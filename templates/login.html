@@ -38,10 +38,52 @@
             text-align:left;
         }
 
+
         img
         {
             padding-top: 370px;
-            padding-left: 100px;
+        }
+
+        button
+        {
+            background-color: #355e9f;
+            font-family: Montserrat;
+            width: 400px;
+            height: 100px;
+            font-size: 60px;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .form-container {
+            margin-top: 50px; /* Ajusta el margen superior para posicionar la sección */
+            padding: 20px; /* Espacio interno del contenedor */
+            background-color: white; /* Fondo blanco para el contenedor */
+            border-radius: 8px; /* Bordes redondeados */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra */
+            width: 600px; /* Ancho del contenedor para que coincida con los inputs */
+            display: flex; /* Habilita Flexbox */
+            flex-direction: column; /* Organiza los elementos en una columna */
+            align-items: center; /* Centra los elementos horizontalmente */
+        }
+
+        .form-container h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            font-family: Calibri;
+            font-size: 48px;
+        }
+
+        .form-container input {
+            width: 550px; /* Ancho completo del input */
+            height: 80px;
+            margin-bottom: 20px; /* Espacio entre los inputs */
+            padding: 10px;
+            font-family: Calibri;
+            font-size: 30px;
+            background-color: #EEEE;
+            border-color: #EEEE;
+            
         }
 
     </style>
@@ -53,9 +95,28 @@
 <div class="fixed-top-border"> 
 </div>
 
+<center><img src="{% static 'assets/logo.png' %}"></center>
+
+
 <body>
-    <img src="{% static 'assets/logo.png' %}">
-    <h1>¡Bienvenido!</h1>
+    <center><h1>¡Bienvenido!</h1>
+
+    <div class="form-container">
+        <h2>Usuario</h2>
+        <input type="text" id="user" name="user" placeholder="Ingrese su usuario">
+
+        <h2>Contraseña</h2>
+        <input type="password" id="pwd" name="pwd" placeholder="Ingrese su contraseña">
+    </div>
+
+</center>
+
+<br></br>
+<br></br>
+
+    <center><button type="button"><b>Ingresar</b></button></center>
+
 </body>
+
 
 </html>
