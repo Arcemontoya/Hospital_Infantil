@@ -18,6 +18,12 @@
         align-items: center;
     }
 
+    .fixed-top-border img
+    {
+        position: inherit;
+        scale: 50%;
+    }
+
 
     .section-title
     {
@@ -113,13 +119,23 @@
         padding-left: 20px; /* Opcional: separa el texto del borde izquierdo */
     }
 
+    
+
+
 </style>
 
 
+
+
 <head>
+    
+    <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
 
-    <div class="fixed-top-border"></div>
+    <div class="fixed-top-border">
+        <img src="{% static 'assets/Interfaz/previous.png' %}">
+    </div>
 
+    
 </head>
 
 <body>
@@ -177,6 +193,7 @@
      <button type="button"><b>Registrar</b></button>
     </center>
 
+    
 
 </body>
 
