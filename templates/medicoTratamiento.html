@@ -1,0 +1,183 @@
+{% load static %}
+
+<!DOCTYPE HTML>
+
+<style>
+
+.fixed-top-border {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 169.31px; /* Ajusta la altura según lo necesites */
+        background-color: #355e9f;
+        z-index: 1000;
+
+        /* Remover alineación y padding relacionados con el contenido */
+        display: flex;
+        align-items: center;
+    }
+
+
+    .section-title
+    {
+        background-color: #EEEEEE;
+        font-family: Montserrat;
+        width: 350px;
+        border-radius: 8px;
+        padding: 5px;
+        margin-bottom: 80px;
+        text-align: center;
+    }
+    
+
+    .form-container {
+        
+            margin-top: 50px; /* Ajusta el margen superior para posicionar la sección */
+            padding: 20px; /* Espacio interno del contenedor */
+            background-color: white; /* Fondo blanco para el contenedor */
+            border-radius: 8px; /* Bordes redondeados */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra */
+            width: 600px; /* Ancho del contenedor para que coincida con los inputs */
+            display: flex; /* Habilita Flexbox */
+            flex-direction: column; /* Organiza los elementos en una columna */
+            align-items: center;
+            margin-bottom: 80px;
+            margin-top: 200px;
+    }
+
+    
+
+    button
+        {
+            background-color: #355e9f;
+            font-family: Montserrat;
+            width: 400px;
+            height: 100px;
+            font-size: 60px;
+            color: white;
+            border-radius: 8px;
+    }
+
+    .form-container input {
+            width: 550px; /* Ancho completo del input */
+            height: 80px;
+            margin-bottom: 20px; /* Espacio entre los inputs */
+            padding: 10px;
+            font-family: Calibri;
+            font-size: 30px;
+            background-color: #EEEE;
+            border-color: #EEEE;
+            
+    }
+
+    textarea
+    {
+        width: 600px; /* Ancho completo del input */
+        height: 500px;
+        background-color: #EEEE;
+        border-color: #EEEE; 
+        font-family: Calibri;
+        font-size: 30px;
+    }
+
+    select
+    {
+        width: 550px; /* Ancho completo del input */
+        height: 80px;
+        margin-bottom: 20px; /* Espacio entre los inputs */
+        padding: 10px;
+        font-family: Calibri;
+        font-size: 30px;
+        background-color: #EEEE;
+        border-color: #EEEE;    
+    }
+
+    h1{
+        font-family: Montserrat;
+        font-size: 60px;
+
+    }
+
+    h2{
+        font-family: Montserrat;
+        font-size: 40px;
+    }
+
+    h3{
+        font-family: Calibri;
+        font-size: 30px;
+        align-self: flex-start; /* Alinear el h3 al inicio del contenedor */
+        text-align: left; /* Alinea el texto del h3 a la izquierda */
+        width: 100%; /* Asegura que el h3 ocupe todo el ancho disponible */
+        padding-left: 20px; /* Opcional: separa el texto del borde izquierdo */
+    }
+
+</style>
+
+
+<head>
+
+    <div class="fixed-top-border"></div>
+
+</head>
+
+<body>
+
+    <center>
+        <div class="form-container">
+            <div class="section-title"><h2>Tratamiento</h2></div>
+            
+            <h3>Nombre del medicamento: </h3>
+            <input type="text" id="nombreMedicamento" name="nombreMedicamento" placeholder="Ingrese medicamento.">
+            
+            <h3>Dosis administrada: </h3>
+            <input type="text" id="dosisAdministrada" name="dosisAdministrada" placeholder="Ingrese dosis administrada.">
+
+            <h3>Via</h3>
+            <select name="Via" id="Via" placeholder="wenas">
+                <option value="" disabled selected>Selecciona una vía</option>
+                <option value="CUTANEA">CUTANEA</option>
+                <option value="INHALADA">INHALADA</option>
+                <option value="IM-INTRAMUSCULAR">INTRADERMICA</option>
+                <option value="IV-INTRAVENOSA">IV-INTRAVENOSA</option>
+                <option value="NASAL">NASAL</option>
+            </select>
+
+        </div>
+
+  
+        <div class="form-container">
+            <div class="section-title"><h2>Frecuencia y duración</h2></div>
+        
+            <h3>Ingrese frecuencia de dosis</h3>
+            <input type="text" name="frecuenciaDosis" id="frecuenciaDosis" placeholder="Ingrese un número">
+
+            <h3>Tiempo</h3>
+            <select name="Tiempo" id="Tiempo">
+                <option value="" disabled selected>Selecciona una unidad de tiempo</option>
+                <option value="HRS">HRS</option>
+                <option value="MINS">MINS</option>
+                <option value="UNICA">UNICA</option>
+                <option value="PRN">PRN</option>
+            </select>
+
+            <h3>Duracion de terapia en días:</h3>
+            <input type="text" name="terapiaDias" id="terapiaDias" placeholder="Ingrese la duración de terapia">
+        </div>
+
+
+        <div class="form-container">
+            <div class="section-title"><h2>Otras indicaciones</h2></div>
+            <textarea id="OtrasIndicaciones" name="OtrasIndicaciones" rows="4" cols="50" placeholder="Wenas"></textarea>
+        </div>
+
+    </div>
+
+     <button type="button"><b>Registrar</b></button>
+    </center>
+
+
+</body>
+
+</HTML>
