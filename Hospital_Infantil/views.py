@@ -2,4 +2,4 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 def index(request):
-    return HttpResponse(render(request, "medicoTratamiento.html"))
+    return HttpResponse(render(request, "perfilPaciente.html"))
