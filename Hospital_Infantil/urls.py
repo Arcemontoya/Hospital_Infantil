@@ -21,6 +21,27 @@ from . import views
 urlpatterns = [
     #path('admin/', admin.site.urls),
 
+    # Login
     path('', views.login, name='login'),
-    path('pacientesEnfermero/', views.pacientesEnfermero, name="pacientesEnfermero")
+
+    # INTERFACES DE ENFERMERO
+    path('pacientesEnfermero/', views.pacientesEnfermero, name="pacientesEnfermero"),
+    path('registroPaciente/', views.registroPaciente, name="registroPaciente"),
+    path('registroEstudiosyGabinete/', views.registroEstudiosyGabinete, name="registroEstudiosyGabinete"),
+
+    # INTERFACES DE MEDICO
+    path('registroTratamiento/', views.registroTratamiento, name="registroTratamiento"),
+    path('pacientesMedico/', views.pacientesMedico, name="pacientesMedico"),
+
+    # INTERFACES DE ADMINISTRADOR
+    path('registroUsuario/', views.registroUsuario, name="registroUsuario"),
+    path('perfilUsuario/', views.perfilUsuario, name="perfilUsuario"),
+    path('usuarios/', views.usuarios, name="usuarios"),
+
+    #INTERFACES GENERALES
+    path('signosVitales/', views.signosVitales, name="signosVitales"),
+    path('radiografia/', views.radiografia, name="radiografia"),
+    path('estudio/', views.estudio, name="estudio"),
+    path('perfilPaciente/', views.perfilPaciente, name="perfilPaciente"),
+    path('estudiosyGabinete/', views.estudiosyGabinete, name="estudiosyGabinete"),
 ]
