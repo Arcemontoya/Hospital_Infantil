@@ -1,10 +1,179 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
+
+    <style>
+        .fixed-top-border{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: px;
+            background-color: #355e9f;
+            z-index: 1000;
+
+            display: flex;
+            align-items: center;
+
+            font-family: Montserrat;
+            color: white;
+            padding: 10px;
+        }
+
+        .fixed-bottom-border
+        {
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color:#355e9f;
+            padding: 10px;
+            height: 169.3px;
+        }
+
+        .icon-container
+        {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .icon-item
+        {
+            flex-grow: 1;
+            position: relative;
+            margin: 0 40px; /* Espaciado entre los íconos */
+            text-align: center; /* Asegura que el texto esté centrado */
+        }
+
+        .icon-item img
+        {
+            margin-bottom: 40px;
+            scale: 40%;
+        }
+
+        .icon-item p
+        {
+            position: absolute;
+            bottom: 0; /* Coloca el texto en la parte inferior del contenedor del ícono */
+            left: 50%;
+            color: white;
+            font-family: Montserrat;
+            font-size: 20px;
+            transform: translateX(-50%) translateY(-250%);
+        }
+
+        .form-container {
+            margin-top: 50px; /* Ajusta el margen superior para posicionar la sección */
+            padding: 20px; /* Espacio interno del contenedor */
+            background-color: white; /* Fondo blanco para el contenedor */
+            border-radius: 8px; /* Bordes redondeados */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra */
+            width: 600px; /* Ancho del contenedor para que coincida con los inputs */
+            display: flex; /* Habilita Flexbox */
+            flex-direction: column; /* Organiza los elementos en una columna */
+            align-items: center;
+            margin-bottom: 200px;
+            margin-top: 200px;
+        }
+
+
+        .section-title
+        {
+            background-color: #EEEEEE;
+            font-family: Montserrat;
+            width: 350px;
+            border-radius: 8px;
+            padding: 5px;
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        h1{
+            font-family: Montserrat;
+            font-size: 60px;
+
+        }
+
+        h2{
+            font-family: Montserrat;
+            font-size: 40px;
+        }
+
+        h3{
+            font-family: Calibri;
+            font-size: 30px;
+            align-self: flex-start; /* Alinear el h3 al inicio del contenedor */
+            text-align: left; /* Alinea el texto del h3 a la izquierda */
+            width: 100%; /* Asegura que el h3 ocupe todo el ancho disponible */
+            padding-left: 20px; /* Opcional: separa el texto del borde izquierdo */
+        }
+
+        p
+        {
+            font-family: Calibri;
+            align-self: flex-start;
+            text-align: justify;
+        }
+        
+        img
+        {
+            scale: 40%;
+        }
+
+    </style>
+
+
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <div class="fixed-top-border"><h1>Perfil del usuario</h1></div>
+
+    <!-------REFERENCIAS PARA IMAGENES--------->
+
+    <link href="{% static 'assets/Interfaz/user.png' %}" rel="icon" type="image/png">
+    <link href="{% static 'assets/Interfaz/plus.png' %}" rel="icon" type="image/png">
+    <link href="{% static 'assets/Interfaz/more.png' %}" rel="icon" type="image/png">
+
+     <!-------FIN REFERENCIAS PARA IMAGENES--------->
+    </div>
 </head>
+
 <body>
+    <center>
+        <div class="form-container">
+            <div class="section-title"><h2>Usuario</h2></div>
+            
+            <h3>Fecha de ingreso: </h3>
+            <h3>Nombre del usuario: </h3>
+            <h3>ID del usuario: </h3>
+            <h3>Cedula profesional: </h3>
+
+        </div>
+
+    </center>
+
+    <div class="fixed-bottom-border">
+        <center>
+            <div class="icon-container">
+                <div class="icon-item">
+                    <img src="{% static 'assets/interfaz/user.png' %}">
+                    <p>Usuarios</p>
+                </div>
+                <div class="icon-item">
+                    <img src="{% static 'assets/interfaz/plus.png' %}">
+                    <p>Nuevo usuario</p>
+                </div>
+                <div class="icon-item">
+                    <img src="{% static 'assets/interfaz/more.png' %}">
+                    <p>Más</p>
+                </div>
+            </div>
+        </center>
+    </div>
 
 </body>
+
 </html>
