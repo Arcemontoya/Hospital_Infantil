@@ -127,14 +127,51 @@
     <div class="fixed-top-border">
 
         <img src="{% static 'assets/Interfaz/previous.png'%}">
-        <h1>Radiografía</h1>
+        <h1>Registro de usuario</h1>
 
     </div>
 
 </head>
 
 <body>
-    
 
+    <center>
+        <div class="form-container">
+            <div class="section-title"><h2>Características del usuario</h2></div>
+
+            <h3>Nombre del usuario: </h3>
+            <input type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Ingrese nombre de usuario">
+            <h3>Fecha de ingreso: </h3>
+            <input type="date" id="fechaIngresoUsuario" name="fechaIngresoUsuario" placeholder="Ingrese fecha de ingreso">
+            <h3>Usuario de identificación: </h3>
+            <input type="text" id="UID" name="UID" placeholder="Ingrese nuevo identificador de usuario">
+            <h3>Correo: </h3>
+            <input type="text" id="UID" name="UID" placeholder="Ingrese nuevo identificador de usuario">
+            <h3>Contraseña</h3>
+            <input type="text" id="UID" name="UID" placeholder="Ingrese una contraseña">
+    
+        </div>
+
+        <div class="form-container">
+            <div class="section-title"><h2>Cedula profesional</h2></div>
+
+            <input type="text" id="cedulaProfesional" name="cedulaProfesional" placeholder="Ingrese cedula profesional">
+        </div>
+
+        <div class="form-container">
+            <div class="section-title"><h2>Ocupación</h2></div>
+
+            <h3>Ocupación</h3>
+            <select name="ocupacion" id="ocupacion">
+                <option value="" disabled selected>Selecciona una ocupación</option>
+                <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                <option value="MEDICO">MEDICO</option>
+                <option value="ENFERMERO">ENFERMERO</option>
+            </select>
+        </div>
+
+        <button type="button"><b>Registrar</b></button>
+
+    </center>
 </body>
 </html>
