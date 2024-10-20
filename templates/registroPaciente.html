@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
     <style>
@@ -13,6 +15,13 @@
             /* Remover alineación y padding relacionados con el contenido */
             display: flex;
             align-items: center;
+        }
+
+
+        .fixed-top-border img
+        {
+            
+            scale: 40%;
         }
 
 
@@ -93,7 +102,7 @@
         h1{
             font-family: Montserrat;
             font-size: 60px;
-
+            color: white;
         }
 
         h2{
@@ -111,5 +120,56 @@
         }
     </style>
 
+    <head>
+
+        <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
+
+        <div class="fixed-top-border">
+            <img src="{% static 'assets/Interfaz/previous.png' %}">
+            <h1>Registro de paciente</h1>
+
+        </div>
+    </head>
+
+    <body>
+        <center>
+            <div class="form-container">
+                <div class="section-title"><h2>Características del paciente</h2></div>
+
+                <h3>Nombre del paciente: </h3>
+                <input type="text" name="nombrePaciente" id="nombrePaciente" placeholder="Ingrese nombre del paciente">
+                
+                <h3>Fecha de ingreso: </h3>
+                <input type="date" name="fechaIngreso" id="fechaIngreso" placeholder="Ingrese la fecha de ingreso del paciente">
+
+                <h3>Altura: </h3>
+                <input type="text" name="alturaPaciente" id="alturaPaciente" placeholder="Ingrese altura en metros">
+
+                <h3>Peso: </h3>
+                <input type="text" name="pesoPaciente" id="pesoPaciente" placeholder="Ingrese peso del paciente">
+
+            </div>
+
+            <div class="form-container">
+                <div class="section-title"><h2>Cirugía</h2></div>
+
+                <h3>Cirugía realizada: </h3>
+                <input type="text" name="cirugíaRealizada" id="cirugíaRealizada" placeholder="Ingrese la cirugía realizada">                
+                
+                <h3>Diagnóstico clínico prequirúrgico</h3>
+                <textarea name="diagnosticoPrequirurgico" id="diagnosticoPrequirurgico" rows="4" cols="50" placeholder="Ingrese diagnóstico clínico prequirúrgico"></textarea>
+            </div>
+
+            <div class="form-container">
+                <div class="section-title"><h2>Nota de enfermería</h2></div>
+
+                <h3>Ingrese nota de enfermería</h3>
+                <textarea name="notaEnfermeria" id="notaEnfermeria" rows="4" cols="50" placeholder="Ingrese nota de enfermería"></textarea>
+            </div>
+
+            <button type="button"><b>Registrar</b></button>
+        </center>
+
+    </body>
 
 </html>
