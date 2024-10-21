@@ -197,25 +197,28 @@
 
     <div class="fixed-bottom-border">
         <center>
+            <a href = "{% url 'usuarios' %}">
             <div class="icon-container">
                 <div class="icon-item">
                     <img src="{% static 'assets/interfaz/user.png' %}">
                     <p>Usuarios</p>
                 </div>
+            </a>
+            <a href = "{% url 'registroUsuario' %}">
                 <div class="icon-item">
                     <img src="{% static 'assets/interfaz/plus.png' %}">
                     <p>Nuevo usuario</p>
                 </div>
+            </a>
                 <div class="icon-item dropdown">
                     <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
                     <p>Más</p>
                     
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{ % static 'usuarios.html' %}">Deshabilitar usuario</a></li>
-                        <li><a class="dropdown-item" href="#">Editar usuario</a></li>
-                        <li><a class="dropdown-item" href="#">Interfaz enfermero</a></li>
-                        <li><a class="dropdown-item" href="#">Interfaz administrador</a></li>
+                        <li><a href = "{% url 'usuarios' %}" class="dropdown-item" href="{ % static 'usuarios.html' %}">Deshabilitar usuario</a></li>
+                        <li><a href = "{% url 'registroUsuario' %}" class="dropdown-item" href="#">Editar usuario</a></li>
+                        <li><a href = "{% url 'pacientesEnfermero' %}" class="dropdown-item" href="#">Interfaz enfermero</a></li>
                     </ul>
                 </div>
             </div>
