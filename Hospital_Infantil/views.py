@@ -19,6 +19,12 @@ def registroEstudiosyGabinete(request):
 def perfilPacienteEnfermero(request):
     return HttpResponse(render(request, "perfilPacienteEnfermero.html"))
 
+def agregarEstudio(request):
+    return HttpResponse(render(request, "agregarEstudio.html"))
+
+def estudiosyGabineteEnfermero(request):
+    return HttpResponse(render(request, "estudiosyGabineteEnfermero.html"))
+
 
 # INTERFACES DE MEDICO
 
@@ -30,6 +36,10 @@ def pacientesMedico(request):
 
 def perfilPacienteMedico(request):
     return HttpResponse(render(request, "perfilPacienteMedico.html"))
+
+def estudiosyGabineteMedico(request):
+    return HttpResponse(render(request, "estudiosyGabineteMedico.html"))
+
 
 # INTERFACES DE ADMINISTRADOR
 
@@ -52,6 +62,5 @@ def radiografia(request):
 def estudio(request):
     return HttpResponse(render(request, "estudio.html"))
 
-def estudiosyGabinete(request):
-    return HttpResponse(render(request, "estudiosyGabinete.html"))
+
 
