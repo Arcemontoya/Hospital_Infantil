@@ -125,9 +125,11 @@
         <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
 
         <div class="fixed-top-border">
+            <a href=" {% url 'pacientesEnfermero' %}">
             <img src="{% static 'assets/Interfaz/previous.png' %}">
+            </a>
             <h1>Registro de paciente</h1>
-
+            
         </div>
     </head>
 
@@ -166,8 +168,9 @@
                 <h3>Ingrese nota de enfermería</h3>
                 <textarea name="notaEnfermeria" id="notaEnfermeria" rows="4" cols="50" placeholder="Ingrese nota de enfermería"></textarea>
             </div>
-
+            <a href=" {% url 'pacientesEnfermero' %}">
             <button type="button"><b>Registrar</b></button>
+            </a>
         </center>
 
     </body>

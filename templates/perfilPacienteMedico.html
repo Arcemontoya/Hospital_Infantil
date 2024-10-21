@@ -1,0 +1,238 @@
+{% load static %}
+
+<!DOCTYPE HTML>
+<HTML lang="en">
+
+    <style>
+        .fixed-top-border{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: px;
+            background-color: #355e9f;
+            z-index: 1000;
+
+            display: flex;
+            align-items: center;
+
+            font-family: Montserrat;
+            color: white;
+            padding: 10px;
+        }
+
+        .fixed-bottom-border
+        {
+            position: fixed;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color:#355e9f;
+            padding: 10px;
+            height: 169.3px;
+        }
+
+        .icon-container
+        {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .icon-item
+        {
+            position: relative;
+            margin: 0 40px; /* Espaciado entre los íconos */
+            text-align: center; /* Asegura que el texto esté centrado */
+        }
+
+        .icon-item img
+        {
+            margin-bottom: 40px;
+            scale: 40%;
+        }
+
+        .icon-item p
+        {
+            position: absolute;
+            bottom: 0; /* Coloca el texto en la parte inferior del contenedor del ícono */
+            left: 50%;
+            color: white;
+            font-family: Montserrat;
+            font-size: 30px;
+            transform: translateX(-50%) translateY(-80%);
+        }
+
+        .form-container {
+            margin-top: 50px; /* Ajusta el margen superior para posicionar la sección */
+            padding: 20px; /* Espacio interno del contenedor */
+            background-color: white; /* Fondo blanco para el contenedor */
+            border-radius: 8px; /* Bordes redondeados */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra */
+            width: 600px; /* Ancho del contenedor para que coincida con los inputs */
+            display: flex; /* Habilita Flexbox */
+            flex-direction: column; /* Organiza los elementos en una columna */
+            align-items: center;
+            margin-bottom: 200px;
+            margin-top: 200px;
+        }
+
+
+        .section-title
+        {
+            background-color: #EEEEEE;
+            font-family: Montserrat;
+            width: 350px;
+            border-radius: 8px;
+            padding: 5px;
+            margin-bottom: 80px;
+            text-align: center;
+        }
+
+        h1{
+            font-family: Montserrat;
+            font-size: 60px;
+
+        }
+
+        h2{
+            font-family: Montserrat;
+            font-size: 40px;
+        }
+
+        h3{
+            font-family: Calibri;
+            font-size: 30px;
+            align-self: flex-start; /* Alinear el h3 al inicio del contenedor */
+            text-align: left; /* Alinea el texto del h3 a la izquierda */
+            width: 100%; /* Asegura que el h3 ocupe todo el ancho disponible */
+            padding-left: 20px; /* Opcional: separa el texto del borde izquierdo */
+        }
+
+        p
+        {
+            font-family: Calibri;
+            align-self: flex-start;
+            text-align: justify;
+        }
+        
+        img
+        {
+            scale: 40%;
+        }
+
+
+    </style>
+
+
+
+    <head>
+        <div class="fixed-top-border"><h1>Perfil del paciente</h1></div>
+
+            <!-------REFERENCIAS PARA IMAGENES--------->
+
+            <link href="{% static 'assets/Interfaz/vitalSigns.png' %}" rel="icon" type="image/png">
+            <link href="{% static 'assets/Interfaz/patients.png' %}" rel="icon" type="image/png">
+            <link href="{% static 'assets/Interfaz/plus.png' %}" rel="icon" type="image/png">
+
+             <!-------FIN REFERENCIAS PARA IMAGENES--------->
+    </head>
+
+    <body>
+        <center>
+            <div class="form-container">
+                <div class="section-title"><h2>Paciente</h2></div>
+                <h3>Fecha de ingreso: </h3>
+                <h3>Fecha de nacimiento: </h3>
+                <h3>Expediente: </h3>
+                <h3>Peso(Kg): </h3>
+                <h3>Altura(metros): </h3>
+                <h3>Cirugía realizada: </h3>
+            </div>
+
+            <div class="form-container">
+                <div class="section-title"><h2>Diagnóstico clínico prequirúrgico</h2></div>
+                <p>Lorem ipsum dolor sit amet. Et rerum perferendis hic amet ipsum est nostrum animi sed molestiae deserunt aut quam minus sit mollitia repellat aut quia temporibus! Ut eius enim cum maiores veniam eum animi cupiditate. Quo error quia et dolores deleniti non quae tempore aut excepturi nemo. Qui minima alias quo internos voluptas qui voluptates accusamus et esse autem.
+                    Id odit soluta est temporibus consequatur et harum fugit qui cupiditate modi vel nobis suscipit. Et sint dolorum sit doloribus harum quo eius quasi eum fugiat ipsa qui eaque incidunt. A quidem doloremque qui iure laborum sit unde veniam. Ut omnis iste et omnis omnis et nemo deleniti est libero voluptatem aut placeat harum et reprehenderit nobis ut illum voluptatum.
+                    </p> 
+            </div>
+
+            <div class="form-container">
+                <div class="section-title"><h2>Nota Enfermería</h2></div>
+                <p>Lorem ipsum dolor sit amet. Et rerum perferendis hic amet ipsum est nostrum animi sed molestiae deserunt aut quam minus sit mollitia repellat aut quia temporibus! Ut eius enim cum maiores veniam eum animi cupiditate. Quo error quia et dolores deleniti non quae tempore aut excepturi nemo. Qui minima alias quo internos voluptas qui voluptates accusamus et esse autem.
+                    Id odit soluta est temporibus consequatur et harum fugit qui cupiditate modi vel nobis suscipit. Et sint dolorum sit doloribus harum quo eius quasi eum fugiat ipsa qui eaque incidunt. A quidem doloremque qui iure laborum sit unde veniam. Ut omnis iste et omnis omnis et nemo deleniti est libero voluptatem aut placeat harum et reprehenderit nobis ut illum voluptatum.
+                    </p> 
+            </div>
+
+            <div class="form-container">
+                <div class="section-title"><h2>Tratamiento 1</h2></div>
+                <h3>Nombre del medicamento: </h3>
+                <h3>Vía de administración: </h3>
+                <h3>Frecuencia de dosis: </h3>
+                <h3>Duración de la terapia: </h3>
+                <h3>Otras indicaciones: </h3>
+                <p>Lorem ipsum dolor sit amet. Et rerum perferendis hic amet ipsum est nostrum animi sed molestiae deserunt aut quam minus sit mollitia repellat aut quia temporibus! Ut eius enim cum maiores veniam eum animi cupiditate. Quo error quia et dolores deleniti non quae tempore aut excepturi nemo. Qui minima alias quo internos voluptas qui voluptates accusamus et esse autem.
+                    Id odit soluta est temporibus consequatur et harum fugit qui cupiditate modi vel nobis suscipit. Et sint dolorum sit doloribus harum quo eius quasi eum fugiat ipsa qui eaque incidunt. A quidem doloremque qui iure laborum sit unde veniam. Ut omnis iste et omnis omnis et nemo deleniti est libero voluptatem aut placeat harum et reprehenderit nobis ut illum voluptatum.
+                    </p> 
+            </div>
+
+            <div class="form-container">
+                <div class="section-title"><h2>Tratamiento 2</h2></div>
+                <h3>Nombre del medicamento: </h3>
+                <h3>Vía de administración: </h3>
+                <h3>Frecuencia de dosis: </h3>
+                <h3>Duración de la terapia: </h3>
+                <h3>Otras indicaciones: </h3>
+                <p>Lorem ipsum dolor sit amet. Et rerum perferendis hic amet ipsum est nostrum animi sed molestiae deserunt aut quam minus sit mollitia repellat aut quia temporibus! Ut eius enim cum maiores veniam eum animi cupiditate. Quo error quia et dolores deleniti non quae tempore aut excepturi nemo. Qui minima alias quo internos voluptas qui voluptates accusamus et esse autem.
+                    Id odit soluta est temporibus consequatur et harum fugit qui cupiditate modi vel nobis suscipit. Et sint dolorum sit doloribus harum quo eius quasi eum fugiat ipsa qui eaque incidunt. A quidem doloremque qui iure laborum sit unde veniam. Ut omnis iste et omnis omnis et nemo deleniti est libero voluptatem aut placeat harum et reprehenderit nobis ut illum voluptatum.
+                    </p> 
+            </div>
+
+            <div class="form-container">
+                <div class="section-title"><h2>Tratamiento 3</h2></div>
+                <h3>Nombre del medicamento: </h3>
+                <h3>Vía de administración: </h3>
+                <h3>Frecuencia de dosis: </h3>
+                <h3>Duración de la terapia: </h3>
+                <h3>Otras indicaciones: </h3>
+                <p>Lorem ipsum dolor sit amet. Et rerum perferendis hic amet ipsum est nostrum animi sed molestiae deserunt aut quam minus sit mollitia repellat aut quia temporibus! Ut eius enim cum maiores veniam eum animi cupiditate. Quo error quia et dolores deleniti non quae tempore aut excepturi nemo. Qui minima alias quo internos voluptas qui voluptates accusamus et esse autem.
+                    Id odit soluta est temporibus consequatur et harum fugit qui cupiditate modi vel nobis suscipit. Et sint dolorum sit doloribus harum quo eius quasi eum fugiat ipsa qui eaque incidunt. A quidem doloremque qui iure laborum sit unde veniam. Ut omnis iste et omnis omnis et nemo deleniti est libero voluptatem aut placeat harum et reprehenderit nobis ut illum voluptatum.
+                    </p> 
+            </div>
+
+        </center>
+    </body>
+
+    <!------- FONDO INTERACTUABLE -------->
+
+    <!----<img src="{% static 'assets/interfaz/.png' %}">-->
+
+
+    <div class="fixed-bottom-border">
+        <center>
+            <a href=" {% url 'pacientesEnfermero' %}">
+            <div class="icon-container">
+                <div class="icon-item">
+                    <img src="{% static 'assets/interfaz/patients.png' %}">
+                    <p>Pacientes</p>
+                </div>
+            </a>
+            <a href=" {% url 'signosVitales' %}">
+                <div class="icon-item">
+                    <img src="{% static 'assets/interfaz/vitalSigns.png' %}">
+                    <p>Signos V.</p>
+                </div>
+            </a>
+                <div class="icon-item">
+                    <img src="{% static 'assets/interfaz/more.png' %}">
+                    <p>Más</p>
+                </div>
+            </div>
+        </center>
+    </div>
+    
+    
+
+</HTML>

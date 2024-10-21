@@ -87,15 +87,17 @@
 
     <!--BOTON DE MAS-->
     <link href="{% static 'assets/Interfaz/plus.png' %}" rel="icon" type="image/png">
+    <a href=" {% url 'registroPaciente' %}">
     <img src="{% static 'assets/Interfaz/plus.png' %}">
-
+    </a>
 </head>
 
 <body>
     <!--CUADRO-->
-
+        <a href=" {% url 'perfilPacienteEnfermero' %}">
             <table>
-                <tr>
+                
+                <tr class="clickable-row" href="{% url 'perfilPacienteEnfermero' %}">
                     <th>Nombre</th>
                     <th>ID</th>
                     <th>Fecha de ingreso</th>
@@ -282,6 +284,8 @@
                 </tr>
                 
             </table>
+        </a>
+      
 </body>
 
 </html>

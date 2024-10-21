@@ -32,6 +32,7 @@ urlpatterns = [
     # INTERFACES DE MEDICO
     path('registroTratamiento/', views.registroTratamiento, name="registroTratamiento"),
     path('pacientesMedico/', views.pacientesMedico, name="pacientesMedico"),
+    path('perfilPacienteMedico/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
 
     # INTERFACES DE ADMINISTRADOR
     path('registroUsuario/', views.registroUsuario, name="registroUsuario"),
@@ -42,6 +43,6 @@ urlpatterns = [
     path('signosVitales/', views.signosVitales, name="signosVitales"),
     path('radiografia/', views.radiografia, name="radiografia"),
     path('estudio/', views.estudio, name="estudio"),
-    path('perfilPaciente/', views.perfilPaciente, name="perfilPaciente"),
+    path('perfilPacienteEnfermero/', views.perfilPacienteEnfermero, name="perfilPacienteEnfermero"),
     path('estudiosyGabinete/', views.estudiosyGabinete, name="estudiosyGabinete"),
 ]

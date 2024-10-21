@@ -212,15 +212,19 @@
 
     <div class="fixed-bottom-border">
         <center>
+            <a href=" {% url 'pacientesEnfermero' %}">
             <div class="icon-container">
                 <div class="icon-item">
                     <img src="{% static 'assets/interfaz/patients.png' %}">
                     <p>Pacientes</p>
                 </div>
+            </a>
+            <a href=" {% url 'signosVitales' %}">
                 <div class="icon-item">
                     <img src="{% static 'assets/interfaz/vitalSigns.png' %}">
                     <p>Signos V.</p>
                 </div>
+            </a>
                 <div class="icon-item">
                     <img src="{% static 'assets/interfaz/more.png' %}">
                     <p>Más</p>

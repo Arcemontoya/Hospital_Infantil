@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-
-
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 # LOGIN
 def login(request):
     return HttpResponse(render(request, "login.html"))
@@ -16,6 +16,9 @@ def registroPaciente(request):
 def registroEstudiosyGabinete(request):
     return HttpResponse(render(request, "registroEstudiosyGabinete.html"))
 
+def perfilPacienteEnfermero(request):
+    return HttpResponse(render(request, "perfilPacienteEnfermero.html"))
+
 
 # INTERFACES DE MEDICO
 
@@ -24,6 +27,9 @@ def registroTratamiento(request):
 
 def pacientesMedico(request):
     return HttpResponse(render(request, "pacientesMedico.html"))
+
+def perfilPacienteMedico(request):
+    return HttpResponse(render(request, "perfilPacienteMedico.html"))
 
 # INTERFACES DE ADMINISTRADOR
 
@@ -46,8 +52,6 @@ def radiografia(request):
 def estudio(request):
     return HttpResponse(render(request, "estudio.html"))
 
-def perfilPaciente(request):
-    return HttpResponse(render(request, "perfilPaciente.html"))
-
 def estudiosyGabinete(request):
     return HttpResponse(render(request, "estudiosyGabinete.html"))
+
