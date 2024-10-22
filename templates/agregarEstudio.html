@@ -1,5 +1,12 @@
 {% load static %}
 
+<script>
+    function goBack() {
+    window.history.back();
+    }
+</script>
+
+
 <!DOCTYPE HTML>
 <HTML lang="en">
 
@@ -127,7 +134,10 @@
 
     <div class="fixed-top-border">
 
-        <img src="{% static 'assets/Interfaz/previous.png'%}">
+        <a onclick="goBack()">
+            <img src="{% static 'assets/Interfaz/previous.png'%}">
+        </a>
+
         <h1>Registro de estudio y gabinete</h1>
 
     </div>

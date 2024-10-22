@@ -1,5 +1,11 @@
 {% load static %}
 
+<script>
+    function goBack() {
+    window.history.back();
+    }
+</script>
+
 <!DOCTYPE HTML>
 <HTML lang="en">
 <style>
@@ -130,7 +136,9 @@
     <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
 
     <div class="fixed-top-border">
-        <img src="{% static 'assets/Interfaz/previous.png' %}">
+        <a onclick="goBack()">
+            <img src="{% static 'assets/Interfaz/previous.png' %}">
+        </a>
         <h1>Nuevo tratamiento</h1>
     </div>
 
