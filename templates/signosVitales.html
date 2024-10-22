@@ -29,7 +29,7 @@
             {
                 scale: 50%;
             }
-        
+
         
             .section-title
             {
@@ -113,7 +113,8 @@
             h2{
                 font-family: Montserrat;
                 font-size: 40px;
-            }
+                margin-top: 50px; /* Espacio superior entre el encabezado y la imagen anterior */
+                margin-bottom: 20px; /* Espacio inferior entre el encabezado y la imagen */            }
         
             h3{
                 font-family: Calibri;
@@ -123,24 +124,58 @@
                 width: 100%; /* Asegura que el h3 ocupe todo el ancho disponible */
                 padding-left: 20px; /* Opcional: separa el texto del borde izquierdo */
             }
-    
+
+            h2.h2Encabezado
+            {
+                transform: translateY(250%);
+            }
+
+            img.vs {
+                scale: 250%;
+                display: block;
+                margin-top: 300px; /* Espacio entre las imágenes */
+                margin-bottom: 300px;
+                position: relative;
+            }
+
+            img.vsEncabezado{
+                scale: 250%;
+                display: block;
+                margin-top: 400px; /* Espacio entre las imágenes */
+                margin-bottom: 300px;
+                position: relative;
+            }
+
     </style>
 
 <head>
 
     <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
+    <link href="{% static 'assets/Prototipado/VS.jpg' %}" rel="icon" type="image/jpg">
+
 
     <div class="fixed-top-border">
         <a onclick="goBack()">
             <img src="{% static 'assets/Interfaz/previous.png'%}">
         </a>
             <h1>Signos vitales</h1>
+            
     </div>
 
 </head>
 
 <body>
-    
+
+    <center>}
+        <h2 class="h2Encabezado">Hace 15 minutos</h2>
+        <img src="{% static 'assets/Prototipado/VS.jpg'%}" class="vsEncabezado">
+        <h2>Hace 30 minutos</h2>
+        <img src="{% static 'assets/Prototipado/VS.jpg'%}" class="vs">
+        <h2>Hace 45 minutos</h2>
+        <img src="{% static 'assets/Prototipado/VS.jpg'%}" class="vs">
+        <h2>Hace 60 minutos</h2>
+        <img src="{% static 'assets/Prototipado/VS.jpg'%}" class="vs">
+    </center>
 
 </body>
 </html>
