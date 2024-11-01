@@ -1,5 +1,6 @@
 {% load static %}
 
+
 <script>
     function goBack() {
     window.history.back();
@@ -126,6 +127,7 @@
     
     </style>
 
+
 <head>
 
     <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
@@ -141,45 +143,51 @@
 </head>
 
 <body>
-
     <center>
-        <div class="form-container">
-            <div class="section-title"><h2>Características del usuario</h2></div>
+        <!-- Inicia el formulario -->
+        <form action="{% url 'registroUsuario' %}" method="post">
+            {% csrf_token %}
+            
+            <div class="form-container">
+                <div class="section-title"><h2>Características del usuario</h2></div>
+                <h3>Nombre del usuario: </h3>
+                {{ form.username }}
+                
+                <h3>Fecha de ingreso: </h3>
+                <input type="date" id="fechaIngreso" name="fechaIngreso" placeholder="Ingrese fecha de ingreso">
+                
+                <h3>Correo: </h3>
+                {{ form.email }}
+                
+                <h3>Contraseña</h3>
+                {{ form.password1 }}
+                
+                <h3>Confirma la contraseña</h3>
+                {{ form.password2 }}
 
-            <h3>Nombre del usuario: </h3>
-            <input type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Ingrese nombre de usuario">
-            <h3>Fecha de ingreso: </h3>
-            <input type="date" id="fechaIngresoUsuario" name="fechaIngresoUsuario" placeholder="Ingrese fecha de ingreso">
-            <h3>Usuario de identificación: </h3>
-            <input type="text" id="UID" name="UID" placeholder="Ingrese nuevo identificador de usuario">
-            <h3>Correo: </h3>
-            <input type="text" id="UID" name="UID" placeholder="Ingrese nuevo identificador de usuario">
-            <h3>Contraseña</h3>
-            <input type="text" id="UID" name="UID" placeholder="Ingrese una contraseña">
-    
-        </div>
+            </div>
 
-        <div class="form-container">
-            <div class="section-title"><h2>Cedula profesional</h2></div>
+            <div class="form-container">
+                <div class="section-title"><h2>Cédula profesional</h2></div>
+                <input type="text" id="cedulaProfesional" name="cedulaProfesional" placeholder="Ingrese cédula profesional">
+            </div>
 
-            <input type="text" id="cedulaProfesional" name="cedulaProfesional" placeholder="Ingrese cedula profesional">
-        </div>
-
-        <div class="form-container">
-            <div class="section-title"><h2>Ocupación</h2></div>
-
-            <h3>Ocupación</h3>
-            <select name="ocupacion" id="ocupacion">
-                <option value="" disabled selected>Selecciona una ocupación</option>
-                <option value="ADMINISTRADOR">ADMINISTRADOR</option>
-                <option value="MEDICO">MÉDICO</option>
-                <option value="ENFERMERO">ENFERMERO</option>
-            </select>
-        </div>
-
-        <a href=" {% url 'usuarios' %}">
-        <button type="button"><b>Registrar</b></button>
-        </a>
+            <div class="form-container">
+                <div class="section-title"><h2>Ocupación</h2></div>
+                <h3>Ocupación</h3>
+                <select name="ocupacion" id="ocupacion" required>
+                    <option value="" disabled selected>Selecciona una ocupación</option>
+                    <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                    <option value="MEDICO">MÉDICO</option>
+                    <option value="ENFERMERO">ENFERMERO</option>
+                </select>
+            </div>
+            <a href="{% url 'usuarios' %}"> 
+                <button type="submit"><b>Registrar</b></button>
+            </a>
+        </form>
+        <!-- Fin del formulario -->
     </center>
 </body>
+</html>
 </html>

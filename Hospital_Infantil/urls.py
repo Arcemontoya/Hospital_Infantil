@@ -17,19 +17,37 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
+from django.contrib.auth.views import LoginView, LogoutView
+
 
 urlpatterns = [
-    #path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls),
 
-    # Login
-    path('', views.login, name='login'),
+    # Manejo de usuarios
+    path('', include('django.contrib.auth.urls')),
+
+    # Login view
+    path('', LoginView.as_view(template_name='login.html'), name='login'),
+
+    # Logout view
+    path('logout/', LogoutView.as_view(), name='logout'),
+
+    # Mostrar usuarios
+    path('usuarios/', views.mostrarUsuarios, name='mostrarUsuarios'),
+
+
 
     # INTERFACES DE ENFERMERO
     path('pacientesEnfermero/', views.pacientesEnfermero, name="pacientesEnfermero"),
+
+    # Mostrar pacientesEnfermero
+    path('pacientesEnfermero/', views.mostrarPacientes, name='mostrarPacientes'),
+
     path('registroPaciente/', views.registroPaciente, name="registroPaciente"),
     path('registroEstudiosyGabinete/', views.registroEstudiosyGabinete, name="registroEstudiosyGabinete"),
     path('estudiosyGabineteEnfermero/', views.estudiosyGabineteEnfermero, name="estudiosyGabineteEnfermero"),
     path('agregarEstudio/', views.agregarEstudio, name="agregarEstudio"),
+    path('pacientesDeshabiltiados/', views.pacientesDeshabilitados, name="pacientesDeshabilitados"),
 
     # INTERFACES DE MEDICO
     path('registroTratamiento/', views.registroTratamiento, name="registroTratamiento"),
@@ -41,6 +59,7 @@ urlpatterns = [
     path('registroUsuario/', views.registroUsuario, name="registroUsuario"),
     path('perfilUsuario/', views.perfilUsuario, name="perfilUsuario"),
     path('usuarios/', views.usuarios, name="usuarios"),
+    path('usuariosDeshabilitados/', views.usuariosDeshabilitados, name="usuariosDeshabilitados"),
 
     #INTERFACES GENERALES
     path('signosVitales/', views.signosVitales, name="signosVitales"),

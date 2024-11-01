@@ -140,47 +140,56 @@
 
     <body>
         <center>
-            <div class="form-container">
-                <div class="section-title"><h2>Características del paciente</h2></div>
+            <form method="post" action="{% url 'registroPaciente' %}">
+                {% csrf_token %}
+                <div class="form-container">
+                    <div class="section-title"><h2>Características del paciente</h2></div>
 
-                <h3>Nombre del paciente: </h3>
-                <input type="text" name="nombrePaciente" id="nombrePaciente" placeholder="Ingrese nombre del paciente">
-                
-                <h3>Fecha de nacimiento: </h3>
-                <input type="date" name="fechaNacimiento" id="fechaNacimiento" placeholder="Ingrese la fecha de nacimiento del paciente">
+                    <h3>Nombre: </h3>
+                    {{ form.nombre }}
+                    
+                    <h3>Apellido paterno: </h3>
+                    {{ form.apellido_paterno }}
 
-                <h3>Fecha de ingreso: </h3>
-                <input type="date" name="fechaIngreso" id="fechaIngreso" placeholder="Ingrese la fecha de ingreso del paciente">
+                    <h3>Apellido materno: </h3>
+                    {{ form.apellido_materno }}
 
-                <h3>Altura: </h3>
-                <input type="text" name="alturaPaciente" id="alturaPaciente" placeholder="Ingrese altura en metros">
+                    <h3>Fecha de nacimiento: </h3>
+                    {{ form.fecha_nacimiento }}
 
-                <h3>Peso: </h3>
-                <input type="text" name="pesoPaciente" id="pesoPaciente" placeholder="Ingrese peso del paciente">
+                    <h3>Fecha de ingreso: </h3>
+                    {{ form.fecha_ingreso }}
 
-            </div>
+                    <h3>Altura: </h3>
+                    {{ form.altura }}
 
-            <div class="form-container">
-                <div class="section-title"><h2>Cirugía</h2></div>
+                    <h3>Peso: </h3>
+                    {{ form.peso }}
 
-                <h3>Cirugía realizada: </h3>
-                <input type="text" name="cirugíaRealizada" id="cirugíaRealizada" placeholder="Ingrese la cirugía realizada">                
-                
-                <h3>Diagnóstico clínico prequirúrgico</h3>
-                <textarea name="diagnosticoPrequirurgico" id="diagnosticoPrequirurgico" rows="4" cols="50" placeholder="Ingrese diagnóstico clínico prequirúrgico"></textarea>
-            </div>
+                </div>
 
-            <div class="form-container">
-                <div class="section-title"><h2>Nota de enfermería</h2></div>
+                <div class="form-container">
+                    <div class="section-title"><h2>Cirugía</h2></div>
 
-                <h3>Ingrese nota de enfermería</h3>
-                <textarea name="notaEnfermeria" id="notaEnfermeria" rows="4" cols="50" placeholder="Ingrese nota de enfermería"></textarea>
-            </div>
-            <a href=" {% url 'pacientesEnfermero' %}">
-            <button type="button"><b>Registrar</b></button>
-            </a>
-        </center>
+                    <h3>Cirugía realizada: </h3>
+                    {{ form.cirugia_realizada }}
 
+                    
+                    <h3>Diagnóstico clínico prequirúrgico</h3>
+                    {{ form.diagnostico_clinico_prequirurgico }}
+                </div>
+
+                <div class="form-container">
+                    <div class="section-title"><h2>Nota de enfermería</h2></div>
+
+                    <h3>Ingrese nota de enfermería</h3>
+                    {{ form.nota_enfermeria }}
+                </div>
+                <a href=" {% url 'pacientesEnfermero' %}">
+                    <button type="submit"><b>Registrar</b></button>
+                </a>
+            </center>
+        </form>
     </body>
 
 </html>
