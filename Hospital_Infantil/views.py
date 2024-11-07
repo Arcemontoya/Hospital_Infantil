@@ -57,7 +57,7 @@ def pacientesEnfermero(request):
 class RegistroPaciente(FormView):
     template_name = 'registroPaciente.html'
     form_class = PacienteForm
-    success_url = reverse_lazy('mostrarPacientes')
+    success_url = reverse_lazy('mostrarPacientesEnfermero')
 
     def form_valid(self, form):
         form.save()
@@ -199,5 +199,5 @@ def mostrarPacientesEnfermero(request):
     return render(request, 'pacientesEnfermero.html', {'Pacientes': pacientes})
 
 def mostrarPacientesMedico(request):
-    pacientes = Paciente.objects.all()
+    pacientes = Paciente.objects.filter(medico_Encargado__user=request.user)
     return render(request, 'pacientesMedico.html', {'Pacientes': pacientes})

@@ -185,7 +185,15 @@
                     <h3>Ingrese nota de enfermería</h3>
                     {{ form.nota_enfermeria }}
                 </div>
-                <a href="{% url 'mostrarPacientesMedico' %}"> 
+
+                <div class="form-container">
+                    <div class="section-title"><h2>Médico encargado</h2></div>
+
+                    <h3>Seleccione el médico encargado</h3>
+                    {{ form.medico_Encargado }}
+                </div>
+
+                <a href="{% url 'mostrarPacientesEnfermero' %}"> 
                     <button type="submit"><b>Registrar</b></button>
                 </a>
             </center>

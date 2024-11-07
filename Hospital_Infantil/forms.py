@@ -105,11 +105,17 @@ class PacienteForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'placeholder': 'Ingrese la nota de enfermería.'})
     )
 
+    medico_Encargado = forms.ModelChoiceField(
+        queryset=UserProfile.objects.filter(funcionalidad='medico'),
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Selecciona el médico encargado.'}),
+        empty_label='Seleccionar médico'
+    )
 
     class Meta:
         model = Paciente
         fields = ["nombre", "apellido_paterno", "apellido_materno", "fecha_ingreso", "fecha_nacimiento",
-                  "cirugia_realizada", "peso", "altura", "diagnostico_clinico_prequirurgico", "nota_enfermeria"]
+                  "cirugia_realizada", "peso", "altura", "diagnostico_clinico_prequirurgico", "nota_enfermeria", "medico_Encargado"]
 
 
 class Tratamiento(forms.ModelForm):

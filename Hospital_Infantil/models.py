@@ -22,6 +22,9 @@ class UserProfile(models.Model):
         choices=FUNCIONALIDAD_CHOICES
     )
 
+    def __str__(self):
+        return self.user.username
+
 
 # ------------------------------------------ |PACIENTE| ------------------------------------------------------------
 class Paciente(models.Model):
@@ -37,6 +40,13 @@ class Paciente(models.Model):
     altura = models.FloatField(blank=False, default=0.0)
     diagnostico_clinico_prequirurgico = models.CharField(max_length=1000, blank=False)
     nota_enfermeria = models.CharField(max_length=1000, blank=False)
+    medico_Encargado = models.ForeignKey(
+        UserProfile,
+        on_delete=models.SET_NULL,
+        null = True,
+        limit_choices_to={'user__userprofile__funcionalidad': 'medico'},
+    )
+
 
     def __str__(self):
         return self.nombre
@@ -84,6 +94,6 @@ class Tratamiento(models.Model):
         choices=TIEMPO_DOSIS_CHOICES
     )
     duracion_Terapia = models.DecimalField(max_digits=2, decimal_places=0)
-    otras_Indicaciones = models.CharField(max_length=1000)
+    otras_Indicaciones = models.CharField(max_length=1000, null=True)
 
 
