@@ -196,12 +196,13 @@
 <body>
     <center>
         <div class="form-container">
-            <div class="section-title"><h2>Usuario</h2></div>
-            
-            <h3>Fecha de ingreso: </h3>
-            <h3>Nombre del usuario: </h3>
-            <h3>ID del usuario: </h3>
-            <h3>Cedula profesional: </h3>
+            <div class="section-title"><h2>{{ user.username }}</h2></div>
+            <form >
+            <h3>Fecha de ingreso: {{ user_profile.fecha_registro }}</h3>
+            <h3>ID del usuario: {{ user.id }}</h3>
+            <h3>Cedula profesional: {{ user_profile.cedula_profesional }}</h3>
+            <h3>Profesión: {{ user_profile.funcionalidad }}</h3>
+
 
         </div>
 
@@ -230,7 +231,7 @@
                     <ul class="dropdown-menu">
                         <li><a href = "{% url 'usuarios' %}" class="dropdown-item" href="{ % static 'usuarios.html' %}">Deshabilitar usuario</a></li>
                         <li><a href = "{% url 'registroUsuario' %}" class="dropdown-item" href="#">Editar usuario</a></li>
-                        <li><a href = "{% url 'pacientesEnfermero' %}" class="dropdown-item" href="#">Interfaz enfermero</a></li>
+                        <li><a href = "{% url 'mostrarPacientesEnfermero' %}" class="dropdown-item" href="#">Interfaz enfermero</a></li>
                     </ul>
                 </div>
             </div>

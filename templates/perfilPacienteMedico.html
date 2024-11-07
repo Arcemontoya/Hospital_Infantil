@@ -195,26 +195,24 @@
     <body>
         <center>
             <div class="form-container">
-                <div class="section-title"><h2>Paciente</h2></div>
-                <h3>Fecha de ingreso: </h3>
-                <h3>Fecha de nacimiento: </h3>
-                <h3>Expediente: </h3>
-                <h3>Peso(Kg): </h3>
-                <h3>Altura(metros): </h3>
-                <h3>Cirugía realizada: </h3>
+                <div class="section-title"><h2><b>{{ paciente.nombre }} {{ paciente.apellido_paterno }} {{ paciente.apellido_materno }}</b></h2></div>
+                <h3>Fecha de ingreso: {{ paciente.fecha_ingreso }}</h3>
+                <h3>Fecha de nacimiento: {{ paciente.fecha_nacimiento }}</h3>
+                <h3>Expediente: {{ paciente.expediente }}</h3>
+                <h3>Peso(Kg): {{ paciente.peso }}</h3>
+                <h3>Altura(metros): {{ paciente.altura }}</h3>
+                <h3>Cirugía realizada: {{ paciente.cirugia_realizada }}</h3>
             </div>
 
             <div class="form-container">
                 <div class="section-title"><h2>Diagnóstico clínico prequirúrgico</h2></div>
-                <p>Lorem ipsum dolor sit amet. Et rerum perferendis hic amet ipsum est nostrum animi sed molestiae deserunt aut quam minus sit mollitia repellat aut quia temporibus! Ut eius enim cum maiores veniam eum animi cupiditate. Quo error quia et dolores deleniti non quae tempore aut excepturi nemo. Qui minima alias quo internos voluptas qui voluptates accusamus et esse autem.
-                    Id odit soluta est temporibus consequatur et harum fugit qui cupiditate modi vel nobis suscipit. Et sint dolorum sit doloribus harum quo eius quasi eum fugiat ipsa qui eaque incidunt. A quidem doloremque qui iure laborum sit unde veniam. Ut omnis iste et omnis omnis et nemo deleniti est libero voluptatem aut placeat harum et reprehenderit nobis ut illum voluptatum.
+                <p> {{ paciente.diagnostico_clinico_prequirurgico }}
                     </p> 
             </div>
 
             <div class="form-container">
                 <div class="section-title"><h2>Nota Enfermería</h2></div>
-                <p>Lorem ipsum dolor sit amet. Et rerum perferendis hic amet ipsum est nostrum animi sed molestiae deserunt aut quam minus sit mollitia repellat aut quia temporibus! Ut eius enim cum maiores veniam eum animi cupiditate. Quo error quia et dolores deleniti non quae tempore aut excepturi nemo. Qui minima alias quo internos voluptas qui voluptates accusamus et esse autem.
-                    Id odit soluta est temporibus consequatur et harum fugit qui cupiditate modi vel nobis suscipit. Et sint dolorum sit doloribus harum quo eius quasi eum fugiat ipsa qui eaque incidunt. A quidem doloremque qui iure laborum sit unde veniam. Ut omnis iste et omnis omnis et nemo deleniti est libero voluptatem aut placeat harum et reprehenderit nobis ut illum voluptatum.
+                <p>{{ paciente.nota_enfermeria }}
                     </p> 
             </div>
 
@@ -264,7 +262,7 @@
 
     <div class="fixed-bottom-border">
         <center>
-            <a href=" {% url 'pacientesEnfermero' %}">
+            <a href=" {% url 'mostrarPacientesMedico' %}">
             <div class="icon-container">
                 <div class="icon-item">
                     <img src="{% static 'assets/interfaz/patients.png' %}">

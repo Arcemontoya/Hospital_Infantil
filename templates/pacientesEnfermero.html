@@ -102,18 +102,19 @@
                 <th>Fecha de ingreso</th>
             </tr>
         </thead>
-        {% for paciente in Paciente%}
-        <tr>
-            <td>{{ paciente.nombre }}</td>
-            <td>{{ paciente.expediente }}</td>
-            <td>{{ paciente.fecha_ingreso }}</td>
-
-        </tr>
+        <tbody>
+            {% for paciente in Pacientes %}
+            <tr onclick="window.location='{% url 'perfilPacienteEnfermero' paciente.expediente %}'" style="cursor: pointer;">
+                <td>{{ paciente.nombre }}</td>
+                <td>{{ paciente.expediente }}</td>
+                <td>{{ paciente.fecha_ingreso }}</td>
+            </tr>
             {% empty %}
-        <tr>
-            <td colspan="3">No hay pacientes registrados</td>
-        </tr>
-        {% endfor %}
+            <tr>
+                <td colspan="3">No hay pacientes registrados</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
 
 </body>

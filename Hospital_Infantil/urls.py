@@ -19,6 +19,7 @@ from django.urls import path, include
 from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
+from .views import RegistroPaciente, RegistroUsuario, CustomLoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,7 +28,7 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
 
     # Login view
-    path('', LoginView.as_view(template_name='login.html'), name='login'),
+    path('', CustomLoginView.as_view(), name='login'),
 
     # Logout view
     path('logout/', LogoutView.as_view(), name='logout'),
@@ -38,12 +39,11 @@ urlpatterns = [
 
 
     # INTERFACES DE ENFERMERO
-    path('pacientesEnfermero/', views.pacientesEnfermero, name="pacientesEnfermero"),
-
     # Mostrar pacientesEnfermero
-    path('pacientesEnfermero/', views.mostrarPacientes, name='mostrarPacientes'),
+    path('pacientesEnfermero/', views.mostrarPacientesEnfermero, name='mostrarPacientesEnfermero'),
+    path('registroPaciente/', RegistroPaciente.as_view(), name="registroPaciente"),
 
-    path('registroPaciente/', views.registroPaciente, name="registroPaciente"),
+
     path('registroEstudiosyGabinete/', views.registroEstudiosyGabinete, name="registroEstudiosyGabinete"),
     path('estudiosyGabineteEnfermero/', views.estudiosyGabineteEnfermero, name="estudiosyGabineteEnfermero"),
     path('agregarEstudio/', views.agregarEstudio, name="agregarEstudio"),
@@ -51,13 +51,13 @@ urlpatterns = [
 
     # INTERFACES DE MEDICO
     path('registroTratamiento/', views.registroTratamiento, name="registroTratamiento"),
-    path('pacientesMedico/', views.pacientesMedico, name="pacientesMedico"),
+    path('pacientesMedico/', views.mostrarPacientesMedico, name="mostrarPacientesMedico"),
     path('perfilPacienteMedico/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
     path('estudiosyGabineteMedico/', views.estudiosyGabineteMedico, name="estudiosyGabineteMedico"),
 
     # INTERFACES DE ADMINISTRADOR
-    path('registroUsuario/', views.registroUsuario, name="registroUsuario"),
-    path('perfilUsuario/', views.perfilUsuario, name="perfilUsuario"),
+    path('registroUsuario/', RegistroUsuario.as_view(), name="registroUsuario"),
+    path('perfilUsuario/<int:id>/', views.perfilUsuario, name="perfilUsuario"),
     path('usuarios/', views.usuarios, name="usuarios"),
     path('usuariosDeshabilitados/', views.usuariosDeshabilitados, name="usuariosDeshabilitados"),
 
@@ -65,5 +65,7 @@ urlpatterns = [
     path('signosVitales/', views.signosVitales, name="signosVitales"),
     path('radiografia/', views.radiografia, name="radiografia"),
     path('estudio/', views.estudio, name="estudio"),
-    path('perfilPacienteEnfermero/', views.perfilPacienteEnfermero, name="perfilPacienteEnfermero"),
+
+    path('perfilPacienteEnfermero/<int:expediente>/', views.perfilPacienteEnfermero, name="perfilPacienteEnfermero"),
+    path('perfilPacienteMedico/<int:expediente>/', views.perfilPacienteMedico, name="perfilPacienteMedico")
 ]

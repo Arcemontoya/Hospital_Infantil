@@ -140,7 +140,7 @@
 
     <body>
         <center>
-            <form method="post" action="{% url 'registroPaciente' %}">
+            <form action="{% url 'registroPaciente' %}" method="post">
                 {% csrf_token %}
                 <div class="form-container">
                     <div class="section-title"><h2>Características del paciente</h2></div>
@@ -185,7 +185,7 @@
                     <h3>Ingrese nota de enfermería</h3>
                     {{ form.nota_enfermeria }}
                 </div>
-                <a href=" {% url 'pacientesEnfermero' %}">
+                <a href="{% url 'mostrarPacientesMedico' %}"> 
                     <button type="submit"><b>Registrar</b></button>
                 </a>
             </center>

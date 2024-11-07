@@ -242,10 +242,10 @@
             </tr>
         </thead>
         {% for user in users%}
-        <tr>
+        <tr onclick="window.location='{% url 'perfilUsuario' user.id %}'" style="cursor: pointer;">
             <td>{{ user.username }}</td>
             <td>{{ user.id }}</td>
-
+            <td>{{ user.user_profile.fecha_registro|date:"d-m-Y" }}</td>
         </tr>
             {% empty %}
         <tr>
@@ -265,7 +265,7 @@
                 
                 <!-- Menú desplegable -->
                 <ul class="dropdown-menu">
-                    <li><a href = "{% url 'pacientesEnfermero' %}" class="dropdown-item" href="#">Interfaz enfermero</a></li>
+                    <li><a href = "{% url 'mostrarPacientesEnfermero' %}" class="dropdown-item" href="#">Interfaz enfermero</a></li>
                 </ul>
             </div>
         </div>

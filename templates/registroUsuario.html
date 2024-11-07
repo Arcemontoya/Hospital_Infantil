@@ -154,7 +154,7 @@
                 {{ form.username }}
                 
                 <h3>Fecha de ingreso: </h3>
-                <input type="date" id="fechaIngreso" name="fechaIngreso" placeholder="Ingrese fecha de ingreso">
+                {{ profile_form.fecha_registro }}
                 
                 <h3>Correo: </h3>
                 {{ form.email }}
@@ -169,25 +169,18 @@
 
             <div class="form-container">
                 <div class="section-title"><h2>Cédula profesional</h2></div>
-                <input type="text" id="cedulaProfesional" name="cedulaProfesional" placeholder="Ingrese cédula profesional">
+                {{ profile_form.cedula_profesional }}
             </div>
 
             <div class="form-container">
                 <div class="section-title"><h2>Ocupación</h2></div>
                 <h3>Ocupación</h3>
-                <select name="ocupacion" id="ocupacion" required>
-                    <option value="" disabled selected>Selecciona una ocupación</option>
-                    <option value="ADMINISTRADOR">ADMINISTRADOR</option>
-                    <option value="MEDICO">MÉDICO</option>
-                    <option value="ENFERMERO">ENFERMERO</option>
-                </select>
+                {{ profile_form.funcionalidad }}
+
+
             </div>
-            <a href="{% url 'usuarios' %}"> 
                 <button type="submit"><b>Registrar</b></button>
-            </a>
         </form>
-        <!-- Fin del formulario -->
     </center>
 </body>
-</html>
 </html>
