@@ -148,59 +148,46 @@
 <body>
 
     <center>
-        <div class="form-container">
-            <div class="section-title"><h2>Tratamiento</h2></div>
+        <form action="{% url 'agregarTratamiento' expediente=paciente.expediente %}" method="post">
+            {% csrf_token %}
             
-            <h3>Nombre del medicamento: </h3>
-            <input type="text" id="nombreMedicamento" name="nombreMedicamento" placeholder="Ingrese medicamento.">
-            
-            <h3>Dosis administrada: </h3>
-            <input type="text" id="dosisAdministrada" name="dosisAdministrada" placeholder="Ingrese dosis administrada.">
+            <div class="form-container">
+                <div class="section-title"><h2>Tratamiento</h2></div>
 
-            <h3>Via</h3>
-            <select name="Via" id="Via" placeholder="wenas">
-                <option value="" disabled selected>Selecciona una vía</option>
-                <option value="CUTANEA">CUTANEA</option>
-                <option value="INHALADA">INHALADA</option>
-                <option value="IM-INTRAMUSCULAR">INTRADERMICA</option>
-                <option value="IV-INTRAVENOSA">IV-INTRAVENOSA</option>
-                <option value="NASAL">NASAL</option>
-            </select>
+                <h3>Nombre del medicamento:</h3>
+                {{ form.nombre_Medicamento }}
 
-        </div>
+                <h3>Dosis administrada:</h3>
+                {{ form.dosis_Administrada }}
 
-  
-        <div class="form-container">
-            <div class="section-title"><h2>Frecuencia y duración</h2></div>
-        
-            <h3>Ingrese frecuencia de dosis</h3>
-            <input type="text" name="frecuenciaDosis" id="frecuenciaDosis" placeholder="Ingrese un número">
+                <h3>Vía:</h3>
+                {{ form.via_Administracion }}
+            </div>
 
-            <h3>Tiempo</h3>
-            <select name="Tiempo" id="Tiempo">
-                <option value="" disabled selected>Selecciona una unidad de tiempo</option>
-                <option value="HRS">HRS</option>
-                <option value="MINS">MINS</option>
-                <option value="UNICA">UNICA</option>
-                <option value="PRN">PRN</option>
-            </select>
+            <div class="form-container">
+                <div class="section-title"><h2>Frecuencia y duración</h2></div>
 
-            <h3>Duracion de terapia en días:</h3>
-            <input type="text" name="terapiaDias" id="terapiaDias" placeholder="Ingrese la duración de terapia">
-        </div>
+                <h3>Ingrese frecuencia de dosis:</h3>
+                {{ form.frecuencia_Dosis }}
 
+                <h3>Tiempo:</h3>
+                {{ form.tiempo_Dosis }}
 
-        <div class="form-container">
-            <div class="section-title"><h2>Otras indicaciones</h2></div>
-            <textarea id="OtrasIndicaciones" name="OtrasIndicaciones" rows="4" cols="50" placeholder="Ingrese otras indicaciones de tratamiento"></textarea>
-        </div>
+                <h3>Duración de terapia en días:</h3>
+                {{ form.duracion_Terapia }}
+            </div>
 
-    </div>
+            <div class="form-container">
+                <div class="section-title"><h2>Otras indicaciones</h2></div>
+                {{ form.otras_Indicaciones }}
+            </div>
 
-        <a href="{% url 'perfilPacienteMedico'%}">
+        <a href="{% url 'mostrarPacientesMedico' %}">
             <button type="button"><b>Registrar</b></button>
         </a>
-    </center>
+    </form>
+    
+</center>
 
     
 

@@ -19,7 +19,7 @@ from django.urls import path, include
 from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import RegistroPaciente, RegistroUsuario, CustomLoginView
+from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -50,7 +50,7 @@ urlpatterns = [
     path('pacientesDeshabiltiados/', views.pacientesDeshabilitados, name="pacientesDeshabilitados"),
 
     # INTERFACES DE MEDICO
-    path('registroTratamiento/', views.registroTratamiento, name="registroTratamiento"),
+    path('paciente/<int:expediente>/agregar_tratamiento/', RegistroTratamiento.as_view(), name='agregarTratamiento'),
     path('pacientesMedico/', views.mostrarPacientesMedico, name="mostrarPacientesMedico"),
     path('perfilPacienteMedico/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
     path('estudiosyGabineteMedico/', views.estudiosyGabineteMedico, name="estudiosyGabineteMedico"),

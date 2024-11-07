@@ -118,7 +118,7 @@ class PacienteForm(forms.ModelForm):
                   "cirugia_realizada", "peso", "altura", "diagnostico_clinico_prequirurgico", "nota_enfermeria", "medico_Encargado"]
 
 
-class Tratamiento(forms.ModelForm):
+class TratamientoForm(forms.ModelForm):
     nombre_Medicamento = forms.CharField(
         required=True,
         widget=forms.TextInput(attrs={'placeholder' : 'Ingrese el nombre del medicamento.'})
@@ -130,9 +130,9 @@ class Tratamiento(forms.ModelForm):
     )
 
     """
-    via_Administracion = forms.CharField(
+    via_Administracion = forms.ChoiceField(
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Ingrese via de administración.'})
+        widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Ingrese la vía de administración.'})
     )
     """
 

@@ -10,11 +10,11 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import FormView
 
-from .forms import RegisterForm, PacienteForm, UserProfileForm
+from .forms import RegisterForm, PacienteForm, UserProfileForm, TratamientoForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login
 
-from .models import Paciente, UserProfile
+from .models import Paciente, UserProfile, Tratamiento
 
 
 # LOGIN
@@ -78,7 +78,8 @@ def registroEstudiosyGabinete(request):
 
 def perfilPacienteEnfermero(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
-    return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente})
+    tratamientos = Tratamiento.objects.filter(paciente=paciente)
+    return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente, 'tratamiento': tratamientos})
 
 
 def agregarEstudio(request):
@@ -95,8 +96,33 @@ def pacientesDeshabilitados(request):
 
 # INTERFACES DE MEDICO
 
-def registroTratamiento(request):
-    return HttpResponse(render(request, "registroTratamiento.html"))
+class RegistroTratamiento(FormView):
+    template_name = "registroTratamiento.html"
+    form_class = TratamientoForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
+        context['expediente'] = expediente
+        context['paciente'] = paciente
+        return context
+
+    def form_valid(self, form):
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente)
+
+        # Asociar el tratamiento con el paciente
+        tratamiento = form.save(commit=False)
+        tratamiento.paciente = paciente
+        tratamiento.save()
+
+        # Redirige después de guardar, por ejemplo, a la vista del perfil del paciente
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        expediente = self.kwargs.get('expediente')
+        return reverse_lazy('perfilPacienteMedico', kwargs={'expediente': expediente})
 
 
 def pacientesMedico(request):
@@ -105,8 +131,9 @@ def pacientesMedico(request):
 
 def perfilPacienteMedico(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
-    return render(request, "perfilPacienteMedico.html", {'paciente': paciente})
-
+    tratamientos = Tratamiento.objects.filter(paciente=expediente)
+    print(tratamientos)
+    return render(request, "perfilPacienteMedico.html", {'paciente': paciente, 'tratamientos': tratamientos})
 
 def estudiosyGabineteMedico(request):
     return HttpResponse(render(request, "estudiosyGabineteMedico.html"))
