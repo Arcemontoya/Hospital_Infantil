@@ -20,7 +20,7 @@ from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
 from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, edicionTratamiento, \
-    edicionPaciente, edicionUsuario
+    edicionPaciente, edicionUsuario, logout_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,7 +32,7 @@ urlpatterns = [
     path('', CustomLoginView.as_view(), name='login'),
 
     # Logout view
-    path('logout/', LogoutView.as_view(), name='logout'),
+    path('logout_view/', views.logout_view, name='logout_view'),
 
     # Mostrar usuarios
     path('usuarios/', views.mostrarUsuarios, name='mostrarUsuarios'),

@@ -48,7 +48,9 @@ class CustomLoginView(View):
             messages.error(request, "Nombre de usuario o contraseña incorrectos.")
         return render(request, 'registration/login.html', {'form': form})
 
-
+def logout_view(request):
+    logout(request)
+    return redirect('login')
 
 # --------------------------------------------| INTERFACES DE ENFERMERO |--------------------------------------------
 def pacientesEnfermero(request):
