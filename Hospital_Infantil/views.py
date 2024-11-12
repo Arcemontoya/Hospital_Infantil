@@ -90,8 +90,8 @@ def registroEstudiosyGabinete(request):
 
 def perfilPacienteEnfermero(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
-    tratamientos = Tratamiento.objects.filter(paciente=paciente)
-    return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente, 'tratamiento': tratamientos})
+    tratamientos = Tratamiento.objects.filter(paciente=expediente)
+    return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente, 'tratamientos': tratamientos})
 
 
 def agregarEstudio(request):
@@ -132,21 +132,49 @@ class RegistroTratamiento(FormView):
         # Redirige después de guardar, por ejemplo, a la vista del perfil del paciente
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        print(form.errors)
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(f"Error en el campo '{field}': {error}")
+        return super().form_invalid(form)
+
     def get_success_url(self):
         expediente = self.kwargs.get('expediente')
         return reverse_lazy('perfilPacienteMedico', kwargs={'expediente': expediente})
 
-class edicionTratamiento(UpdateView):
-    model = Tratamiento
-    form_class = TratamientoForm
-    template_name = "editarTratamiento.html"
-    success_url = reverse_lazy('perfilPacienteMedico')
+def edicionTratamiento(request, expediente, id_tratamiento):
+    # Obtener el paciente y el tratamiento asociado
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_tratamiento, paciente=paciente)
+
+    if request.method == 'POST':
+        # Crear un formulario con los datos enviados
+        form = TratamientoForm(request.POST, instance=tratamiento)
+        if form.is_valid():
+            form.save()  # Guardar cambios en el tratamiento
+            messages.success(request, "Tratamiento editado con éxito.")
+            # Redirigir al perfil del paciente después de la edición
+            return redirect('perfilPacienteMedico', expediente=paciente.expediente)
+        else:
+            messages.error(request, "Por favor, corrige los errores en el formulario.")
+    else:
+        # Crear el formulario con la instancia del tratamiento para editar
+        form = TratamientoForm(instance=tratamiento)
+
+    return render(request, 'editarTratamiento.html', {'form': form, 'paciente': paciente, 'tratamiento': tratamiento})
 
 def perfilPacienteMedico(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     tratamientos = Tratamiento.objects.filter(paciente=expediente)
-    print(tratamientos)
     return render(request, "perfilPacienteMedico.html", {'paciente': paciente, 'tratamientos': tratamientos})
+
+def listaTratamientos(request, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    tratamientos = Tratamiento.objects.filter(paciente=expediente)
+    return render(request, "listaTratamientos.html", {'paciente': paciente, 'tratamientos': tratamientos})
+
+
 
 def estudiosyGabineteMedico(request):
     return HttpResponse(render(request, "estudiosyGabineteMedico.html"))
@@ -199,12 +227,6 @@ class RegistroUsuario(FormView):
         return self.render_to_response(
             self.get_context_data(form=form, profile_form=profile_form)
         )
-
-class edicionUsuario(UpdateView):
-    model = Tratamiento
-    form_class = TratamientoForm
-    template_name = "editarUsuario.html"
-    success_url = reverse_lazy('usuarios')
 
 def perfilUsuario(request, id):
     user = get_object_or_404(User, id=id)

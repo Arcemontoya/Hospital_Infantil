@@ -142,7 +142,7 @@
     <body>
 
         <center>
-            <form action="{% url 'editarTratamiento' expediente=paciente.expediente %}" method="post">
+            <form action="{% url 'edicionTratamiento' expediente=paciente.expediente id_tratamiento=tratamiento.id_Tratamiento%}" method="post">
                 {% csrf_token %}
                 
                 <div class="form-container">
@@ -177,7 +177,7 @@
                 </div>
 
             <a href="{% url 'mostrarPacientesMedico' %}">
-                <button type="button"><b>Registrar</b></button>
+                <button type="submit"><b>Registrar</b></button>
             </a>
         </form>
         

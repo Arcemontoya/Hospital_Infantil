@@ -20,7 +20,7 @@ from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
 from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, edicionTratamiento, \
-    edicionPaciente, edicionUsuario, logout_view
+    edicionPaciente, logout_view, listaTratamientos
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -55,14 +55,15 @@ urlpatterns = [
     path('pacientesMedico/', views.mostrarPacientesMedico, name="mostrarPacientesMedico"),
     path('perfilPacienteMedico/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
     path('estudiosyGabineteMedico/', views.estudiosyGabineteMedico, name="estudiosyGabineteMedico"),
-    path('paciente/<int:expediente>/editar_tratamiento/', edicionTratamiento.as_view(), name='edicionTratamiento'),
+    path('paciente/<int:expediente>/editar_tratamiento/<int:id_tratamiento>/', views.edicionTratamiento, name='edicionTratamiento'),
+    path('paciente/<int:expediente>/listaTratamiento/', views.listaTratamientos, name='listaTratamientos'),
 
     # ------------------------------------------------| INTERFACES DE ADMINISTRADOR |------------------------------------------------
     path('registroUsuario/', RegistroUsuario.as_view(), name="registroUsuario"),
     path('perfilUsuario/<int:id>/', views.perfilUsuario, name="perfilUsuario"),
     path('usuarios/', views.usuarios, name="usuarios"),
     path('usuariosDeshabilitados/', views.usuariosDeshabilitados, name="usuariosDeshabilitados"),
-    path('edicion_Usuario/<int:id>/', edicionUsuario.as_view(), name="edicionUsuario"),
+    #path('edicion_Usuario/<int:id>/', edicionUsuario.as_view(), name="edicionUsuario"),
 
     # ------------------------------------------------| INTERFACES GENERALES |------------------------------------------------
     path('signosVitales/', views.signosVitales, name="signosVitales"),

@@ -218,11 +218,11 @@
 
             {% for tratamiento in tratamientos %}
             <div class="form-container">
-                <div class="section-title"><h2>{{ forloop.counter }}</h2></div>
+                <div class="section-title"><h2> Tratamiento {{ forloop.counter }}</h2></div>
                 <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
                 <h3>Dosis administrada: {{ tratamiento.dosis_Administrada }}</h3>
                 <h3>Vía de administración: {{ tratamiento.via_Administracion }}</h3>
-                <h3>Frecuencia de dosis: {{ tratamiento.frecuencia_Dosis }} cada {{tratamiento.tiempo_Dosis}}</h3>
+                <h3>Frecuencia de dosis: Cada {{ tratamiento.frecuencia_Dosis }} {{tratamiento.tiempo_Dosis}}</h3>
                 <h3>Duración de la terapia: {{ tratamiento.duracion_Terapia }} días</h3>
                 <h3>Otras indicaciones: {{ tratamiento.nombre_Medicamento }}</h3>
                 <p> {{ tratamiento.otras_Indicaciones }} </p> 
@@ -259,7 +259,7 @@
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'agregarTratamiento' expediente=paciente.expediente %}">Agregar Tratamiento</a></li>
-                        <li><a href = "{% url 'editarTratamiento' expediente=paciente.expediente %}" class="dropdown-item">Editar tratamiento</a></li>
+                        <li><a href = "{% url 'listaTratamientos' expediente=paciente.expediente %}" class="dropdown-item">Editar tratamiento</a></li>
                         <li><a class="dropdown-item" href="#">Llamar paciente</a></li>
                         <li><a class="dropdown-item" href="#">Llamar enfermero</a></li>
                         <li><a href = "{% url 'estudiosyGabineteMedico' %}" class="dropdown-item">Estudios y gabinete</a></li>

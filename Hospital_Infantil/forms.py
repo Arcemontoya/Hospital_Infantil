@@ -124,7 +124,7 @@ class TratamientoForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'placeholder' : 'Ingrese el nombre del medicamento.'})
     )
 
-    dosis_administrada = forms.CharField(
+    dosis_Administrada = forms.CharField(
         required=True,
         widget=forms.TextInput(attrs={'placeholder': 'Ingrese dosis administrada.'})
     )
