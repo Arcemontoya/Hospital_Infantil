@@ -63,7 +63,7 @@ urlpatterns = [
     path('perfilUsuario/<int:id>/', views.perfilUsuario, name="perfilUsuario"),
     path('usuarios/', views.usuarios, name="usuarios"),
     path('usuariosDeshabilitados/', views.usuariosDeshabilitados, name="usuariosDeshabilitados"),
-    #path('edicion_Usuario/<int:id>/', edicionUsuario.as_view(), name="edicionUsuario"),
+    path('edicion_Usuario/<int:id>/', views.edicionUsuario, name="edicionUsuario"),
 
     # ------------------------------------------------| INTERFACES GENERALES |------------------------------------------------
     path('signosVitales/', views.signosVitales, name="signosVitales"),

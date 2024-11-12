@@ -228,6 +228,37 @@ class RegistroUsuario(FormView):
             self.get_context_data(form=form, profile_form=profile_form)
         )
 
+def edicionUsuario(request, id):
+    # Obtener el usuario y perfil asociados, o mostrar un 404 si no se encuentran
+    user = get_object_or_404(User, id=id)
+    user_profile = get_object_or_404(UserProfile, user=user)
+
+    if request.method == "POST":
+        # Cargar el formulario con los datos enviados y las instancias actuales
+        user_form = RegisterForm(request.POST, instance=user)
+        profile_form = UserProfileForm(request.POST, instance=user_profile)
+
+        # Guardar los formularios si son válidos
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save(commit=True)
+            profile_form.save(commit=True)
+            messages.success(request, "Usuario actualizado con éxito.")
+            return redirect('perfilUsuario', id=user.id)
+        else:
+            messages.error(request, "Hubo un error al actualizar el usuario.")
+    else:
+        # Inicializar los formularios con los datos actuales del usuario y perfil
+        user_form = RegisterForm(instance=user)
+        profile_form = UserProfileForm(instance=user_profile)
+
+    # Renderizar la página con los formularios y datos actuales
+    return render(request, 'editarUsuario.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+        'user_data': user,
+        'profile_data': user_profile
+    })
+
 def perfilUsuario(request, id):
     user = get_object_or_404(User, id=id)
     user_profile = get_object_or_404(UserProfile, user=user)

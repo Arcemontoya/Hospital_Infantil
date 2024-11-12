@@ -125,5 +125,55 @@
         }
     </style>
 
+<head>
+
+    <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
+
+    <div class="fixed-top-border">
+        <a onclick="goBack()">
+            <img src="{% static 'assets/Interfaz/previous.png'%}">
+        </a>
+        <h1>Edición de usuario</h1>
+
+    </div>
+
+</head>
+
+<body>
+    <center>
+        <!-- Inicia el formulario -->
+        <form action="{% url 'edicionUsuario' id=user_data.id %}" method="post">
+            {% csrf_token %}
+            
+            <div class="form-container">
+                <div class="section-title"><h2>Características del usuario</h2></div>
+                <h3>Nombre del usuario: </h3>
+                {{ user_form.username }}
+                
+                <h3>Fecha de ingreso: </h3>
+                {{ profile_form.fecha_registro }}
+                
+                <h3>Correo: </h3>
+                {{ user_form.email }}
+                
+            </div>
+
+            <div class="form-container">
+                <div class="section-title"><h2>Cédula profesional</h2></div>
+                {{ profile_form.cedula_profesional }}
+            </div>
+
+            <div class="form-container">
+                <div class="section-title"><h2>Ocupación</h2></div>
+                <h3>Ocupación</h3>
+                {{ profile_form.funcionalidad }}
+
+
+            </div>
+                <button type="submit"><b>Registrar</b></button>
+        </form>
+    </center>
+</body>
+
 
 </html>

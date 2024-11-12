@@ -230,7 +230,7 @@
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu">
                         <li><a href = "{% url 'usuarios' %}" class="dropdown-item" href="{ % static 'usuarios.html' %}">Deshabilitar usuario</a></li>
-                        <li><a href = "{% url 'registroUsuario' %}" class="dropdown-item" href="#">Editar usuario</a></li>
+                        <li><a href = "{% url 'edicionUsuario' id=user.id %}" class="dropdown-item">Editar usuario</a></li>
                         <li><a href = "{% url 'mostrarPacientesEnfermero' %}" class="dropdown-item" href="#">Interfaz enfermero</a></li>
                     </ul>
                 </div>
