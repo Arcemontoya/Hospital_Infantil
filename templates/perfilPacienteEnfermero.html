@@ -261,7 +261,7 @@
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu">
                         <li><a href = "{% url 'mostrarPacientesEnfermero' %}" class="dropdown-item">Deshabilitar paciente</a></li>
-                        <li><a href = "{% url 'registroPaciente' %}" class="dropdown-item" href="#">Editar paciente</a></li>
+                        <li><a href = "{% url 'editarPaciente' expediente=paciente.expediente %}" class="dropdown-item">Editar paciente</a></li>
                         <li><a class="dropdown-item" href="#">Llamar doctor</a></li>
                         <li><a href = "{% url 'estudiosyGabineteEnfermero' %}" class="dropdown-item">Estudios y gabinete</a></li>
                     </ul>

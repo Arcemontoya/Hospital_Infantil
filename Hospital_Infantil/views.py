@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import FormView
+from django.views.generic import FormView, UpdateView
 
 from .forms import RegisterForm, PacienteForm, UserProfileForm, TratamientoForm
 from django.contrib.auth.models import User
@@ -17,7 +17,7 @@ from django.contrib.auth import login as auth_login
 from .models import Paciente, UserProfile, Tratamiento
 
 
-# LOGIN
+# --------------------------------------------| LOGIN |--------------------------------------------
 class CustomLoginView(View):
     def get(self, request):
         form = AuthenticationForm()
@@ -50,7 +50,7 @@ class CustomLoginView(View):
 
 
 
-# INTERFACES DE ENFERMERO
+# --------------------------------------------| INTERFACES DE ENFERMERO |--------------------------------------------
 def pacientesEnfermero(request):
     return render(request, "pacientesEnfermero.html")
 
@@ -71,6 +71,16 @@ class RegistroPaciente(FormView):
                 print(f"Error en el campo '{field}': {error}")
         return super().form_invalid(form)
 
+def edicionPaciente(request, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    if request.method == 'POST':
+        form = PacienteForm(request.POST, instance=paciente)
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('mostrarPacientesEnfermero')
+    else:
+        form = PacienteForm(instance=paciente)
+    return render(request, 'editarPaciente.html', {'form': form, 'paciente': paciente})
 
 def registroEstudiosyGabinete(request):
     return HttpResponse(render(request, "registroEstudiosyGabinete.html"))
@@ -94,7 +104,7 @@ def pacientesDeshabilitados(request):
     return HttpResponse(render(request, "pacientesDeshabilitados.html")),
 
 
-# INTERFACES DE MEDICO
+# --------------------------------------------| INTERFACES DE MEDICO |--------------------------------------------
 
 class RegistroTratamiento(FormView):
     template_name = "registroTratamiento.html"
@@ -124,10 +134,11 @@ class RegistroTratamiento(FormView):
         expediente = self.kwargs.get('expediente')
         return reverse_lazy('perfilPacienteMedico', kwargs={'expediente': expediente})
 
-
-def pacientesMedico(request):
-    return render(request, "pacientesMedico.html")
-
+class edicionTratamiento(UpdateView):
+    model = Tratamiento
+    form_class = TratamientoForm
+    template_name = "editarTratamiento.html"
+    success_url = reverse_lazy('perfilPacienteMedico')
 
 def perfilPacienteMedico(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
@@ -139,7 +150,9 @@ def estudiosyGabineteMedico(request):
     return HttpResponse(render(request, "estudiosyGabineteMedico.html"))
 
 
-# INTERFACES DE ADMINISTRADOR
+
+
+# --------------------------------------------| INTERFACES DE ADMINISTRADOR |--------------------------------------------
 
 class RegistroUsuario(FormView):
     template_name = 'registroUsuario.html'
@@ -185,6 +198,11 @@ class RegistroUsuario(FormView):
             self.get_context_data(form=form, profile_form=profile_form)
         )
 
+class edicionUsuario(UpdateView):
+    model = Tratamiento
+    form_class = TratamientoForm
+    template_name = "editarUsuario.html"
+    success_url = reverse_lazy('usuarios')
 
 def perfilUsuario(request, id):
     user = get_object_or_404(User, id=id)
@@ -197,11 +215,14 @@ def usuarios(request):
     return render(request, "usuarios.html", {'users': users})
 
 
+# --------------------------------------------| INTERFACES DE VISTA GENERAL |--------------------------------------------
+
+def pacientesDeshabilitados(request):
+    return HttpResponse(render(request, "usuariosDeshabilitados.html"))
+
 def usuariosDeshabilitados(request):
     return HttpResponse(render(request, "usuariosDeshabilitados.html"))
 
-
-# INTERFACES VISTA GENERAL
 def signosVitales(request):
     return HttpResponse(render(request, "signosVitales.html"))
 
@@ -214,7 +235,7 @@ def estudio(request):
     return HttpResponse(render(request, "estudio.html"))
 
 
-# MUESTRA DE USUARIOS
+# --------------------------------------------| INTERFACES DE MUESTRA DE DATOS |--------------------------------------------
 
 def mostrarUsuarios(request):
     users = User.objects.all()

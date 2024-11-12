@@ -19,7 +19,8 @@ from django.urls import path, include
 from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento
+from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, edicionTratamiento, \
+    edicionPaciente, edicionUsuario
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,30 +39,32 @@ urlpatterns = [
 
 
 
-    # INTERFACES DE ENFERMERO
+    # ------------------------------------------------| INTERFACES DE ENFERMERO |------------------------------------------------
     # Mostrar pacientesEnfermero
     path('pacientesEnfermero/', views.mostrarPacientesEnfermero, name='mostrarPacientesEnfermero'),
     path('registroPaciente/', RegistroPaciente.as_view(), name="registroPaciente"),
-
+    path('pacientes/editar/<int:expediente>/', views.edicionPaciente, name="editarPaciente"),
 
     path('registroEstudiosyGabinete/', views.registroEstudiosyGabinete, name="registroEstudiosyGabinete"),
     path('estudiosyGabineteEnfermero/', views.estudiosyGabineteEnfermero, name="estudiosyGabineteEnfermero"),
     path('agregarEstudio/', views.agregarEstudio, name="agregarEstudio"),
-    path('pacientesDeshabiltiados/', views.pacientesDeshabilitados, name="pacientesDeshabilitados"),
+    path('pacientesDeshabiltados/', views.pacientesDeshabilitados, name="pacientesDeshabilitados"),
 
-    # INTERFACES DE MEDICO
+    # ------------------------------------------------| INTERFACES DE MEDICO |------------------------------------------------
     path('paciente/<int:expediente>/agregar_tratamiento/', RegistroTratamiento.as_view(), name='agregarTratamiento'),
     path('pacientesMedico/', views.mostrarPacientesMedico, name="mostrarPacientesMedico"),
     path('perfilPacienteMedico/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
     path('estudiosyGabineteMedico/', views.estudiosyGabineteMedico, name="estudiosyGabineteMedico"),
+    path('paciente/<int:expediente>/editar_tratamiento/', edicionTratamiento.as_view(), name='edicionTratamiento'),
 
-    # INTERFACES DE ADMINISTRADOR
+    # ------------------------------------------------| INTERFACES DE ADMINISTRADOR |------------------------------------------------
     path('registroUsuario/', RegistroUsuario.as_view(), name="registroUsuario"),
     path('perfilUsuario/<int:id>/', views.perfilUsuario, name="perfilUsuario"),
     path('usuarios/', views.usuarios, name="usuarios"),
     path('usuariosDeshabilitados/', views.usuariosDeshabilitados, name="usuariosDeshabilitados"),
+    path('edicion_Usuario/<int:id>/', edicionUsuario.as_view(), name="edicionUsuario"),
 
-    #INTERFACES GENERALES
+    # ------------------------------------------------| INTERFACES GENERALES |------------------------------------------------
     path('signosVitales/', views.signosVitales, name="signosVitales"),
     path('radiografia/', views.radiografia, name="radiografia"),
     path('estudio/', views.estudio, name="estudio"),

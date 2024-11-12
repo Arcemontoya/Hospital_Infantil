@@ -28,7 +28,7 @@ class UserProfile(models.Model):
 
 # ------------------------------------------ |PACIENTE| ------------------------------------------------------------
 class Paciente(models.Model):
-    expediente = models.AutoField(primary_key=True)
+    expediente = models.AutoField(primary_key=True, unique=True)
     nombre = models.CharField(max_length=50, blank=False)
 
     apellido_paterno = models.CharField(max_length=50, blank=False)
@@ -80,7 +80,7 @@ class Tratamiento(models.Model):
         ('vaginal', 'VAGINAL'),
     ]
 
-    id_Tratamiento = models.AutoField(primary_key=True)
+    id_Tratamiento = models.AutoField(primary_key=True, unique=True)
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='tratamientos', null=True)
     nombre_Medicamento = models.CharField(max_length=50)
     dosis_Administrada = models.FloatField()
