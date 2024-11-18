@@ -44,17 +44,19 @@
         {
             display: flex;
             justify-content: space-between;
+            width: 100%;
         }
 
         .icon-item
         {
             position: relative;
-            margin: 0 5px; /* Espaciado entre los íconos */
+            margin: 0px; /* Espaciado entre los íconos */
             text-align: center; /* Asegura que el texto esté centrado */
         }
 
         .icon-item img
         {
+            margin-left: 0%;
             margin-bottom: 40px;
             scale: 40%;
         }
@@ -222,65 +224,65 @@
 
     <body>
         <table>
-                
-            <tr class="clickable-row" href="{% url 'perfilPacienteEnfermero' %}">
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Fecha de ingreso</th>
-            </tr>
-            <tr>
-                <td>Nombre</td>
-                <td>Radiografía</td>
-                <td>13/10/2024</td>
-            </tr>
-            <tr>
-                <td>Nombre</td>
-                <td>Estudio</td>
-                <td>13/10/2024</td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Fecha de realización</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for estudio in estudios %}
+                <tr>
+                    <td>{{ estudio.nombre_Estudio }}</td>
+                    <td>Estudio</td>
+                    <td>{{ estudio.fecha_realizada }}</td>
+                </tr>
+                {% endfor %}
+                {% for radiografia in radiografias %}
+                <tr>
+                    <td>{{ radiografia.nombre_Radiografia }}</td>
+                    <td>radiografia</td>
+                    <td>{{ radiografia.fecha_realizada }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </body>
 
     <div class="fixed-bottom-border">
-        <center>
-            <a href=" {% url 'pacientesEnfermero' %}">
-            <div class="icon-container">
-                <div class="icon-item">
+        <div class="icon-container">
+            <div class="icon-item">
+                <a href="{% url 'mostrarPacientesEnfermero' %}">
                     <img src="{% static 'assets/interfaz/patients.png' %}">
                     <p>Pacientes</p>
-                </div>
-                
-                <a href=" {% url 'agregarEstudio' %}">
-                <div class="icon-item">
+                </a>
+            </div>
+            
+            <div class="icon-item">
+                <a href="{% url 'registroRadiografias' expediente=paciente.expediente %}">
                     <img src="{% static 'assets/interfaz/plus.png' %}">
                     <p>Nuevo estudio</p>
-                </div>
                 </a>
-                
-            <a href=" {% url 'signosVitales' %}">
-            <div class="icon-container">
-                <div class="icon-item">
+            </div>
+            
+            <div class="icon-item">
+                <a href="{% url 'signosVitales' %}">
                     <img src="{% static 'assets/interfaz/vitalSigns.png' %}">
                     <p>Signos V.</p>
+                </a>
             </div>
-            </a>
-
-            </a>
-            <div class="icon-container">
-                <div class="icon-item">
-                    <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
-                    <p>Más</p>
-
-                    <!-- Menú desplegable -->
-                    <ul class="dropdown-menu">
-                        <li><a href = "{% url 'pacientesEnfermero' %}" class="dropdown-item">Deshabilitar paciente</a></li>
-                        <li><a href = "{% url 'registroPaciente' %}" class="dropdown-item" href="#">Editar paciente</a></li>
-                        <li><a class="dropdown-item" href="#">Llamar doctor</a></li>
-                    </ul>
-
+    
+            <div class="icon-item">
+                <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
+                <p>Más</p>
+                <!-- Menú desplegable -->
+                <ul class="dropdown-menu">
+                    <li><a href="{% url 'editarPaciente' expediente=paciente.expediente %}" class="dropdown-item">Editar paciente</a></li>
+                    <li><a class="dropdown-item" href="#">Llamar doctor</a></li>
+                </ul>
             </div>
-            </a>
-
-        </center>
+        </div>
     </div>
+
 </HTML>

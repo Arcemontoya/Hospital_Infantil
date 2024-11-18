@@ -262,7 +262,7 @@
                         <li><a href = "{% url 'listaTratamientos' expediente=paciente.expediente %}" class="dropdown-item">Editar tratamiento</a></li>
                         <li><a class="dropdown-item" href="#">Llamar paciente</a></li>
                         <li><a class="dropdown-item" href="#">Llamar enfermero</a></li>
-                        <li><a href = "{% url 'estudiosyGabineteMedico' %}" class="dropdown-item">Estudios y gabinete</a></li>
+                        <li><a href = "{% url 'estudiosyGabineteMedico' expediente=paciente.expediente %}" class="dropdown-item">Estudios y gabinete</a></li>
                     </ul>
 
                 </div>

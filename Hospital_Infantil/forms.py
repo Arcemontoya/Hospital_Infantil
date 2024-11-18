@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-from .models import Paciente, Tratamiento, UserProfile
+from .models import Paciente, Tratamiento, UserProfile, Estudios, Radiografias
 
 
 class RegisterForm(UserCreationForm):
@@ -173,3 +173,32 @@ class TratamientoForm(forms.ModelForm):
                 }
             )
         }
+
+class EstudiosForm(forms.ModelForm):
+    nombre_Estudio = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder' : 'Ingrese el nombre del estudio.'}),
+    )
+
+    fecha_realizada = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date', 'placeholder': 'Ingrese fecha de realización del estudio.'})
+    )
+
+    class Meta:
+        model = Estudios
+        fields= ["nombre_Estudio", "fecha_realizada", "estudio"]
+
+class RadiografiasForm(forms.ModelForm):
+    nombre_Radiografia = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder' : 'Ingrese el nombre de la radiografía.'}),
+    )
+
+    fecha_realizada = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={'type': 'date', 'placeholder': 'Ingrese fecha de realización de la radiografía.'})
+    )
+    class Meta:
+        model = Radiografias
+        fields= ["nombre_Radiografia", "fecha_realizada", "radiografia"]

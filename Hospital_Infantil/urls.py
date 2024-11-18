@@ -14,13 +14,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
 from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, edicionTratamiento, \
-    edicionPaciente, logout_view, listaTratamientos
+    edicionPaciente, logout_view, listaTratamientos, RegistroEstudios, RegistroRadiografias
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,17 +46,15 @@ urlpatterns = [
     path('pacientesEnfermero/', views.mostrarPacientesEnfermero, name='mostrarPacientesEnfermero'),
     path('registroPaciente/', RegistroPaciente.as_view(), name="registroPaciente"),
     path('pacientes/editar/<int:expediente>/', views.edicionPaciente, name="editarPaciente"),
-
-    path('registroEstudiosyGabinete/', views.registroEstudiosyGabinete, name="registroEstudiosyGabinete"),
-    path('estudiosyGabineteEnfermero/', views.estudiosyGabineteEnfermero, name="estudiosyGabineteEnfermero"),
-    path('agregarEstudio/', views.agregarEstudio, name="agregarEstudio"),
+    path('registroEstudios/<int:expediente>/', RegistroEstudios.as_view(), name="registroEstudios"),
+    path('registroRadiografias/<int:expediente>/', RegistroRadiografias.as_view(), name="registroRadiografias"),
     path('pacientesDeshabiltados/', views.pacientesDeshabilitados, name="pacientesDeshabilitados"),
+    path('estudioyGabineteEnfermero/<int:expediente>/', views.estudios_GabineteEnfermero, name="estudioyGabineteEnfermero"),
 
     # ------------------------------------------------| INTERFACES DE MEDICO |------------------------------------------------
     path('paciente/<int:expediente>/agregar_tratamiento/', RegistroTratamiento.as_view(), name='agregarTratamiento'),
     path('pacientesMedico/', views.mostrarPacientesMedico, name="mostrarPacientesMedico"),
     path('perfilPacienteMedico/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
-    path('estudiosyGabineteMedico/', views.estudiosyGabineteMedico, name="estudiosyGabineteMedico"),
     path('paciente/<int:expediente>/editar_tratamiento/<int:id_tratamiento>/', views.edicionTratamiento, name='edicionTratamiento'),
     path('paciente/<int:expediente>/listaTratamiento/', views.listaTratamientos, name='listaTratamientos'),
 
@@ -73,3 +73,6 @@ urlpatterns = [
     path('perfilPacienteEnfermero/<int:expediente>/', views.perfilPacienteEnfermero, name="perfilPacienteEnfermero"),
     path('perfilPacienteMedico/<int:expediente>/', views.perfilPacienteMedico, name="perfilPacienteMedico")
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

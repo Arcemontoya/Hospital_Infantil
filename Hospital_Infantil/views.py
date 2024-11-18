@@ -6,15 +6,15 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import FormView, UpdateView
 
-from .forms import RegisterForm, PacienteForm, UserProfileForm, TratamientoForm
+from .forms import RegisterForm, PacienteForm, UserProfileForm, TratamientoForm, EstudiosForm, RadiografiasForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login as auth_login
 
-from .models import Paciente, UserProfile, Tratamiento
+from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios
 
 
 # --------------------------------------------| LOGIN |--------------------------------------------
@@ -84,23 +84,92 @@ def edicionPaciente(request, expediente):
         form = PacienteForm(instance=paciente)
     return render(request, 'editarPaciente.html', {'form': form, 'paciente': paciente})
 
-def registroEstudiosyGabinete(request):
-    return HttpResponse(render(request, "registroEstudiosyGabinete.html"))
-
 
 def perfilPacienteEnfermero(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     tratamientos = Tratamiento.objects.filter(paciente=expediente)
-    return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente, 'tratamientos': tratamientos})
+    radiografias = Radiografias.objects.filter(paciente=expediente)
+    estudios = Estudios.objects.filter(paciente=expediente)
+    return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente, 'tratamientos': tratamientos,
+                  'estudios': estudios, 'radiografias': radiografias})
 
 
 def agregarEstudio(request):
     return HttpResponse(render(request, "agregarEstudio.html"))
 
 
-def estudiosyGabineteEnfermero(request):
-    return HttpResponse(render(request, "estudiosyGabineteEnfermero.html"))
+def estudios_GabineteEnfermero(request, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
 
+    estudios = Estudios.objects.filter(paciente=paciente)
+    radiografias = Radiografias.objects.filter(paciente=paciente)
+
+    return render(request, 'estudiosyGabineteEnfermero.html',
+                  context={'paciente': paciente, 'estudios': estudios, 'radiografias': radiografias})
+
+class RegistroEstudios(FormView):
+    template_name = 'registroEstudio.html'
+    form_class = EstudiosForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
+        context['expediente'] = expediente
+        context['paciente'] = paciente
+        return context
+
+
+    def form_valid(self, form):
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente)
+
+        # Asociar el tratamiento con el paciente
+        estudio_registro = form.save(commit=False)
+        estudio_registro.paciente = paciente
+        estudio_registro.save()
+
+        self.success_url = reverse('estudioyGabineteEnfermero', args=[expediente])
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print(form.errors)
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(f"Error en el campo '{field}': {error}")
+        return super().form_invalid(form)
+
+class RegistroRadiografias(FormView):
+    template_name = 'registroRadiografia.html'
+    form_class = RadiografiasForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
+        context['expediente'] = expediente
+        context['paciente'] = paciente
+        return context
+
+
+    def form_valid(self, form):
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente)
+
+        # Asociar el tratamiento con el paciente
+        estudio_registro = form.save(commit=False)
+        estudio_registro.paciente = paciente
+        estudio_registro.save()
+
+        self.success_url = reverse('estudioyGabineteEnfermero', args=[expediente])
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print(form.errors)
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(f"Error en el campo '{field}': {error}")
+        return super().form_invalid(form)
 
 def pacientesDeshabilitados(request):
     return HttpResponse(render(request, "pacientesDeshabilitados.html")),
@@ -167,7 +236,11 @@ def edicionTratamiento(request, expediente, id_tratamiento):
 def perfilPacienteMedico(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     tratamientos = Tratamiento.objects.filter(paciente=expediente)
-    return render(request, "perfilPacienteMedico.html", {'paciente': paciente, 'tratamientos': tratamientos})
+    radiografias = Radiografias.objects.filter(paciente=expediente)
+    estudios = Estudios.objects.filter(paciente=expediente)
+    return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente, 'tratamientos': tratamientos,
+                  'estudios': estudios, 'radiografias': radiografias})
+
 
 def listaTratamientos(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
@@ -175,11 +248,18 @@ def listaTratamientos(request, expediente):
     return render(request, "listaTratamientos.html", {'paciente': paciente, 'tratamientos': tratamientos})
 
 
-
 def estudiosyGabineteMedico(request):
     return HttpResponse(render(request, "estudiosyGabineteMedico.html"))
 
 
+def estudios_GabineteMedico(request, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+
+    estudios = Estudios.objects.filter(paciente=paciente)
+    radiografias = Radiografias.objects.filter(paciente=paciente)
+
+    return render(request, 'estudiosyGabineteMedico.html',
+                  context={'paciente': paciente, 'estudios': estudios, 'radiografias': radiografias})
 
 
 # --------------------------------------------| INTERFACES DE ADMINISTRADOR |--------------------------------------------
@@ -304,3 +384,4 @@ def mostrarPacientesEnfermero(request):
 def mostrarPacientesMedico(request):
     pacientes = Paciente.objects.filter(medico_Encargado__user=request.user)
     return render(request, 'pacientesMedico.html', {'Pacientes': pacientes})
+

@@ -96,4 +96,18 @@ class Tratamiento(models.Model):
     duracion_Terapia = models.DecimalField(max_digits=2, decimal_places=0)
     otras_Indicaciones = models.CharField(max_length=1000, null=True)
 
+class Estudios(models.Model):
+    id_Estudio = models.AutoField(primary_key=True, unique=True)
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='estudios', null=True)
+    nombre_Estudio = models.CharField(max_length=20, null=False)
+    fecha_realizada = models.DateField(default=timezone.now)
+    estudio = models.FileField(upload_to='estudios/')
+
+
+class Radiografias(models.Model):
+    id_Radiografia = models.AutoField(primary_key=True, unique=True)
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='radiografias', null=True)
+    nombre_Radiografia = models.CharField(max_length=20, null=False)
+    fecha_realizada = models.DateField(default=timezone.now)
+    radiografia = models.FileField(upload_to='radiografias/')
 

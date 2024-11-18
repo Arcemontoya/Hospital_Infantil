@@ -138,7 +138,7 @@
             <img src="{% static 'assets/Interfaz/previous.png'%}">
         </a>
 
-        <h1>Registro de estudio y gabinete</h1>
+        <h1>Registro de radiografías</h1>
 
     </div>
 
@@ -147,24 +147,34 @@
 
 <body>
     <center>
-    <div class="form-container">
+
         
-        <h3>Ingrese el archivo del estudio o radiografía: </h3>
-        <input type="file">
+        <form action="{% url 'registroRadiografias' expediente=paciente.expediente %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-container">
+                <div class="section-title"><h2>Registro de radiografia</h2></div>
 
-        <select name="estudioRadiografia" id="estudioRadiografia">
-            <option value="" disabled selected>Selecciona tipo de archivo: </option>
-            <option value="ESTUDIO">ESTUDIO</option>
-            <option value="RADIOGRAFIA">RADIOGRAFIA</option>
-        </select>
+                <h3>Ingrese el nombre del estudio:</h3>
 
-    </div>
+                {{ form.nombre_Radiografia }}
 
-    <a href="{% url 'estudiosyGabineteEnfermero' %}">
-        <button type="button">
-            <b>Registrar</b>
-        </button>
-    </a>
+                <h3>Ingrese la fecha en que se realizó la radiografía:</h3>
+
+                {{ form.fecha_realizada }}
+
+                <h3>Ingrese el archivo PDF con la interpretación de la radiografía: </h3>
+
+                {{ form.radiografia }}
+
+            </div>
+
+            <a href="{% url 'estudioyGabineteEnfermero' expediente=paciente.expediente %}">
+                <button type="submit">
+                    <b>Registrar</b>
+                </button>
+            </a>
+        </form>
+
     
     </center>
 
