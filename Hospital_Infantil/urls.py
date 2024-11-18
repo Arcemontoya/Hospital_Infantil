@@ -50,6 +50,10 @@ urlpatterns = [
     path('registroRadiografias/<int:expediente>/', RegistroRadiografias.as_view(), name="registroRadiografias"),
     path('pacientesDeshabiltados/', views.pacientesDeshabilitados, name="pacientesDeshabilitados"),
     path('estudioyGabineteEnfermero/<int:expediente>/', views.estudios_GabineteEnfermero, name="estudioyGabineteEnfermero"),
+    path('estudio/<int:id_Estudio>/', views.mostrarEstudio, name="mostrarEstudio"),
+    path('radiografia/<int:id_Radiografia>/', views.mostrarRadiografia, name="mostrarRadiografia"),
+    path('ver_pdfEstudios/<int:id_Estudio>/', views.ver_pdfEstudios, name='ver_pdfEstudios'),
+    path('ver_pdfRadiografias/<int:id_Radiografia>/', views.ver_pdfRadiografias, name='ver_pdfRadiografias'),
 
     # ------------------------------------------------| INTERFACES DE MEDICO |------------------------------------------------
     path('paciente/<int:expediente>/agregar_tratamiento/', RegistroTratamiento.as_view(), name='agregarTratamiento'),

@@ -233,14 +233,14 @@
             </thead>
             <tbody>
                 {% for estudio in estudios %}
-                <tr>
+                <tr onclick="window.location='{% url 'mostrarEstudio' estudio.id_Estudio %}'" style="cursor: pointer;">
                     <td>{{ estudio.nombre_Estudio }}</td>
                     <td>Estudio</td>
                     <td>{{ estudio.fecha_realizada }}</td>
                 </tr>
                 {% endfor %}
                 {% for radiografia in radiografias %}
-                <tr>
+                <tr onclick="window.location='{% url 'mostrarRadiografia' radiografia.id_Radiografia %}'" style="cursor: pointer;">
                     <td>{{ radiografia.nombre_Radiografia }}</td>
                     <td>radiografia</td>
                     <td>{{ radiografia.fecha_realizada }}</td>

@@ -2,7 +2,7 @@ import profile
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, FileResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -170,6 +170,32 @@ class RegistroRadiografias(FormView):
             for error in errors:
                 print(f"Error en el campo '{field}': {error}")
         return super().form_invalid(form)
+
+
+def ver_pdfEstudios(request, id_Estudio):
+    estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+    archivo_pdf = estudio.estudio
+    response = FileResponse(archivo_pdf.open(), content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="{archivo_pdf.name}"'
+
+    return response
+
+def ver_pdfRadiografias(request, id_Radiografia):
+    radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
+    archivo_pdf = radiografia.radiografia
+    response = FileResponse(archivo_pdf.open(), content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="{archivo_pdf.name}"'
+
+    return response
+
+
+def mostrarEstudio(request, id_Estudio):
+    estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+    return render(request, 'estudio.html', {'estudio': estudio})
+
+def mostrarRadiografia(request, id_Radiografia):
+    radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
+    return render(request, 'radiografia.html', {'radiografia': radiografia})
 
 def pacientesDeshabilitados(request):
     return HttpResponse(render(request, "pacientesDeshabilitados.html")),
