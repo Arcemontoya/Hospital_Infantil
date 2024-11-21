@@ -1,5 +1,4 @@
 {% load static %}
-
 <script>
     function goBack() {
     window.history.back();
@@ -67,8 +66,8 @@
             left: 50%;
             color: white;
             font-family: Montserrat;
-            font-size: 20px;
-            transform: translateX(-50%) translateY(-220%);
+            font-size: 30px;
+            transform: translateX(-50%) translateY(-80%);
         }
 
         .form-container {
@@ -100,7 +99,7 @@
         .fixed-top-border h1{
             font-family: Montserrat;
             font-size: 60px;
-
+            color: white;
         }
 
         h2{
@@ -215,7 +214,7 @@
 
         <div class="fixed-top-border">
             <a onclick="goBack()">
-                <img src="{% static 'assets/Interfaz/previous.png' %}">
+              <img src="{% static 'assets/Interfaz/previous.png' %}">
             </a>
             <h1>Estudios y gabinete</h1>
         </div>
@@ -223,28 +222,36 @@
 
     <body>
         <table>
-                
-            <tr class="clickable-row" href="{% url 'perfilPacienteEnfermero' %}">
-                <th>Nombre</th>
-                <th>Tipo</th>
-                <th>Fecha de ingreso</th>
-            </tr>
-            <tr>
-                <td>Nombre</td>
-                <td>Radiografía</td>
-                <td>13/10/2024</td>
-            </tr>
-            <tr>
-                <td>Nombre</td>
-                <td>Estudio</td>
-                <td>13/10/2024</td>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Fecha de realización</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for estudio in estudios %}
+                <tr onclick="window.location='{% url 'mostrarEstudioMedico' estudio.id_Estudio %}'" style="cursor: pointer;">
+                    <td>{{ estudio.nombre_Estudio }}</td>
+                    <td>Estudio</td>
+                    <td>{{ estudio.fecha_realizada }}</td>
+                </tr>
+                {% endfor %}
+                {% for radiografia in radiografias %}
+                <tr onclick="window.location='{% url 'mostrarRadiografiaMedico' radiografia.id_Radiografia %}'" style="cursor: pointer;">
+                    <td>{{ radiografia.nombre_Radiografia }}</td>
+                    <td>radiografia</td>
+                    <td>{{ radiografia.fecha_realizada }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </body>
 
+
     <div class="fixed-bottom-border">
         <center>
-            <a href=" {% url 'pacientesEnfermero' %}">
+            <a href=" {% url 'mostrarPacientesMedico' %}">
             <div class="icon-container">
                 <div class="icon-item">
                     <img src="{% static 'assets/interfaz/patients.png' %}">
@@ -259,12 +266,11 @@
             </a>
                 <div class="icon-item">
                     <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
-                    <p>Más</p>
 
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu">
-                        <li><a href = "{% url 'registroTratamiento' %}" class="dropdown-item">Agregar tratamiento</a></li>
-                        <li><a href = "{% url 'registroTratamiento' %}" class="dropdown-item">Editar tratamiento</a></li>
+                        <li><a href = "{% url 'agregarTratamiento' expediente=paciente.expediente %}" class="dropdown-item">Agregar tratamiento</a></li>
+                        <li><a href = "{% url 'listaTratamientos' expediente=paciente.expediente %}" class="dropdown-item">Editar tratamiento</a></li>
                         <li><a class="dropdown-item" href="#">Llamar paciente</a></li>
                         <li><a class="dropdown-item" href="#">Llamar enfermero</a></li>
                     </ul>

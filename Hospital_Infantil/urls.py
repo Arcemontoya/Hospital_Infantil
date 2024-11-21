@@ -50,8 +50,9 @@ urlpatterns = [
     path('registroRadiografias/<int:expediente>/', RegistroRadiografias.as_view(), name="registroRadiografias"),
     path('pacientesDeshabiltados/', views.pacientesDeshabilitados, name="pacientesDeshabilitados"),
     path('estudioyGabineteEnfermero/<int:expediente>/', views.estudios_GabineteEnfermero, name="estudioyGabineteEnfermero"),
-    path('estudio/<int:id_Estudio>/', views.mostrarEstudio, name="mostrarEstudio"),
-    path('radiografia/<int:id_Radiografia>/', views.mostrarRadiografia, name="mostrarRadiografia"),
+    path('estudioEnfermero/<int:expediente>/<int:id_Estudio>/', views.mostrarEstudioEnfermero,
+         name='mostrarEstudioEnfermero'),
+    path('radiografiaEnfermero/<int:expediente>/<int:id_Radiografia>/', views.mostrarRadiografiaEnfermero, name="mostrarRadiografiaEnfermero"),
     path('ver_pdfEstudios/<int:id_Estudio>/', views.ver_pdfEstudios, name='ver_pdfEstudios'),
     path('ver_pdfRadiografias/<int:id_Radiografia>/', views.ver_pdfRadiografias, name='ver_pdfRadiografias'),
 
@@ -61,6 +62,10 @@ urlpatterns = [
     path('perfilPacienteMedico/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
     path('paciente/<int:expediente>/editar_tratamiento/<int:id_tratamiento>/', views.edicionTratamiento, name='edicionTratamiento'),
     path('paciente/<int:expediente>/listaTratamiento/', views.listaTratamientos, name='listaTratamientos'),
+    path('estudioyGabineteMedico/<int:expediente>/', views.estudios_GabineteMedico,
+         name="estudioyGabineteMedico"),
+    path('estudio/<int:id_Estudio>/', views.mostrarEstudioMedico, name="mostrarEstudioMedico"),
+    path('radiografia/<int:id_Radiografia>/', views.mostrarRadiografiaMedico, name="mostrarRadiografiaMedico"),
 
     # ------------------------------------------------| INTERFACES DE ADMINISTRADOR |------------------------------------------------
     path('registroUsuario/', RegistroUsuario.as_view(), name="registroUsuario"),

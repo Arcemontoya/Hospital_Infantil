@@ -1,7 +1,12 @@
 {% load static %}
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>
 
-<!DOCTYPE HTML>
-<HTML lang="en">
+<!DOCTYPE html>
+<html lang="en">
 
     <style>
         .fixed-top-border{
@@ -19,6 +24,16 @@
             font-family: Montserrat;
             color: white;
             padding: 10px;
+        }
+        
+        .fixed-top-border a
+        {
+            scale: 60%;
+        }
+
+        .fixed-top-border img
+        {
+            scale: 60%;
         }
 
         .fixed-bottom-border
@@ -138,23 +153,52 @@
             scale: 40%;
         }
 
+        .pdf-navigation {
+            display: flex;
+            flex-direction: column; /* Cambia a columna */
+            justify-content: center; /* Asegura alineación vertical */
+            align-items: center;
+            margin-bottom: 15px;
+            gap: 10px; /* Espaciado entre los botones y el mensaje */
+        }
+
+        .pdf-navigation button
+        {
+            background-color: #355e9f;
+            font-family: Montserrat;
+            width: 400px;
+            height: 100px;
+            font-size: 60px;
+            color: white;
+            border-radius: 8px;
+        }
+
+        .pdf-navigation .page-info h3 {
+            font-size: 30px; /* Ajusta el tamaño de la fuente */
+            color: #355e9f;
+            margin-top: 30px; /* Espaciado con respecto a los botones */
+        }
+
+        .button-container {
+            display: flex; /* Mantiene los botones en una fila */
+            gap: 20px; /* Espaciado entre los botones */
+        }
+
 
     </style>
 
+<head>
+    <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
 
+    <div class="fixed-top-border">
+        <a onclick="goBack()">
+            <img src="{% static 'assets/Interfaz/previous.png'%}">
+        </a>
+        <h1>Estudio</h1>
+        <!-- Carga de PDF.js -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
 
-    <head>
-        <div class="fixed-top-border"><h1>Perfil del paciente</h1></div>
-
-            <!-------REFERENCIAS PARA IMAGENES--------->
-
-            <link href="{% static 'assets/Interfaz/vitalSigns.png' %}" rel="icon" type="image/png">
-            <link href="{% static 'assets/Interfaz/patients.png' %}" rel="icon" type="image/png">
-            <link href="{% static 'assets/Interfaz/plus.png' %}" rel="icon" type="image/png">
-
-             <!-------FIN REFERENCIAS PARA IMAGENES--------->
-
-                     <!-- Bootstrap CSS -->
+                             <!-- Bootstrap CSS -->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
         
         <style>
@@ -190,52 +234,78 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"></script>
 
-    </head>
+    </div>
+</head>
 
-    <body>
-        <center>
-            <div class="form-container">
-                <div class="section-title"><h2><b>{{ paciente.nombre }} {{ paciente.apellido_paterno }} {{ paciente.apellido_materno }}</b></h2></div>
-                <h3>Fecha de ingreso: {{ paciente.fecha_ingreso }}</h3>
-                <h3>Fecha de nacimiento: {{ paciente.fecha_nacimiento }}</h3>
-                <h3>Expediente: {{ paciente.expediente }}</h3>
-                <h3>Peso(Kg): {{ paciente.peso }}</h3>
-                <h3>Altura(metros): {{ paciente.altura }}</h3>
-                <h3>Cirugía realizada: {{ paciente.cirugia_realizada }}</h3>
+<body>
+    <center>
+        <div class="form-container">
+            <div class="section-title"><h2>{{ estudio.nombre_Estudio }}</h2></div>
+            <h3>Fecha realizada: {{ estudio.fecha_realizada }}</h3>
+        </div>
+
+        <div class="pdf-navigation">
+            <div class="button-container">
+                <button onclick="previousPage()">Pág. Anterior</button>
+                <button onclick="nextPage()">Pág. Siguiente</button>
             </div>
-
-            <div class="form-container">
-                <div class="section-title"><h2>Diagnóstico clínico prequirúrgico</h2></div>
-                <p> {{ paciente.diagnostico_clinico_prequirurgico }}
-                    </p> 
-            </div>
-
-            <div class="form-container">
-                <div class="section-title"><h2>Nota Enfermería</h2></div>
-                <p>{{ paciente.nota_enfermeria }}
-                    </p> 
-            </div>
-
-            {% for tratamiento in tratamientos %}
-            <div class="form-container">
-                <div class="section-title"><h2> Tratamiento {{ forloop.counter }}</h2></div>
-                <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
-                <h3>Dosis administrada: {{ tratamiento.dosis_Administrada }}</h3>
-                <h3>Vía de administración: {{ tratamiento.via_Administracion }}</h3>
-                <h3>Frecuencia de dosis: Cada {{ tratamiento.frecuencia_Dosis }} {{tratamiento.tiempo_Dosis}}</h3>
-                <h3>Duración de la terapia: {{ tratamiento.duracion_Terapia }} días</h3>
-                <h3>Otras indicaciones: {{ tratamiento.nombre_Medicamento }}</h3>
-                <p> {{ tratamiento.otras_Indicaciones }} </p> 
-            </div>
-            {% endfor %}
+            <div class="page-info">
+                <h3>Página: <span id="page-num">1</span> de <span id="page-count">1</span></h3>
+            </div>        
+        </div>
 
 
-        </center>
-    </body>
+        <div id="pdf-container" style="width: 100%; height: 80vh; overflow: auto;"></div>
+        
+        <script>
+            var url = '{% url "ver_pdfEstudios" estudio.id_Estudio %}';
+            var pdfDoc = null;
+            var currentPage = 1;
+            var totalPages = 0;
 
-    <!------- FONDO INTERACTUABLE -------->
+            pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+                pdfDoc = pdfDoc_;
+                totalPages = pdfDoc.numPages;
+                document.getElementById('page-count').textContent = totalPages;
+                renderPage(currentPage);
+            });
 
-    <!----<img src="{% static 'assets/interfaz/.png' %}">-->
+            function renderPage(pageNum) {
+                pdfDoc.getPage(pageNum).then(function(page) {
+                    var scale = 1.5;
+                    var viewport = page.getViewport({ scale: scale });
+
+                    var canvas = document.createElement('canvas');
+                    var context = canvas.getContext('2d');
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    page.render({
+                        canvasContext: context,
+                        viewport: viewport
+                    });
+
+                    document.getElementById('pdf-container').innerHTML = ''; 
+                    document.getElementById('pdf-container').appendChild(canvas);
+                    document.getElementById('page-num').textContent = currentPage;
+                });
+            }
+
+            function nextPage() {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    renderPage(currentPage);
+                }
+            }
+
+            function previousPage() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    renderPage(currentPage);
+                }
+            }
+        </script>
+    </center>
 
 
     <div class="fixed-bottom-border">
@@ -258,11 +328,8 @@
 
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'agregarTratamiento' expediente=paciente.expediente %}">Agregar Tratamiento</a></li>
-                        <li><a href = "{% url 'listaTratamientos' expediente=paciente.expediente %}" class="dropdown-item">Editar tratamiento</a></li>
                         <li><a class="dropdown-item" href="#">Llamar paciente</a></li>
                         <li><a class="dropdown-item" href="#">Llamar enfermero</a></li>
-                        <li><a href = "{% url 'estudioyGabineteMedico' expediente=paciente.expediente %}" class="dropdown-item">Estudios y gabinete</a></li>
                     </ul>
 
                 </div>
@@ -270,6 +337,7 @@
         </center>
     </div>
     
-    
 
-</HTML>
+</body>
+
+</html>

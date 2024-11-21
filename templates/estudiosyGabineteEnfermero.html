@@ -44,12 +44,14 @@
         {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             width: 100%;
         }
 
         .icon-item
         {
             position: relative;
+            flex: 1;
             margin: 0px; /* Espaciado entre los íconos */
             text-align: center; /* Asegura que el texto esté centrado */
         }
@@ -233,14 +235,14 @@
             </thead>
             <tbody>
                 {% for estudio in estudios %}
-                <tr onclick="window.location='{% url 'mostrarEstudio' estudio.id_Estudio %}'" style="cursor: pointer;">
+                <tr onclick="window.location='{% url 'mostrarEstudioEnfermero' expediente=paciente.expediente id_Estudio=estudio.id_Estudio %}'" style="cursor: pointer;">
                     <td>{{ estudio.nombre_Estudio }}</td>
                     <td>Estudio</td>
                     <td>{{ estudio.fecha_realizada }}</td>
                 </tr>
                 {% endfor %}
                 {% for radiografia in radiografias %}
-                <tr onclick="window.location='{% url 'mostrarRadiografia' radiografia.id_Radiografia %}'" style="cursor: pointer;">
+                <tr onclick="window.location='{% url 'mostrarRadiografiaEnfermero' expediente=paciente.expediente id_Radiografia=radiografia.id_Radiografia %}'" style="cursor: pointer;">
                     <td>{{ radiografia.nombre_Radiografia }}</td>
                     <td>radiografia</td>
                     <td>{{ radiografia.fecha_realizada }}</td>
@@ -251,7 +253,6 @@
     </body>
 
     <div class="fixed-bottom-border">
-        <div class="icon-container">
             <div class="icon-item">
                 <a href="{% url 'mostrarPacientesEnfermero' %}">
                     <img src="{% static 'assets/interfaz/patients.png' %}">
@@ -259,13 +260,19 @@
                 </a>
             </div>
             
-            <div class="icon-item">
-                <a href="{% url 'registroRadiografias' expediente=paciente.expediente %}">
+            <!---->
+            <div class="icon-item dropdown">
+                <a href="#" role="button" id="dropdownAgregar" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="{% static 'assets/interfaz/plus.png' %}">
-                    <p>Nuevo estudio</p>
                 </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownAgregar">
+                    <li><a href="{% url 'registroEstudios' expediente=paciente.expediente %}" class="dropdown-item">Registrar estudio</a></li>
+                    <li><a href="{% url 'registroRadiografias' expediente=paciente.expediente %}" class="dropdown-item">Registrar radiografia</a></li>
+                </ul>
+                <p>Agregar</p>
             </div>
-            
+            <!---->
+
             <div class="icon-item">
                 <a href="{% url 'signosVitales' %}">
                     <img src="{% static 'assets/interfaz/vitalSigns.png' %}">
@@ -275,14 +282,12 @@
     
             <div class="icon-item">
                 <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
-                <p>Más</p>
                 <!-- Menú desplegable -->
                 <ul class="dropdown-menu">
                     <li><a href="{% url 'editarPaciente' expediente=paciente.expediente %}" class="dropdown-item">Editar paciente</a></li>
                     <li><a class="dropdown-item" href="#">Llamar doctor</a></li>
                 </ul>
             </div>
-        </div>
     </div>
 
 </HTML>

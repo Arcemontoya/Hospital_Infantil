@@ -189,13 +189,23 @@ def ver_pdfRadiografias(request, id_Radiografia):
     return response
 
 
-def mostrarEstudio(request, id_Estudio):
+def mostrarEstudioMedico(request, id_Estudio):
     estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
-    return render(request, 'estudio.html', {'estudio': estudio})
+    return render(request, 'estudioMedico.html', {'estudio': estudio})
 
-def mostrarRadiografia(request, id_Radiografia):
+def mostrarRadiografiaMedico(request, id_Radiografia):
     radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
-    return render(request, 'radiografia.html', {'radiografia': radiografia})
+    return render(request, 'radiografiaMedico.html', {'radiografia': radiografia})
+
+def mostrarEstudioEnfermero(request, id_Estudio, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+    return render(request, 'estudioEnfermero.html', {'estudio': estudio, "paciente": paciente})
+
+def mostrarRadiografiaEnfermero(request, id_Radiografia, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
+    return render(request, 'radiografiaEnfermero.html', {'radiografia': radiografia, "paciente": paciente})
 
 def pacientesDeshabilitados(request):
     return HttpResponse(render(request, "pacientesDeshabilitados.html")),
@@ -264,7 +274,7 @@ def perfilPacienteMedico(request, expediente):
     tratamientos = Tratamiento.objects.filter(paciente=expediente)
     radiografias = Radiografias.objects.filter(paciente=expediente)
     estudios = Estudios.objects.filter(paciente=expediente)
-    return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente, 'tratamientos': tratamientos,
+    return render(request, "perfilPacienteMedico.html", {'paciente': paciente, 'tratamientos': tratamientos,
                   'estudios': estudios, 'radiografias': radiografias})
 
 
@@ -273,9 +283,6 @@ def listaTratamientos(request, expediente):
     tratamientos = Tratamiento.objects.filter(paciente=expediente)
     return render(request, "listaTratamientos.html", {'paciente': paciente, 'tratamientos': tratamientos})
 
-
-def estudiosyGabineteMedico(request):
-    return HttpResponse(render(request, "estudiosyGabineteMedico.html"))
 
 
 def estudios_GabineteMedico(request, expediente):
@@ -389,11 +396,11 @@ def signosVitales(request):
 
 
 def radiografia(request):
-    return HttpResponse(render(request, "radiografia.html"))
+    return HttpResponse(render(request, "radiografiaMedico.html"))
 
 
 def estudio(request):
-    return HttpResponse(render(request, "estudio.html"))
+    return HttpResponse(render(request, "estudioMedico.html"))
 
 
 # --------------------------------------------| INTERFACES DE MUESTRA DE DATOS |--------------------------------------------
