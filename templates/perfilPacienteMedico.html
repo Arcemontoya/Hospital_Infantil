@@ -1,4 +1,5 @@
 {% load static %}
+{% load tz %}
 
 <!DOCTYPE HTML>
 <HTML lang="en">
@@ -219,6 +220,8 @@
             {% for tratamiento in tratamientos %}
             <div class="form-container">
                 <div class="section-title"><h2> Tratamiento {{ forloop.counter }}</h2></div>
+                <h3>Estado del tratamiento: {{tratamiento.tratamiento_activo}}</h3>
+                <h3>Última aplicación: {{ tratamiento.historial_aplicacion|timezone:"America/Tijuana"|date:"h:i A" }}</h3>
                 <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
                 <h3>Dosis administrada: {{ tratamiento.dosis_Administrada }}</h3>
                 <h3>Vía de administración: {{ tratamiento.via_Administracion }}</h3>

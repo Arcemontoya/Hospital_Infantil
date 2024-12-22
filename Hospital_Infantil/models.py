@@ -55,6 +55,11 @@ class Paciente(models.Model):
 # ------------------------------------------ |TRATAMIENTO| ------------------------------------------------------------
 
 class Tratamiento(models.Model):
+    TRATAMIENTO_ACTIVO_CHOICES = [
+        ("activo", "Activo"),
+        ("Inactivo", "Inactivo")
+    ]
+
     TIEMPO_DOSIS_CHOICES = [
         ('hrs', 'HRS'),
         ('mins', 'MINS'),
@@ -90,11 +95,21 @@ class Tratamiento(models.Model):
     )
     frecuencia_Dosis = models.DecimalField(max_digits=2, decimal_places=0)
     tiempo_Dosis = models.CharField(
-        max_length= 10,
+        max_length = 10,
         choices=TIEMPO_DOSIS_CHOICES
     )
     duracion_Terapia = models.DecimalField(max_digits=2, decimal_places=0)
     otras_Indicaciones = models.CharField(max_length=1000, null=True)
+    tratamiento_activo = models.CharField(
+        max_length=10,
+        choices=TRATAMIENTO_ACTIVO_CHOICES,
+        default="Activo"
+    )
+
+    # ESTE LOS MANEJA EL ENFERMERO
+    historial_aplicacion = models.DateTimeField(null=True)
+
+
 
 class Estudios(models.Model):
     id_Estudio = models.AutoField(primary_key=True, unique=True)

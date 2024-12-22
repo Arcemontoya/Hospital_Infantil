@@ -1,7 +1,12 @@
+from datetime import datetime
+
 from django import forms
 from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.utils import timezone
+from django.utils.timezone import now
+
 
 from .models import Paciente, Tratamiento, UserProfile, Estudios, Radiografias
 
@@ -129,13 +134,6 @@ class TratamientoForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'placeholder': 'Ingrese dosis administrada.'})
     )
 
-    """
-    via_Administracion = forms.ChoiceField(
-        required=True,
-        widget=forms.Select(attrs={'class': 'form-control', 'placeholder': 'Ingrese la vía de administración.'})
-    )
-    """
-
     # Valida para que máximo sea 60
     frecuencia_Dosis = forms.CharField(
         required=True,
@@ -153,10 +151,22 @@ class TratamientoForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'placeholder': 'Ingrese otras indicaciones.'})
     )
 
+    # Este los manejará el enfermero
+    historial_aplicacion = forms.DateTimeField(
+        required=False,
+        initial=timezone.localtime,
+        widget=forms.DateTimeInput(
+            format='%Y-%m-%d %H:%M:%S',  # Formato para la fecha y hora
+            attrs={
+                'type': 'datetime-local',  # Activa un selector de fecha y hora en navegadores modernos
+            }
+        )
+    )
+
     class Meta:
         model = Tratamiento
         fields = ['nombre_Medicamento', 'dosis_Administrada', 'via_Administracion', 'frecuencia_Dosis',
-                  'tiempo_Dosis', 'duracion_Terapia', 'otras_Indicaciones']
+                  'tiempo_Dosis', 'duracion_Terapia', 'otras_Indicaciones', "tratamiento_activo", "historial_aplicacion"]
 
         widgets = {
             'via_Administracion' : forms.Select(
@@ -170,6 +180,13 @@ class TratamientoForm(forms.ModelForm):
                 attrs={
                     'class': 'form_control',
                     'placeholder': 'Selecciona una opción.'
+                }
+            ),
+
+            'tratamiento_activo' : forms.Select(
+                attrs={
+                    'class': 'form_control',
+                    'placeholder': 'Selecciona el estado del tratamiento.'
                 }
             )
         }
