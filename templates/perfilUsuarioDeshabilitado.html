@@ -150,7 +150,7 @@
 </style>
 
 <head>
-    <div class="fixed-top-border"><h1>Perfil del usuario</h1></div>
+    <div class="fixed-top-border"><h1>Perfil del usuario deshabilitado</h1></div>
 
         <!-------REFERENCIAS PARA IMAGENES--------->
 
@@ -236,8 +236,8 @@
                     
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu">
-                        <li><a href = "{% url 'deshabilitar_usuario' id=user.id %}" class="dropdown-item"
-                            onclick="return confirm('¿Estás seguro de que deseas deshabilitar este usuario?')">Deshabilitar usuario</a></li>
+                        <li><a href = "{% url 'habilitar_usuario' id=user.id %}" class="dropdown-item"
+                            onclick="return confirm('¿Estás seguro de que deseas habilitar este usuario?')">Habilitar usuario</a></li>
                         <li><a href = "{% url 'edicionUsuario' id=user.id %}" class="dropdown-item">Editar usuario</a></li>
                         <li><a href = "{% url 'mostrarPacientesEnfermero' %}" class="dropdown-item" href="#">Interfaz enfermero</a></li>
                     </ul>

@@ -39,6 +39,9 @@ urlpatterns = [
     # Mostrar usuarios
     path('usuarios/', views.mostrarUsuarios, name='mostrarUsuarios'),
 
+    #Mostrar usuarios deshabilitados
+    path('usuariosDeshabilitados/', views.mostrarUsuariosDeshabilitados, name='mostrarUsuariosDeshabilitados'),
+
 
 
     # ------------------------------------------------| INTERFACES DE ENFERMERO |------------------------------------------------
@@ -55,6 +58,9 @@ urlpatterns = [
     path('radiografiaEnfermero/<int:expediente>/<int:id_Radiografia>/', views.mostrarRadiografiaEnfermero, name="mostrarRadiografiaEnfermero"),
     path('ver_pdfEstudios/<int:id_Estudio>/', views.ver_pdfEstudios, name='ver_pdfEstudios'),
     path('ver_pdfRadiografias/<int:id_Radiografia>/', views.ver_pdfRadiografias, name='ver_pdfRadiografias'),
+    path('paciente/<int:expediente>/actualizar_tratamiento/<int:id_tratamiento>/',
+         views.actualizacion_Aplicacion_Tratamiento, name="actualizacionTratamiento"),
+    path('paciente/<int:expediente>/listaTratamientosEnfermero/', views.listaTratamientosEnfermero, name='listaTratamientosEnfermero'),
 
     # ------------------------------------------------| INTERFACES DE MEDICO |------------------------------------------------
     path('paciente/<int:expediente>/agregar_tratamiento/', RegistroTratamiento.as_view(), name='agregarTratamiento'),
@@ -73,6 +79,8 @@ urlpatterns = [
     path('usuarios/', views.usuarios, name="usuarios"),
     path('usuariosDeshabilitados/', views.usuariosDeshabilitados, name="usuariosDeshabilitados"),
     path('edicion_Usuario/<int:id>/', views.edicionUsuario, name="edicionUsuario"),
+    path('deshabilitar_usuario/<int:id>/', views.deshabilitar_Usuario, name='deshabilitar_usuario'),
+    path('habilitar_usuario/<int:id>', views.habilitar_Usuario, name='habilitar_usuario'),
 
     # ------------------------------------------------| INTERFACES GENERALES |------------------------------------------------
     path('signosVitales/', views.signosVitales, name="signosVitales"),

@@ -217,21 +217,41 @@
                     </p> 
             </div>
 
-            {% for tratamiento in tratamientos %}
-            <div class="form-container">
-                <div class="section-title"><h2> Tratamiento {{ forloop.counter }}</h2></div>
-                <h3>Estado del tratamiento: {{tratamiento.tratamiento_activo}}</h3>
-                <h3>Última aplicación: {{ tratamiento.historial_aplicacion|timezone:"America/Tijuana"|date:"h:i A" }}</h3>
-                <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
-                <h3>Dosis administrada: {{ tratamiento.dosis_Administrada }}</h3>
-                <h3>Vía de administración: {{ tratamiento.via_Administracion }}</h3>
-                <h3>Frecuencia de dosis: Cada {{ tratamiento.frecuencia_Dosis }} {{tratamiento.tiempo_Dosis}}</h3>
-                <h3>Duración de la terapia: {{ tratamiento.duracion_Terapia }} días</h3>
-                <h3>Otras indicaciones: {{ tratamiento.nombre_Medicamento }}</h3>
-                <p> {{ tratamiento.otras_Indicaciones }} </p> 
-            </div>
+            {% if tratamientosActivos %}
+            <div class="section-title"><h2>Tratamientos Activos</h2></div>
+            {% for tratamiento in tratamientosActivos %}
+                <div class="form-container">
+                    <div class="section-title"><h2>Tratamiento {{ forloop.counter }}</h2></div>
+                    <h3>Estado del tratamiento: {{ tratamiento.tratamiento_activo }}</h3>
+                    <h3>Última aplicación: {{ tratamiento.historial_aplicacion|timezone:"America/Tijuana"|date:"h:i A" }}</h3>
+                    <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
+                    <h3>Dosis administrada: {{ tratamiento.dosis_Administrada }}</h3>
+                    <h3>Vía de administración: {{ tratamiento.via_Administracion }}</h3>
+                    <h3>Frecuencia de dosis: Cada {{ tratamiento.frecuencia_Dosis }} {{ tratamiento.tiempo_Dosis }}</h3>
+                    <h3>Duración de la terapia: {{ tratamiento.duracion_Terapia }} días</h3>
+                    <h3>Otras indicaciones: {{ tratamiento.nombre_Medicamento }}</h3>
+                    <p>{{ tratamiento.otras_Indicaciones }}</p>
+                </div>
             {% endfor %}
-
+        {% endif %}
+        
+        {% if tratamientosInactivos %}
+            <div class="section-title"><h2>Tratamientos Inactivos</h2></div>
+            {% for tratamiento in tratamientosInactivos %}
+                <div class="form-container">
+                    <div class="section-title"><h2>Tratamiento {{ forloop.counter }}</h2></div>
+                    <h3>Estado del tratamiento: {{ tratamiento.tratamiento_activo }}</h3>
+                    <h3>Última aplicación: {{ tratamiento.historial_aplicacion|timezone:"America/Tijuana"|date:"h:i A" }}</h3>
+                    <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
+                    <h3>Dosis administrada: {{ tratamiento.dosis_Administrada }}</h3>
+                    <h3>Vía de administración: {{ tratamiento.via_Administracion }}</h3>
+                    <h3>Frecuencia de dosis: Cada {{ tratamiento.frecuencia_Dosis }} {{ tratamiento.tiempo_Dosis }}</h3>
+                    <h3>Duración de la terapia: {{ tratamiento.duracion_Terapia }} días</h3>
+                    <h3>Otras indicaciones: {{ tratamiento.nombre_Medicamento }}</h3>
+                    <p>{{ tratamiento.otras_Indicaciones }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
 
         </center>
     </body>

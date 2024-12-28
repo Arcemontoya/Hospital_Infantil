@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from django.test import TestCase
 from django.contrib.auth.models import User
 from .forms import (
@@ -5,6 +6,8 @@ from .forms import (
     EstudiosForm, RadiografiasForm
 )
 from .models import UserProfile, Paciente, Tratamiento, Estudios, Radiografias
+from .views import deshabilitar_Usuario
+
 
 class TestForms(TestCase):
 
@@ -111,3 +114,4 @@ class TestForms(TestCase):
             "fecha_realizada": "2024-12-01",
         })
         self.assertFalse(form.is_valid())
+

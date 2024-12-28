@@ -28,6 +28,11 @@ class UserProfile(models.Model):
 
 # ------------------------------------------ |PACIENTE| ------------------------------------------------------------
 class Paciente(models.Model):
+    PACIENTE_ACTIVO_CHOICES = [
+        ("Habilitado", "Habilitado"),
+        ("Deshabilitado", "Deshabilitado")
+    ]
+
     expediente = models.AutoField(primary_key=True, unique=True)
     nombre = models.CharField(max_length=50, blank=False)
 
@@ -46,6 +51,10 @@ class Paciente(models.Model):
         null = True,
         limit_choices_to={'user__userprofile__funcionalidad': 'medico'},
     )
+
+    paciente_Habilitado= models.CharField(max_length=15,
+                                          choices=PACIENTE_ACTIVO_CHOICES,
+                                          default="Habilitado")
 
 
     def __str__(self):

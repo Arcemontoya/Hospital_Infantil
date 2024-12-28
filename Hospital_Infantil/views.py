@@ -87,11 +87,12 @@ def edicionPaciente(request, expediente):
 
 def perfilPacienteEnfermero(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
-    tratamientos = Tratamiento.objects.filter(paciente=expediente)
+    tratamientosActivos = Tratamiento.objects.filter(paciente=expediente, tratamiento_activo="activo")
+    tratamientosInactivos = Tratamiento.objects.filter(paciente=expediente, tratamiento_activo="Inactivo")
     radiografias = Radiografias.objects.filter(paciente=expediente)
     estudios = Estudios.objects.filter(paciente=expediente)
-    return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente, 'tratamientos': tratamientos,
-                  'estudios': estudios, 'radiografias': radiografias})
+    return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente, 'tratamientosActivos': tratamientosActivos,
+                                                         'tratamientosInactivos': tratamientosInactivos, 'estudios': estudios, 'radiografias': radiografias})
 
 
 def agregarEstudio(request):
@@ -207,9 +208,38 @@ def mostrarRadiografiaEnfermero(request, id_Radiografia, expediente):
     radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
     return render(request, 'radiografiaEnfermero.html', {'radiografia': radiografia, "paciente": paciente})
 
+
 def pacientesDeshabilitados(request):
     return HttpResponse(render(request, "pacientesDeshabilitados.html")),
 
+def listaTratamientosEnfermero(request, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    tratamientos = Tratamiento.objects.filter(paciente=expediente)
+    return render(request, "listaTratamientosEnfermero.html", {'paciente': paciente, 'tratamientos': tratamientos})
+
+def actualizacion_Aplicacion_Tratamiento(request, expediente, id_tratamiento):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_tratamiento, paciente=paciente)
+
+    if request.method == 'POST':
+        form = TratamientoForm(request.POST, instance=tratamiento)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Tratamiento editado con éxito.")
+            return redirect('perfilPacienteEnfermero', expediente=paciente.expediente)
+        else:
+            messages.error(request, "Por favor, corrige los errores en el formulario.")
+    else:
+        form = TratamientoForm(instance=tratamiento)
+    return render(request, 'actualizacion_Aplicacion_Tratamiento.html', {'form': form, 'paciente': paciente, 'tratamiento': tratamiento})
+
+"""
+def deshabilitarPaciente(request, expediente):
+    paciente = get_object_or_404(request, expediente=expediente)
+    paciente.paciente_Habilitado = "Deshabilitado"
+    paciente.save()
+    return
+"""
 
 # --------------------------------------------| INTERFACES DE MEDICO |--------------------------------------------
 
@@ -249,9 +279,11 @@ class RegistroTratamiento(FormView):
         return reverse_lazy('perfilPacienteMedico', kwargs={'expediente': expediente})
 
 def edicionTratamiento(request, expediente, id_tratamiento):
+    usuario=request.user.userprofile.funcionalidad
     # Obtener el paciente y el tratamiento asociado
     paciente = get_object_or_404(Paciente, expediente=expediente)
     tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_tratamiento, paciente=paciente)
+
 
     if request.method == 'POST':
         # Crear un formulario con los datos enviados
@@ -259,8 +291,10 @@ def edicionTratamiento(request, expediente, id_tratamiento):
         if form.is_valid():
             form.save()  # Guardar cambios en el tratamiento
             messages.success(request, "Tratamiento editado con éxito.")
-            # Redirigir al perfil del paciente después de la edición
-            return redirect('perfilPacienteMedico', expediente=paciente.expediente)
+            if (usuario == 'medico'):
+                return redirect('perfilPacienteMedico', expediente=paciente.expediente)
+            elif (usuario == 'enfermero'):
+                return redirect('perfilPacienteEnfermero', expediente=paciente.expediente)
         else:
             messages.error(request, "Por favor, corrige los errores en el formulario.")
     else:
@@ -271,10 +305,11 @@ def edicionTratamiento(request, expediente, id_tratamiento):
 
 def perfilPacienteMedico(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
-    tratamientos = Tratamiento.objects.filter(paciente=expediente)
+    tratamientosActivos = Tratamiento.objects.filter(paciente=expediente)
+    tratamientosInactivos = Tratamiento.objects.filter(paciente=expediente)
     radiografias = Radiografias.objects.filter(paciente=expediente)
     estudios = Estudios.objects.filter(paciente=expediente)
-    return render(request, "perfilPacienteMedico.html", {'paciente': paciente, 'tratamientos': tratamientos,
+    return render(request, "perfilPacienteMedico.html", {'paciente': paciente, 'tratamientos': tratamientosActivos,
                   'estudios': estudios, 'radiografias': radiografias})
 
 
@@ -282,8 +317,6 @@ def listaTratamientos(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     tratamientos = Tratamiento.objects.filter(paciente=expediente)
     return render(request, "listaTratamientos.html", {'paciente': paciente, 'tratamientos': tratamientos})
-
-
 
 def estudios_GabineteMedico(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
@@ -372,15 +405,46 @@ def edicionUsuario(request, id):
         'profile_data': user_profile
     })
 
+def deshabilitar_Usuario(request, id):
+    user = get_object_or_404(User, id=id)
+    user.is_active = False
+    user.save()
+    messages.success(request,"El usuario fue deshabilitado correctamente.")
+    return redirect('usuarios')
+
+def habilitar_Usuario(request, id):
+    user = get_object_or_404(User, id=id)
+    user.is_active = True
+    user.save()
+    messages.success(request, "El usuario fue habilitado correctamente.")
+    return redirect("usuarios")
+
+
 def perfilUsuario(request, id):
     user = get_object_or_404(User, id=id)
     user_profile = get_object_or_404(UserProfile, user=user)
-    return render(request, "perfilUsuario.html", {'user': user, 'user_profile': user_profile})
+    if (user.is_active):
+        return render(request, "perfilUsuario.html", {'user': user, 'user_profile': user_profile})
+    else:
+        return render(request, "perfilUsuarioDeshabilitado.html", {'user': user, 'user_profile': user_profile})
 
 
 def usuarios(request):
     users = User.objects.select_related('user_profile').all()
     return render(request, "usuarios.html", {'users': users})
+
+def mostrarUsuarios(request):
+    users = User.objects.filter(is_active=True)
+    return render(request, "usuarios.html", {"users": users})
+
+def mostrarUsuariosDeshabilitados(request):
+    users = User.objects.filter(is_active=False)
+    return render(request, "usuariosDeshabilitados.html", context={"users": users})
+
+def usuariosDeshabilitados(request):
+    users = User.objects.select_related('user_profile').filter(is_active=False)
+    return render(request, "usuariosDeshabilitados.html", {'users': users})
+
 
 
 # --------------------------------------------| INTERFACES DE VISTA GENERAL |--------------------------------------------
@@ -404,11 +468,6 @@ def estudio(request):
 
 
 # --------------------------------------------| INTERFACES DE MUESTRA DE DATOS |--------------------------------------------
-
-def mostrarUsuarios(request):
-    users = User.objects.all()
-    return render(request, "usuarios.html", {"users": users})
-
 
 def mostrarPacientesEnfermero(request):
     pacientes = Paciente.objects.all()
