@@ -285,8 +285,13 @@
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'listaTratamientosEnfermero' expediente=paciente.expediente %}" class="dropdown-item">Lista de Tratamientos</a></li>
-                        <li><a href = "{% url 'mostrarPacientesEnfermero' %}" class="dropdown-item">Deshabilitar paciente</a></li>
+                        {% if paciente.paciente_Habilitado == "Habilitado" %}
+                            <li><a href = "{% url 'deshabilitarPaciente' expediente=paciente.expediente%}" class="dropdown-item">Deshabilitar paciente</a></li>
+                        {% elif paciente.paciente_Habilitado == "Deshabilitado"%}
+                        <li><a href = "{% url 'habilitarPaciente' expediente=paciente.expediente%}" class="dropdown-item">Habilitar paciente</a></li>
+                        {% endif %}
                         <li><a href = "{% url 'editarPaciente' expediente=paciente.expediente %}" class="dropdown-item">Editar paciente</a></li>
+                        <li><a href = "{% url 'mostrarPacientesDeshabilitados'%}" class="dropdown-item">Pacientes deshabilitados</a></li>
                         <li><a class="dropdown-item" href="#">Llamar doctor</a></li>
                         <li><a href = "{% url 'estudioyGabineteEnfermero' expediente=paciente.expediente %}" class="dropdown-item">Estudios y gabinete</a></li>
                     </ul>

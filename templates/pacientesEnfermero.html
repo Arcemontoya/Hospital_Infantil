@@ -69,12 +69,28 @@
         font-size: 60px;
     }
 
+    /*
     img
     {
         position: fixed;
         scale: 60%;
         transform: translateX(1260px) translateY(2200px);
     }
+    */
+
+    .image-container
+    {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 80px;
+        margin-top: 10px;
+        scale: 60%;
+        top: 65%;
+        left: 78%;
+    }
+
 
 </style>
 
@@ -85,11 +101,20 @@
         <h1>Pacientes</h1>
     </div>
 
-    <!--BOTON DE MAS-->
+    <!--BOTON DE MAS Y PACIENTES DESHABILITADOS-->
     <link href="{% static 'assets/Interfaz/plus.png' %}" rel="icon" type="image/png">
-    <a href=" {% url 'registroPaciente' %}">
-    <img src="{% static 'assets/Interfaz/plus.png' %}">
-    </a>
+    <link href="{% static 'assets/Interfaz/disabledPatients.png' %}" rel="icon" type="image/png">
+    
+    <div class="image-container">
+        <a href=" {% url 'registroPaciente' %}">
+        <img src="{% static 'assets/Interfaz/plus.png' %}">
+        </a>
+        
+        <a href="{% url 'pacientesDeshabilitados' %}">
+        <img src="{% static 'assets/Interfaz/disabledPatients.png' %}">
+        </a>
+    </div>
+
 </head>
 
 <body>
@@ -104,11 +129,13 @@
         </thead>
         <tbody>
             {% for paciente in Pacientes %}
-            <tr onclick="window.location='{% url 'perfilPacienteEnfermero' paciente.expediente %}'" style="cursor: pointer;">
-                <td>{{ paciente.nombre }}</td>
-                <td>{{ paciente.expediente }}</td>
-                <td>{{ paciente.fecha_ingreso }}</td>
-            </tr>
+                {% if paciente.paciente_Habilitado == "Habilitado" %}
+                <tr onclick="window.location='{% url 'perfilPacienteEnfermero' paciente.expediente %}'" style="cursor: pointer;">
+                    <td>{{ paciente.nombre }}</td>
+                    <td>{{ paciente.expediente }}</td>
+                    <td>{{ paciente.fecha_ingreso }}</td>
+                </tr>
+                {% endif %}
             {% empty %}
             <tr>
                 <td colspan="3">No hay pacientes registrados</td>

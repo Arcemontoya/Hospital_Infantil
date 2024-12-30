@@ -1,21 +1,131 @@
 {% load static %}
 
+<script>
+    function goBack() {
+    window.history.back();
+    }
+</script>
+
 <!DOCTYPE html>
+<html lang="en">
+    <!-- ESTANDARIZACIÓN DE COLORES-->
+    <!-- AZUL: 355E9F -->
+    <!-- ROJO: E32525 -->
+    <!-- AMARILLO: FDD007 -->
+    <!-- VERDE: 76BD42 -->
+    <!-- NEGRO: 222222 -->
 
-    <style>
+<style>
+    
+    .fixed-top-border{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 169.3px;
+        background-color: #355e9f;
+        z-index: 1000;
 
+        display: flex;
+        align-items: center;
+
+        font-family: Montserrat;
+        color: white;
+        padding: 10px;
+    }
+
+    table{
+        font-family: Calibri;
+        border-collapse: collapse;
+        border: #EEEEEE;
+        width: 100%;
+        margin-top: 80px;
+    }
+
+    th{
         
-    </style>
+        font-family: Calibri;
+        font-size: 40px;
+        border: 1px solid #EEEEEE;
+        text-align:center;
+        padding: 60px;
+        padding-top: 125px;
+        position: sticky;
+            top: 90px; 
+            z-index: 100;
+        background-color: #EEEEEE;
+    }
 
+    td{
+        font-family: Calibri;
+        font-size: 40px;
+        border: 1px solid #FFFF;
+        text-align: center;
+        padding: 35px;
+    }
 
-    <head>
+    tr:nth-child(even){
+        text-align: center;
+    }
 
-    </head>
+    h1{
+        font-family: Montserrat;
+        font-size: 60px;
+    }
 
+    .fixed-top-border a
+    {
+        scale: 60%;
+    }
 
-    <body>
-        <h1>WENAS</h1>
-        
-    </body>
+    .fixed-top-border img
+    {
+        scale: 70%;
+    }
+
+</style>
+
+<!--PARTE SUPERIOR-->
+
+<head>
+    <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
+
+    <div class="fixed-top-border">
+        <a onclick="goBack()">
+        <img src="{% static 'assets/Interfaz/previous.png' %}">
+        </a>
+        <h1>Pacientes deshabilitados</h1>
+    </div>
+
+</head>
+
+<body>
+          
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Expediente</th>
+                <th>Fecha de ingreso</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for paciente in pacientes %}
+                {% if paciente.paciente_Habilitado == "Deshabilitado" %}
+                <tr onclick="window.location='{% url 'perfilPacienteEnfermero' paciente.expediente %}'" style="cursor: pointer;">
+                    <td>{{ paciente.nombre }}</td>
+                    <td>{{ paciente.expediente }}</td>
+                    <td>{{ paciente.fecha_ingreso }}</td>
+                </tr>
+                {% endif %}
+            {% empty %}
+            <tr>
+                <td colspan="3">No hay pacientes registrados</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
 
 </html>

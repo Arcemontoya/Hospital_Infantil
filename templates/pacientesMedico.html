@@ -100,11 +100,13 @@
         </thead>
         <tbody>
             {% for paciente in Pacientes %}
-            <tr onclick="window.location='{% url 'perfilPacienteMedico' paciente.expediente %}'" style="cursor: pointer;">
-                <td>{{ paciente.nombre }}</td>
-                <td>{{ paciente.expediente }}</td>
-                <td>{{ paciente.fecha_ingreso }}</td>
-            </tr>
+                {% if paciente.paciente_Habilitado == "Habilitado" %}
+                <tr onclick="window.location='{% url 'perfilPacienteMedico' paciente.expediente %}'" style="cursor: pointer;">
+                    <td>{{ paciente.nombre }}</td>
+                    <td>{{ paciente.expediente }}</td>
+                    <td>{{ paciente.fecha_ingreso }}</td>
+                </tr>
+                {% endif %}
             {% empty %}
             <tr>
                 <td colspan="3">No hay pacientes registrados</td>

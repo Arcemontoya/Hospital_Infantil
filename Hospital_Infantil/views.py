@@ -208,10 +208,6 @@ def mostrarRadiografiaEnfermero(request, id_Radiografia, expediente):
     radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
     return render(request, 'radiografiaEnfermero.html', {'radiografia': radiografia, "paciente": paciente})
 
-
-def pacientesDeshabilitados(request):
-    return HttpResponse(render(request, "pacientesDeshabilitados.html")),
-
 def listaTratamientosEnfermero(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     tratamientos = Tratamiento.objects.filter(paciente=expediente)
@@ -233,13 +229,22 @@ def actualizacion_Aplicacion_Tratamiento(request, expediente, id_tratamiento):
         form = TratamientoForm(instance=tratamiento)
     return render(request, 'actualizacion_Aplicacion_Tratamiento.html', {'form': form, 'paciente': paciente, 'tratamiento': tratamiento})
 
-"""
+
 def deshabilitarPaciente(request, expediente):
-    paciente = get_object_or_404(request, expediente=expediente)
+    paciente = get_object_or_404(Paciente, expediente=expediente)
     paciente.paciente_Habilitado = "Deshabilitado"
     paciente.save()
-    return
-"""
+    return redirect('mostrarPacientesEnfermero')
+
+def habilitarPaciente(request, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    paciente.paciente_Habilitado = "Habilitado"
+    paciente.save()
+    return redirect("mostrarPacientesEnfermero")
+
+def pacientesDeshabilitados(request):
+    pacientes = Paciente.objects.filter(paciente_Habilitado="Deshabilitado")
+    return render(request, "pacientesDeshabilitados.html", context={"pacientes" : pacientes})
 
 # --------------------------------------------| INTERFACES DE MEDICO |--------------------------------------------
 
@@ -412,6 +417,7 @@ def deshabilitar_Usuario(request, id):
     messages.success(request,"El usuario fue deshabilitado correctamente.")
     return redirect('usuarios')
 
+
 def habilitar_Usuario(request, id):
     user = get_object_or_404(User, id=id)
     user.is_active = True
@@ -449,31 +455,22 @@ def usuariosDeshabilitados(request):
 
 # --------------------------------------------| INTERFACES DE VISTA GENERAL |--------------------------------------------
 
-def pacientesDeshabilitados(request):
-    return HttpResponse(render(request, "usuariosDeshabilitados.html"))
-
-def usuariosDeshabilitados(request):
-    return HttpResponse(render(request, "usuariosDeshabilitados.html"))
-
 def signosVitales(request):
     return HttpResponse(render(request, "signosVitales.html"))
 
-
-def radiografia(request):
-    return HttpResponse(render(request, "radiografiaMedico.html"))
-
-
-def estudio(request):
-    return HttpResponse(render(request, "estudioMedico.html"))
 
 
 # --------------------------------------------| INTERFACES DE MUESTRA DE DATOS |--------------------------------------------
 
 def mostrarPacientesEnfermero(request):
-    pacientes = Paciente.objects.all()
+    pacientes = Paciente.objects.filter(paciente_Habilitado="Habilitado")
     return render(request, 'pacientesEnfermero.html', {'Pacientes': pacientes})
 
+def mostrarPacientesDeshabilitados(request):
+    pacientes = Paciente.objects.filter(paciente_Habilitado="Deshabilitado")
+    return render(request, 'pacientesDeshabilitados.html', {'Pacientes': pacientes})
+
 def mostrarPacientesMedico(request):
-    pacientes = Paciente.objects.filter(medico_Encargado__user=request.user)
+    pacientes = Paciente.objects.filter(medico_Encargado__user=request.user, paciente_Habilitado="Habilitado")
     return render(request, 'pacientesMedico.html', {'Pacientes': pacientes})
 

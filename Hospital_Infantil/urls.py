@@ -42,7 +42,8 @@ urlpatterns = [
     #Mostrar usuarios deshabilitados
     path('usuariosDeshabilitados/', views.mostrarUsuariosDeshabilitados, name='mostrarUsuariosDeshabilitados'),
 
-
+    #Mostrar pacientes deshabilitados
+    path('pacientesDeshabilitados/', views.mostrarPacientesDeshabilitados, name='mostrarPacientesDeshabilitados'),
 
     # ------------------------------------------------| INTERFACES DE ENFERMERO |------------------------------------------------
     # Mostrar pacientesEnfermero
@@ -61,6 +62,9 @@ urlpatterns = [
     path('paciente/<int:expediente>/actualizar_tratamiento/<int:id_tratamiento>/',
          views.actualizacion_Aplicacion_Tratamiento, name="actualizacionTratamiento"),
     path('paciente/<int:expediente>/listaTratamientosEnfermero/', views.listaTratamientosEnfermero, name='listaTratamientosEnfermero'),
+    path('paciente/pacientesDeshabilitados', views.pacientesDeshabilitados, name='pacientesDeshabilitados'),
+    path('deshabilitarPaciente/<int:expediente>', views.deshabilitarPaciente, name='deshabilitarPaciente'),
+    path('habilitarPaciente/<int:expediente>', views.habilitarPaciente, name="habilitarPaciente"),
 
     # ------------------------------------------------| INTERFACES DE MEDICO |------------------------------------------------
     path('paciente/<int:expediente>/agregar_tratamiento/', RegistroTratamiento.as_view(), name='agregarTratamiento'),
@@ -84,8 +88,6 @@ urlpatterns = [
 
     # ------------------------------------------------| INTERFACES GENERALES |------------------------------------------------
     path('signosVitales/', views.signosVitales, name="signosVitales"),
-    path('radiografia/', views.radiografia, name="radiografia"),
-    path('estudio/', views.estudio, name="estudio"),
 
     path('perfilPacienteEnfermero/<int:expediente>/', views.perfilPacienteEnfermero, name="perfilPacienteEnfermero"),
     path('perfilPacienteMedico/<int:expediente>/', views.perfilPacienteMedico, name="perfilPacienteMedico")
