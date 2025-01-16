@@ -63,6 +63,13 @@ class Paciente(models.Model):
 
 # ------------------------------------------ |TRATAMIENTO| ------------------------------------------------------------
 
+# Cuantas veces se suministra
+# No se sobreescribe la última aplicación, se guarda
+# Mandar recordatorio de suministro por paciente
+# Crear otra tabla relacional entre medicamento(tratamiento) y hora de suministro
+# Modulación de DB
+
+
 class Tratamiento(models.Model):
     TRATAMIENTO_ACTIVO_CHOICES = [
         ("activo", "Activo"),
@@ -119,6 +126,13 @@ class Tratamiento(models.Model):
     historial_aplicacion = models.DateTimeField(null=True)
 
 
+class HistorialAplicacion(models.Model):
+    tratamiento = models.ForeignKey(Tratamiento, on_delete=models.CASCADE, related_name="historiales")
+    fecha_aplicacion = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.tratamiento.nombre_Medicamento} - {self.fecha_aplicacion}"
+
 
 class Estudios(models.Model):
     id_Estudio = models.AutoField(primary_key=True, unique=True)
@@ -127,6 +141,8 @@ class Estudios(models.Model):
     fecha_realizada = models.DateField(default=timezone.now)
     estudio = models.FileField(upload_to='estudios/')
 
+# CANDIDATO PARA ESTUDIOS
+# SI PUEDO SUMAR A ALGUIEN EN SIGNOS VITALES
 
 class Radiografias(models.Model):
     id_Radiografia = models.AutoField(primary_key=True, unique=True)

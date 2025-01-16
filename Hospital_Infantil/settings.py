@@ -23,10 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-5t#ndq279(iil5d5%37_&ih92^kp*-wxg8*7a&aetf53a6i(c^'
 
+# Agregar siguiente hora de medicamento
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.1.72", "localhost", "192.168.1.103"]
+ALLOWED_HOSTS = ["192.168.1.72", "localhost", "192.168.1.103", "192.168.1.3", "192.168.1.83"]
 
 
 # Application definition
@@ -82,6 +85,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 
 # Password validation
@@ -140,3 +144,12 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "abc@mail.com"
 EMAIL_HOST_PASSWORD = "emailpassword"
+
+"""
+    CORREGIR MODELO DE TRATAMIENTO
+    CREAR UNA NUEVA TABLA CON MEDICAMENTO
+"""
+
+# TRATAMIENTO AL CUMULO DE LOS MEDICAMENTOS
+# ANOTAR ULTIMO SUMINISTRO DEL MEDICAMENTO AL SIGUIENTE MEDICAMENTO (SE LO DISTE CADA 8 HORAS, PREDECIR CUANDO SERÁ EL SIGUIENTE SUMINISTRO)
+#

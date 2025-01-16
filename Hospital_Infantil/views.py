@@ -11,10 +11,11 @@ from django.views import View
 from django.views.generic import FormView, UpdateView
 
 from .forms import RegisterForm, PacienteForm, UserProfileForm, TratamientoForm, EstudiosForm, RadiografiasForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth import login as auth_login
+from django.utils import timezone
 
-from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios
+from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios, HistorialAplicacion
 
 
 # --------------------------------------------| LOGIN |--------------------------------------------
@@ -53,6 +54,8 @@ def logout_view(request):
     return redirect('login')
 
 # --------------------------------------------| INTERFACES DE ENFERMERO |--------------------------------------------
+
+
 def pacientesEnfermero(request):
     return render(request, "pacientesEnfermero.html")
 
@@ -93,10 +96,6 @@ def perfilPacienteEnfermero(request, expediente):
     estudios = Estudios.objects.filter(paciente=expediente)
     return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente, 'tratamientosActivos': tratamientosActivos,
                                                          'tratamientosInactivos': tratamientosInactivos, 'estudios': estudios, 'radiografias': radiografias})
-
-
-def agregarEstudio(request):
-    return HttpResponse(render(request, "agregarEstudio.html"))
 
 
 def estudios_GabineteEnfermero(request, expediente):
@@ -220,15 +219,47 @@ def actualizacion_Aplicacion_Tratamiento(request, expediente, id_tratamiento):
     if request.method == 'POST':
         form = TratamientoForm(request.POST, instance=tratamiento)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Tratamiento editado con éxito.")
+            # Guardar el tratamiento actualizado
+            tratamiento_actualizado = form.save()
+
+            # Registrar el historial de aplicación
+            HistorialAplicacion.objects.create(
+                tratamiento=tratamiento_actualizado,
+                fecha_aplicacion=timezone.now()
+            )
+
+            messages.success(request, "Tratamiento editado y aplicación registrada con éxito.")
             return redirect('perfilPacienteEnfermero', expediente=paciente.expediente)
         else:
             messages.error(request, "Por favor, corrige los errores en el formulario.")
     else:
         form = TratamientoForm(instance=tratamiento)
-    return render(request, 'actualizacion_Aplicacion_Tratamiento.html', {'form': form, 'paciente': paciente, 'tratamiento': tratamiento})
 
+    # Renderizar el formulario
+    return render(request, 'actualizacion_Aplicacion_Tratamiento.html', {
+        'form': form,
+        'paciente': paciente,
+        'tratamiento': tratamiento
+    })
+
+def historial_aplicacion_por_paciente(request, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    historial = HistorialAplicacion.objects.filter(tratamiento__paciente=paciente).order_by('-fecha_aplicacion')
+
+    return render(request, 'historial_aplicacion_paciente.html', {
+        'paciente': paciente,
+        'historial': historial
+    })
+
+
+def historial_aplicacion_por_tratamiento(request, id_tratamiento):
+    tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_tratamiento)
+    historial = tratamiento.historiales.all().order_by('-fecha_aplicacion')  # Ordenar por fecha descendente
+
+    return render(request, 'historialAplicacion.html', {
+        'tratamiento': tratamiento,
+        'historial': historial
+    })
 
 def deshabilitarPaciente(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
@@ -308,13 +339,15 @@ def edicionTratamiento(request, expediente, id_tratamiento):
 
     return render(request, 'editarTratamiento.html', {'form': form, 'paciente': paciente, 'tratamiento': tratamiento})
 
+
+# Modificar
 def perfilPacienteMedico(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     tratamientosActivos = Tratamiento.objects.filter(paciente=expediente)
     tratamientosInactivos = Tratamiento.objects.filter(paciente=expediente)
     radiografias = Radiografias.objects.filter(paciente=expediente)
     estudios = Estudios.objects.filter(paciente=expediente)
-    return render(request, "perfilPacienteMedico.html", {'paciente': paciente, 'tratamientos': tratamientosActivos,
+    return render(request, "perfilPacienteMedico.html", {'paciente': paciente, 'tratamientosActivos': tratamientosActivos, 'tratamientosInactivos': tratamientosInactivos,
                   'estudios': estudios, 'radiografias': radiografias})
 
 
@@ -364,6 +397,15 @@ class RegistroUsuario(FormView):
             profile.user = user
             profile.save()
 
+            # Agregacion de grupos
+            grupo_nombre = profile.funcionalidad
+            grupo = Group.objects.filter(name=grupo_nombre).first()
+
+            if grupo:
+                user.groups.add(grupo)
+                messages.success(self.request, f"Usuario registrado y asigndo al grupo {grupo_nombre}.")
+            else:
+                messages.warning(self.request, f"Usuario registrado, pero no se encontró un grupo.")
             messages.success(self.request, "Usuario registrado con éxito.")
             return super().form_valid(form)
         except Exception as e:
