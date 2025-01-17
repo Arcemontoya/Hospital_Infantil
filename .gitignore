@@ -1,3 +1,5 @@
 .venv/*
 Hospital_Infantil/__pycache__/*
 Hospital_Infantil/migrations/__pycache__/*
+db.sqlite3
+db.sqlite3
