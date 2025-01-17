@@ -1,205 +1,235 @@
 {% load static %}
 <script>
     function goBack() {
-    window.history.back();
+        window.history.back();
     }
 </script>
 
 <!DOCTYPE html>
 <html lang="en">
-    <style>
-        .fixed-top-border {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 169.31px; /* Ajusta la altura según lo necesites */
-            background-color: #355e9f;
-            z-index: 1000;
+<style>
+    .fixed-top-border {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 169.31px;
+        /* Ajusta la altura según lo necesites */
+        background-color: #355e9f;
+        z-index: 1000;
 
-            /* Remover alineación y padding relacionados con el contenido */
-            display: flex;
-            align-items: center;
-        }
-
-
-        .fixed-top-border img
-        {
-            
-            scale: 40%;
-        }
+        /* Remover alineación y padding relacionados con el contenido */
+        display: flex;
+        align-items: center;
+    }
 
 
-        .section-title
-        {
-            background-color: #EEEEEE;
-            font-family: Montserrat;
-            width: 350px;
-            border-radius: 8px;
-            padding: 5px;
-            margin-bottom: 80px;
-            text-align: center;
-        }
-        
+    .fixed-top-border img {
 
-        .form-container {
-            
-                margin-top: 50px; /* Ajusta el margen superior para posicionar la sección */
-                padding: 20px; /* Espacio interno del contenedor */
-                background-color: white; /* Fondo blanco para el contenedor */
-                border-radius: 8px; /* Bordes redondeados */
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra */
-                width: 600px; /* Ancho del contenedor para que coincida con los inputs */
-                display: flex; /* Habilita Flexbox */
-                flex-direction: column; /* Organiza los elementos en una columna */
-                align-items: center;
-                margin-bottom: 200px;
-                margin-top: 200px;
-        }
-
-        
-
-        button
-        {
-                background-color: #355e9f;
-                font-family: Montserrat;
-                width: 400px;
-                height: 100px;
-                font-size: 60px;
-                color: white;
-                border-radius: 8px;
-        }
-
-        .form-container input {
-                width: 550px; /* Ancho completo del input */
-                height: 80px;
-                margin-bottom: 20px; /* Espacio entre los inputs */
-                padding: 10px;
-                font-family: Calibri;
-                font-size: 30px;
-                background-color: #EEEE;
-                border-color: #EEEE;
-                
-        }
-
-        textarea
-        {
-            width: 600px; /* Ancho completo del input */
-            height: 500px;
-            background-color: #EEEE;
-            border-color: #EEEE; 
-            font-family: Calibri;
-            font-size: 30px;
-        }
-
-        select
-        {
-            width: 550px; /* Ancho completo del input */
-            height: 80px;
-            margin-bottom: 20px; /* Espacio entre los inputs */
-            padding: 10px;
-            font-family: Calibri;
-            font-size: 30px;
-            background-color: #EEEE;
-            border-color: #EEEE;    
-        }
-
-        h1{
-            font-family: Montserrat;
-            font-size: 60px;
-            color: white;
-        }
-
-        h2{
-            font-family: Montserrat;
-            font-size: 40px;
-        }
-
-        h3{
-            font-family: Calibri;
-            font-size: 30px;
-            align-self: flex-start; /* Alinear el h3 al inicio del contenedor */
-            text-align: left; /* Alinea el texto del h3 a la izquierda */
-            width: 100%; /* Asegura que el h3 ocupe todo el ancho disponible */
-            padding-left: 20px; /* Opcional: separa el texto del borde izquierdo */
-        }
-    </style>
+        scale: 40%;
+    }
 
 
-    <head>
+    .section-title {
+        background-color: #EEEEEE;
+        font-family: Montserrat;
+        width: 350px;
+        border-radius: 8px;
+        padding: 5px;
+        margin-bottom: 80px;
+        text-align: center;
+    }
 
-        <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
 
-        <div class="fixed-top-border">
-            <a onclick="goBack()">
+    .form-container {
+
+        margin-top: 50px;
+        /* Ajusta el margen superior para posicionar la sección */
+        padding: 20px;
+        /* Espacio interno del contenedor */
+        background-color: white;
+        /* Fondo blanco para el contenedor */
+        border-radius: 8px;
+        /* Bordes redondeados */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        /* Sombra */
+        width: 600px;
+        /* Ancho del contenedor para que coincida con los inputs */
+        display: flex;
+        /* Habilita Flexbox */
+        flex-direction: column;
+        /* Organiza los elementos en una columna */
+        align-items: center;
+        margin-bottom: 200px;
+        margin-top: 200px;
+    }
+
+
+
+    button {
+        background-color: #355e9f;
+        font-family: Montserrat;
+        width: 400px;
+        height: 100px;
+        font-size: 60px;
+        color: white;
+        border-radius: 8px;
+    }
+
+    .form-container input {
+        width: 550px;
+        /* Ancho completo del input */
+        height: 80px;
+        margin-bottom: 20px;
+        /* Espacio entre los inputs */
+        padding: 10px;
+        font-family: Calibri;
+        font-size: 30px;
+        background-color: #EEEE;
+        border-color: #EEEE;
+
+    }
+
+    textarea {
+        width: 600px;
+        /* Ancho completo del input */
+        height: 500px;
+        background-color: #EEEE;
+        border-color: #EEEE;
+        font-family: Calibri;
+        font-size: 30px;
+    }
+
+    select {
+        width: 550px;
+        /* Ancho completo del input */
+        height: 80px;
+        margin-bottom: 20px;
+        /* Espacio entre los inputs */
+        padding: 10px;
+        font-family: Calibri;
+        font-size: 30px;
+        background-color: #EEEE;
+        border-color: #EEEE;
+    }
+
+    h1 {
+        font-family: Montserrat;
+        font-size: 60px;
+        color: white;
+    }
+
+    h2 {
+        font-family: Montserrat;
+        font-size: 40px;
+    }
+
+    h3 {
+        font-family: Calibri;
+        font-size: 30px;
+        align-self: flex-start;
+        /* Alinear el h3 al inicio del contenedor */
+        text-align: left;
+        /* Alinea el texto del h3 a la izquierda */
+        width: 100%;
+        /* Asegura que el h3 ocupe todo el ancho disponible */
+        padding-left: 20px;
+        /* Opcional: separa el texto del borde izquierdo */
+    }
+</style>
+
+
+<head>
+
+    <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
+
+    <div class="fixed-top-border">
+        <a onclick="goBack()">
             <img src="{% static 'assets/Interfaz/previous.png' %}">
+        </a>
+        <h1>Edición de paciente</h1>
+
+    </div>
+</head>
+
+<body>
+    <center>
+        <form action="{% url 'editarPaciente' expediente=paciente.expediente %}" method="post">
+            {% csrf_token %}
+            <div class="form-container">
+                <div class="section-title">
+                    <h2>Características del paciente</h2>
+                </div>
+
+                <h3> 
+                    Nombre:
+                    <input type="text" name="nombre" value="{{ form.nombre.value }}" required maxlength="100">
+                </h3>
+
+                <h3>Apellido paterno: 
+                    <input type="text" name="apellido_paterno" value="{{ form.apellido_paterno.value }}" required maxlength="100">
+                </h3>
+
+                <h3>Apellido materno: 
+                    <input type="text" name="apellido_materno" value="{{ form.apellido_materno.value }}" required maxlength="100">
+                </h3>
+
+                <h3>Fecha de nacimiento: 
+                    <input type="date" name="fecha_nacimiento" value="{{ form.fecha_nacimiento.value }}" required>
+                </h3>
+
+                <h3>Fecha de ingreso: 
+                    <input type="date" name="fecha_ingreso" value="{{ form.fecha_ingreso.value }}" required>
+                </h3>
+
+                <h3>Altura (cm): 
+                    <input type="number" name="altura" value="{{ form.altura.value }}" required min="0" max="300">
+                </h3>
+
+                <h3>Peso (kg): 
+                    <input type="number" name="peso" value="{{ form.peso.value }}" required min="0" max="200">
+                </h3>
+            </div>
+
+            <div class="form-container">
+                <div class="section-title">
+                    <h2>Cirugía</h2>
+                </div>
+
+                <h3>Cirugía realizada: 
+                    <input type="text" name="cirugia_realizada" value="{{ form.cirugia_realizada.value }}" required maxlength="100">
+                </h3>
+
+                <h3>Diagnóstico clínico prequirúrgico
+                    <input type="text" name="diagnostico_clinico_prequirurgico" value="{{ form.diagnostico_clinico_prequirurgico.value }}" required maxlength="300">
+                </h3>
+            </div>
+
+            <div class="form-container">
+                <div class="section-title">
+                    <h2>Nota de enfermería</h2>
+                </div>
+
+                <h3>Ingrese nota de enfermería
+                    <input type="text" name="nota_enfermeria" value="{{ form.nota_enfermeria.value }}" required maxlength="300">
+                </h3>
+            </div>
+
+            <div class="form-container">
+                <div class="section-title">
+                    <h2>Médico encargado</h2>
+                </div>
+
+                <h3>Seleccione el médico encargado</h3>
+                {{ form.medico_Encargado }} 
+            </div>
+
+            <a href="{% url 'mostrarPacientesEnfermero' %}">
+                <button type="submit"><b>Registrar</b></button>
             </a>
-            <h1>Edición de paciente</h1>
-            
-        </div>
-    </head>
-
-    <body>
-        <center>
-            <form action="{% url 'editarPaciente' expediente=paciente.expediente %}" method="post">
-                {% csrf_token %}
-                <div class="form-container">
-                    <div class="section-title"><h2>Características del paciente</h2></div>
-
-                    <h3>Nombre: </h3>
-                    {{ form.nombre }}
-                    
-                    <h3>Apellido paterno: </h3>
-                    {{ form.apellido_paterno }}
-
-                    <h3>Apellido materno: </h3>
-                    {{ form.apellido_materno }}
-
-                    <h3>Fecha de nacimiento: </h3>
-                    {{ form.fecha_nacimiento }}
-
-                    <h3>Fecha de ingreso: </h3>
-                    {{ form.fecha_ingreso }}
-
-                    <h3>Altura: </h3>
-                    {{ form.altura }}
-
-                    <h3>Peso: </h3>
-                    {{ form.peso }}
-
-                </div>
-
-                <div class="form-container">
-                    <div class="section-title"><h2>Cirugía</h2></div>
-
-                    <h3>Cirugía realizada: </h3>
-                    {{ form.cirugia_realizada }}
-
-                    
-                    <h3>Diagnóstico clínico prequirúrgico</h3>
-                    {{ form.diagnostico_clinico_prequirurgico }}
-                </div>
-
-                <div class="form-container">
-                    <div class="section-title"><h2>Nota de enfermería</h2></div>
-
-                    <h3>Ingrese nota de enfermería</h3>
-                    {{ form.nota_enfermeria }}
-                </div>
-
-                <div class="form-container">
-                    <div class="section-title"><h2>Médico encargado</h2></div>
-
-                    <h3>Seleccione el médico encargado</h3>
-                    {{ form.medico_Encargado }}
-                </div>
-
-                <a href="{% url 'mostrarPacientesEnfermero' %}"> 
-                    <button type="submit"><b>Registrar</b></button>
-                </a>
-            </center>
-        </form>
-    </body>
+    </center>
+    </form>
+</body>
 
 
 
