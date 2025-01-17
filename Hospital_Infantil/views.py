@@ -55,7 +55,6 @@ def logout_view(request):
 
 # --------------------------------------------| INTERFACES DE ENFERMERO |--------------------------------------------
 
-
 def pacientesEnfermero(request):
     return render(request, "pacientesEnfermero.html")
 

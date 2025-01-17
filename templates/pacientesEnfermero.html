@@ -10,93 +10,10 @@
     <!-- VERDE: 76BD42 -->
     <!-- NEGRO: 222222 -->
 
-<style>
-    
-    .fixed-top-border{
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: px;
-        background-color: #355e9f;
-        z-index: 1000;
-
-        display: flex;
-        align-items: center;
-
-        font-family: Montserrat;
-        color: white;
-        padding: 10px;
-
-    }
-    
-    table{
-        font-family: Calibri;
-        border-collapse: collapse;
-        border: #EEEEEE;
-        width: 100%;
-        margin-top: 80px;
-    }
-
-    th{
-        
-        font-family: Calibri;
-        font-size: 40px;
-        border: 1px solid #EEEEEE;
-        text-align:center;
-        padding: 60px;
-        padding-top: 125px;
-        position: sticky;
-            top: 90px; 
-            z-index: 100;
-        background-color: #EEEEEE;
-    }
-
-    td{
-        font-family: Calibri;
-        font-size: 40px;
-        border: 1px solid #FFFF;
-        text-align: center;
-        padding: 35px;
-    }
-
-    tr:nth-child(even){
-        text-align: center;
-    }
-
-    h1{
-        font-family: Montserrat;
-        font-size: 60px;
-    }
-
-    /*
-    img
-    {
-        position: fixed;
-        scale: 60%;
-        transform: translateX(1260px) translateY(2200px);
-    }
-    */
-
-    .image-container
-    {
-        position: fixed;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 80px;
-        margin-top: 10px;
-        scale: 60%;
-        top: 65%;
-        left: 78%;
-    }
-
-
-</style>
-
-<!--PARTE SUPERIOR-->
 
 <head>
+    <link rel="stylesheet" href="{% static 'CSS/listsDisplays.css' %}">
+
     <div class="fixed-top-border"> 
         <h1>Pacientes</h1>
     </div>
@@ -104,6 +21,7 @@
     <!--BOTON DE MAS Y PACIENTES DESHABILITADOS-->
     <link href="{% static 'assets/Interfaz/plus.png' %}" rel="icon" type="image/png">
     <link href="{% static 'assets/Interfaz/disabledPatients.png' %}" rel="icon" type="image/png">
+
     
     <div class="image-container">
         <a href=" {% url 'registroPaciente' %}">
