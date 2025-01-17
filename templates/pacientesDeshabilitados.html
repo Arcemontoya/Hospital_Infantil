@@ -8,87 +8,13 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <!-- ESTANDARIZACIÓN DE COLORES-->
-    <!-- AZUL: 355E9F -->
-    <!-- ROJO: E32525 -->
-    <!-- AMARILLO: FDD007 -->
-    <!-- VERDE: 76BD42 -->
-    <!-- NEGRO: 222222 -->
-
-<style>
-    
-    .fixed-top-border{
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 169.3px;
-        background-color: #355e9f;
-        z-index: 1000;
-
-        display: flex;
-        align-items: center;
-
-        font-family: Montserrat;
-        color: white;
-        padding: 10px;
-    }
-
-    table{
-        font-family: Calibri;
-        border-collapse: collapse;
-        border: #EEEEEE;
-        width: 100%;
-        margin-top: 80px;
-    }
-
-    th{
-        
-        font-family: Calibri;
-        font-size: 40px;
-        border: 1px solid #EEEEEE;
-        text-align:center;
-        padding: 60px;
-        padding-top: 125px;
-        position: sticky;
-            top: 90px; 
-            z-index: 100;
-        background-color: #EEEEEE;
-    }
-
-    td{
-        font-family: Calibri;
-        font-size: 40px;
-        border: 1px solid #FFFF;
-        text-align: center;
-        padding: 35px;
-    }
-
-    tr:nth-child(even){
-        text-align: center;
-    }
-
-    h1{
-        font-family: Montserrat;
-        font-size: 60px;
-    }
-
-    .fixed-top-border a
-    {
-        scale: 60%;
-    }
-
-    .fixed-top-border img
-    {
-        scale: 70%;
-    }
-
-</style>
 
 <!--PARTE SUPERIOR-->
 
 <head>
     <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
+    <link rel="stylesheet" href="{% static 'CSS/listsDisplays.css' %}">
+
 
     <div class="fixed-top-border">
         <a onclick="goBack()">
