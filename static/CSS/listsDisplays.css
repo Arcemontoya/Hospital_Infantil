@@ -73,4 +73,99 @@
         scale: 40%;
     }
 
+    .fixed-bottom-border
+    {
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color:#355e9f;
+        padding: 10px;
+        height: 169.3px;
+    }
 
+    .icon-container
+    {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .icon-item
+    {
+        position: relative;
+        flex: 1;
+        margin: 0px; /* Espaciado entre los íconos */
+        text-align: center; /* Asegura que el texto esté centrado */
+    }
+
+    .icon-item img
+    {
+        margin-left: 0%;
+        margin-bottom: 40px;
+        scale: 40%;
+    }
+
+    .icon-item p
+    {
+        position: absolute;
+        bottom: 0; /* Coloca el texto en la parte inferior del contenedor del ícono */
+        left: 50%;
+        color: white;
+        font-family: Montserrat;
+        font-size: 20px;
+        transform: translateX(-50%) translateY(-220%);
+    }
+
+
+    .fixed-bottom-border
+    {
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color:#355e9f;
+        padding: 10px;
+        height: 169.3px;
+    }
+
+    .icon-container
+    {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .icon-item
+    {
+        position: relative;
+        flex: 1;
+        margin: 0px; /* Espaciado entre los íconos */
+        text-align: center; /* Asegura que el texto esté centrado */
+    }
+
+    .icon-item img
+    {
+        margin-left: 0%;
+        margin-bottom: 40px;
+        scale: 40%;
+    }
+
+    .icon-item p
+    {
+        position: absolute;
+        bottom: 0; /* Coloca el texto en la parte inferior del contenedor del ícono */
+        left: 50%;
+        color: white;
+        font-family: Montserrat;
+        font-size: 20px;
+        transform: translateX(-50%) translateY(-220%);
+    }
