@@ -1,0 +1,6 @@
+# Colores
+AZUL:       #355E9F
+ROJO:       #E32525
+AMARILLO:   #FDD007
+VERDE:      #76BD42 
+NEGRO:      #222222 
