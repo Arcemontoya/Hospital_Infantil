@@ -22,7 +22,9 @@ from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
 from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, edicionTratamiento, \
-    edicionPaciente, logout_view, listaTratamientos, RegistroEstudios, RegistroRadiografias
+    edicionPaciente, logout_view, listaTratamientos, RegistroEstudios, RegistroRadiografias, \
+    desplieguePacientesHabilitados, desplieguePacientesDeshabilitados, edicionPacientes, perfilPaciente, \
+    edicionTratamientos
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,6 +46,15 @@ urlpatterns = [
 
     #Mostrar pacientes deshabilitados
     path('pacientesDeshabilitados/', views.mostrarPacientesDeshabilitados, name='mostrarPacientesDeshabilitados'),
+
+    # ------------------------------------------------| TESTING |------------------------------------------------
+
+    path('testing/<int:pk>/', views.perfilPaciente.as_view(), name='name'),
+    #path('testing/<int:pk>/', edicionPacientes.as_view(), name = "edicionPacientes"), así se manda a llamar
+    #path('testing/<int:expendiente>/<int:pk>', edicionTratamientos.as_view(), name = "perfilPaciente"), Así se edita un medicamento
+
+
+
 
     # ------------------------------------------------| INTERFACES DE ENFERMERO |------------------------------------------------
     # Mostrar pacientesEnfermero
