@@ -1,4 +1,5 @@
 import profile
+from itertools import chain
 
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, get_object_or_404
@@ -244,19 +245,70 @@ class RegistroRadiografias(FormView):
                 print(f"Error en el campo '{field}': {error}")
         return super().form_invalid(form)
 
-# --------------------------------------------| MOSTRAR ESTUDIOS Y RADIOGRAFIA |--------------------------------------------
+# --------------------------------------------| MOSTRAR ESTUDIOS Y GABINETE |--------------------------------------------
+class EstudiosYGabinete(ListView):
+    template_name = "Testing.html"
+    context_object_name = "estudiosRadiografias"
 
+    def get_queryset(self):
+        paciente_id = self.kwargs.get('paciente_id')
+        estudios = Estudios.objects.filter(paciente_id=paciente_id)
+        radiografias = Radiografias.objects.filter(paciente_id=paciente_id)
+        return list(chain(estudios, radiografias))
 
-# Eliminar
+""" PENDIENTE
+class mostrarDetallesEstudios(DetailView):
+    model = Paciente
+    template_name = "Testing.html"
+    context_object_name = "estudios"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['estudios'] = Estudios.objects.filter(paciente_id=self.object)
+        return context
+
+    def get_pdf(self, request, id_Estudio):
+        estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+        archivo_pdf = estudio.estudio
+        response = FileResponse(archivo_pdf.open(), content_type='application/pdf')
+        response['Content-Disposition'] = f'inline; filename="{archivo_pdf.name}"'
+        return response
+"""
+
+# No mover
 def ver_pdfEstudios(request, id_Estudio):
-    estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
-    archivo_pdf = estudio.estudio
+    estudios = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+    archivo_pdf = estudios.estudio
     response = FileResponse(archivo_pdf.open(), content_type='application/pdf')
     response['Content-Disposition'] = f'inline; filename="{archivo_pdf.name}"'
 
     return response
 
-# Eliminar
+""" PENDIENTE
+class mostrarDetallesRadiografia(DetailView):
+    Model = Paciente
+    #template_name = "Testing.html"
+    context_object_name = "radiografias"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
+        context['expediente'] = expediente
+        context['paciente'] = paciente
+        return context
+
+    # Eliminar
+    def get_pdf(request, id_Radiografia):
+        radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
+        archivo_pdf = radiografia.radiografia
+        response = FileResponse(archivo_pdf.open(), content_type='application/pdf')
+        response['Content-Disposition'] = f'inline; filename="{archivo_pdf.name}"'
+
+        return response
+"""
+
+# No mover
 def ver_pdfRadiografias(request, id_Radiografia):
     radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
     archivo_pdf = radiografia.radiografia
@@ -265,23 +317,23 @@ def ver_pdfRadiografias(request, id_Radiografia):
 
     return response
 
-# Eliminar
+# No mover
 def mostrarEstudioMedico(request, id_Estudio):
     estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
     return render(request, 'estudioMedico.html', {'estudio': estudio})
 
-# Eliminar
+# No mover
 def mostrarRadiografiaMedico(request, id_Radiografia):
     radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
     return render(request, 'radiografiaMedico.html', {'radiografia': radiografia})
 
-# Eliminar
+# No mover
 def mostrarEstudioEnfermero(request, id_Estudio, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
     return render(request, 'estudioEnfermero.html', {'estudio': estudio, "paciente": paciente})
 
-# Eliminar
+# No mover
 def mostrarRadiografiaEnfermero(request, id_Radiografia, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
@@ -345,14 +397,14 @@ def historial_aplicacion_por_tratamiento(request, id_tratamiento):
         'historial': historial
     })
 
-# Refactorizar
+# No mover
 def deshabilitarPaciente(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     paciente.paciente_Habilitado = "Deshabilitado"
     paciente.save()
     return redirect('mostrarPacientesEnfermero')
 
-# Refactorizar
+# No mover
 def habilitarPaciente(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     paciente.paciente_Habilitado = "Habilitado"
@@ -456,7 +508,7 @@ def edicionTratamiento(request, expediente, id_tratamiento):
 
     return render(request, 'editarTratamiento.html', {'form': form, 'paciente': paciente, 'tratamiento': tratamiento})
 
-# --------------------------------------------| ACTUALIZAR HORA DE APLICACION |--------------------------------------------
+# --------------------------------------------| ESTUDIOS Y GABINETE |--------------------------------------------
 
 
 # Eliminar

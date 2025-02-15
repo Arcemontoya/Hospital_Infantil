@@ -49,7 +49,8 @@ urlpatterns = [
 
     # ------------------------------------------------| TESTING |------------------------------------------------
 
-    path('testing/<int:pk>/', views.perfilPaciente.as_view(), name='name'),
+    #path('estudios/pdf/<int:pk>/', mostrarDetallesEstudios.as_view(), name='ver_pdfEstudios'),
+    #path('testing/<int:paciente_id>/', views.EstudiosYGabinete.as_view(), name='name'), así se manda a llamar Estudios y Radiografía combinados
     #path('testing/<int:pk>/', edicionPacientes.as_view(), name = "edicionPacientes"), así se manda a llamar
     #path('testing/<int:expendiente>/<int:pk>', edicionTratamientos.as_view(), name = "perfilPaciente"), Así se edita un medicamento
 

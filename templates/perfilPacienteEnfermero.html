@@ -1,4 +1,4 @@
-{% load static %}
+-......<{% load static %}
 {% load tz %}
 
 <!DOCTYPE HTML>
@@ -147,7 +147,7 @@
 
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'listaTratamientosEnfermero' expediente=paciente.expediente %}" class="dropdown-item">Lista de Tratamientos</a></li>
+                        <li><a href="{% url 'listaTratamientosEnfermero' expediente=paciente.expediente %}" class="dropdown-item">Actualizar suministro de tratamiento</a></li>
                         {% if paciente.paciente_Habilitado == "Habilitado" %}
                             <li><a href = "{% url 'deshabilitarPaciente' expediente=paciente.expediente%}" class="dropdown-item">Deshabilitar paciente</a></li>
                         {% elif paciente.paciente_Habilitado == "Deshabilitado"%}
