@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.utils.timezone import now
 
 
-from .models import Paciente, Tratamiento, UserProfile, Estudios, Radiografias
+from .models import Paciente, Tratamiento, UserProfile, Estudios, Radiografias, SignosVitales
 
 
 class RegisterForm(UserCreationForm):
@@ -219,3 +219,33 @@ class RadiografiasForm(forms.ModelForm):
     class Meta:
         model = Radiografias
         fields= ["nombre_Radiografia", "fecha_realizada", "radiografia"]
+        
+class SignosVitalesForm(forms.ModelForm):
+    temperatura = forms.FloatField(
+        required=True,
+        widget=forms.NumberInput(attrs={'placeholder': 'Ingrese la temperatura en °C.'})
+    )
+
+    frecuencia_cardiaca = forms.IntegerField(
+        required=True,
+        widget=forms.NumberInput(attrs={'placeholder': 'Ingrese la frecuencia cardiaca en latidos por minuto.'})
+    )
+
+    frecuencia_respiratoria = forms.IntegerField(
+        required=True,
+        widget=forms.NumberInput(attrs={'placeholder': 'Ingrese la frecuencia respiratoria en respiraciones por minuto.'})
+    )
+
+    presion_arterial = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': 'Ingrese la presión arterial en mmHg.'})
+    )
+
+    saturacion_oxigeno = forms.IntegerField(
+        required=True,
+        widget=forms.NumberInput(attrs={'placeholder': 'Ingrese la saturación de oxígeno en %.'})
+    )
+
+    class Meta:
+        model = SignosVitales
+        fields = ["temperatura", "frecuencia_cardiaca", "frecuencia_respiratoria", "presion_arterial", "saturacion_oxigeno"]

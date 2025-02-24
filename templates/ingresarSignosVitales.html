@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <title>Ingreso de Signos Vitales</title>
+    <link rel="stylesheet" href="{% static 'CSS/forms.css' %}">
+    <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+    <div class="fixed-top-border">
+        <a onclick="goBack()">
+            <img src="{% static 'assets/Interfaz/previous.png' %}">
+        </a>
+        <h1>Ingreso de Signos Vitales</h1>
+    </div>
+</head>
+
+<body>
+    <center>
+        <form action="{% url 'ingresarSignosVitales' expediente=paciente.expediente %}" method="post">
+            {% csrf_token %}
+            <div class="form-container">
+                <div class="section-title">
+                    <h2>Signos Vitales del Paciente</h2>
+                </div>
+
+                <h3>Frecuencia Cardíaca (latidos por minuto):
+                    <input type="number" name="frecuencia_cardiaca" required min="0" max="200">
+                </h3>
+
+                <h3>Frecuencia Respiratoria (respiraciones por minuto):
+                    <input type="number" name="frecuencia_respiratoria" required min="0" max="100">
+                </h3>
+
+                <h3>Temperatura (°C):
+                    <input type="number" name="temperatura" required min="30" max="45" step="0.1">
+                </h3>
+
+                <h3>Presión Arterial (mm Hg):
+                    <input type="text" name="presion_arterial" required maxlength="7">
+                </h3>
+
+                <h3>Saturación de Oxígeno (%):
+                    <input type="number" name="saturacion_oxigeno" required min="0" max="100">
+                </h3>
+            </div>
+            <button type="submit"><b>Registrar</b></button>
+        </form>
+    </center>
+</body>
+
+</html>

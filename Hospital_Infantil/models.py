@@ -151,3 +151,15 @@ class Radiografias(models.Model):
     fecha_realizada = models.DateField(default=timezone.now)
     radiografia = models.FileField(upload_to='radiografias/')
 
+class SignosVitales(models.Model):
+    id_SignoVital = models.AutoField(primary_key=True, unique=True)
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='signos_vitales', null=True)
+    temperatura = models.FloatField(null=False)
+    frecuencia_cardiaca = models.IntegerField(null=False)
+    frecuencia_respiratoria = models.IntegerField(null=False)
+    presion_arterial = models.CharField(max_length=20, null=False)
+    saturacion_oxigeno = models.IntegerField(null=False)
+    fecha_registro = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f"{self.paciente.nombre} - {self.fecha_registro}"

@@ -87,7 +87,9 @@ urlpatterns = [
     path('habilitar_usuario/<int:id>', views.habilitar_Usuario, name='habilitar_usuario'),
 
     # ------------------------------------------------| INTERFACES GENERALES |------------------------------------------------
-    path('signosVitales/', views.signosVitales, name="signosVitales"),
+    # path('signosVitales/', views.signosVitales, name="signosVitales"),
+    path('signosVitales/<int:expediente>/', views.signosVitales, name='signosVitales'),
+    path('ingresarSignosVitales/<int:expediente>/', views.ingresarSignosVitales, name='ingresarSignosVitales'),
 
     path('perfilPacienteEnfermero/<int:expediente>/', views.perfilPacienteEnfermero, name="perfilPacienteEnfermero"),
     path('perfilPacienteMedico/<int:expediente>/', views.perfilPacienteMedico, name="perfilPacienteMedico")

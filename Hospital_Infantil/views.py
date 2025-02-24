@@ -1,21 +1,20 @@
 import profile
 
 from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, FileResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.generic import FormView, UpdateView
 
-from .forms import RegisterForm, PacienteForm, UserProfileForm, TratamientoForm, EstudiosForm, RadiografiasForm
+from .forms import RegisterForm, PacienteForm, UserProfileForm, TratamientoForm, EstudiosForm, RadiografiasForm, SignosVitalesForm
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import login as auth_login
 from django.utils import timezone
 
-from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios, HistorialAplicacion
+from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios, HistorialAplicacion, SignosVitales
 
 
 # --------------------------------------------| LOGIN |--------------------------------------------
@@ -400,7 +399,7 @@ class RegistroUsuario(FormView):
             grupo_nombre = profile.funcionalidad
             grupo = Group.objects.filter(name=grupo_nombre).first()
 
-            if grupo:
+            if (grupo):
                 user.groups.add(grupo)
                 messages.success(self.request, f"Usuario registrado y asigndo al grupo {grupo_nombre}.")
             else:
@@ -496,9 +495,23 @@ def usuariosDeshabilitados(request):
 
 # --------------------------------------------| INTERFACES DE VISTA GENERAL |--------------------------------------------
 
-def signosVitales(request):
-    return HttpResponse(render(request, "signosVitales.html"))
+def signosVitales(request, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    signos_vitales = SignosVitales.objects.filter(paciente=paciente)
+    return render(request, 'signosVitales.html', {'paciente': paciente, 'signos_vitales': signos_vitales})
 
+def ingresarSignosVitales(request, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    if request.method == 'POST':
+        form = SignosVitalesForm(request.POST)
+        if form.is_valid():
+            signos_vitales = form.save(commit=False)
+            signos_vitales.paciente = paciente
+            signos_vitales.save()
+            return redirect('signosVitales', expediente=paciente.expediente)
+    else:
+        form = SignosVitalesForm()
+    return render(request, 'ingresarSignosVitales.html', {'form': form, 'paciente': paciente})
 
 
 # --------------------------------------------| INTERFACES DE MUESTRA DE DATOS |--------------------------------------------
