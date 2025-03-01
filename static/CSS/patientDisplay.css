@@ -1,32 +1,38 @@
-        .fixed-top-border{
+        .fixed-top-border {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 169.3px;
             background-color: #355e9f;
-            z-index: 1000;
-
+            z-index: 9999; /* 🔹 Asegura que esté por encima de todo */
             display: flex;
             align-items: center;
-
             font-family: Montserrat;
             color: white;
             padding: 10px;
+            border-bottom: 5px solid white; /* 🔹 Agrega borde blanco si quieres */
         }
 
-        .fixed-bottom-border
-        {
+        .fixed-bottom-border {
             position: fixed;
             bottom: 0px;
             left: 0px;
             width: 100%;
+            background-color: #355e9f;
+            padding: 10px;
+            height: 169.3px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color:#355e9f;
-            padding: 10px;
-            height: 169.3px;
+            z-index: 9999; /* 🔹 Mantiene el borde en el frente */
+            border-top: 5px solid white; /* 🔹 Agrega borde si no se nota */
+        }
+
+        /* Ajuste para que el contenido no se superponga */
+        body {
+            padding-top: 170px; /* 🔹 Evita que el contenido quede debajo del borde superior */
+            padding-bottom: 170px; /* 🔹 Evita que quede encima del borde inferior */
         }
 
         .icon-container
@@ -72,6 +78,7 @@
             margin-bottom: 200px;
             margin-top: 200px;
         }
+
 
         .form-container h3
         {
@@ -130,4 +137,30 @@
         img
         {
             scale: 40%;
+        }
+
+        .form-container button
+        {
+                background-color: #355e9f;
+                font-family: Montserrat;
+                width: 400px;
+                height: 100px;
+                font-size: 30px;
+                color: white;
+                border-radius: 8px;
+        }
+
+        .boton-editar {
+            background-color: #4CAF50; /* Verde */
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s ease;
         }

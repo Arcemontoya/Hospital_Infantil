@@ -1,0 +1,50 @@
+<center>
+    <div class="form-container">
+        <h2>Estudios del Paciente</h2>
+        {% for estudio in estudios %}
+            <div class="section-title">
+                <h3>{{ estudio.nombre_Estudio }}</h3>
+            </div>
+            <h4>Fecha realizada: {{ estudio.fecha_realizada }}</h4>
+            
+            <!-- Contenedor del PDF -->
+            <div id="pdf-container-{{ estudio.id_Estudio }}" style="width: 100%; height: 80vh; overflow: auto;"></div>
+
+            <!-- Script para mostrar el PDF -->
+            <script>
+                var url{{ estudio.id_Estudio }} = "{% url 'ver_pdfEstudios' id_Estudio=estudio.id_Estudio %}";
+                var pdfDoc{{ estudio.id_Estudio }} = null;
+                var currentPage{{ estudio.id_Estudio }} = 1;
+                var totalPages{{ estudio.id_Estudio }} = 0;
+
+                pdfjsLib.getDocument(url{{ estudio.id_Estudio }}).promise.then(function(pdfDoc_) {
+                    pdfDoc{{ estudio.id_Estudio }} = pdfDoc_;
+                    totalPages{{ estudio.id_Estudio }} = pdfDoc{{ estudio.id_Estudio }}.numPages;
+                    renderPage{{ estudio.id_Estudio }}(currentPage{{ estudio.id_Estudio }});
+                });
+
+                function renderPage{{ estudio.id_Estudio }}(pageNum) {
+                    pdfDoc{{ estudio.id_Estudio }}.getPage(pageNum).then(function(page) {
+                        var scale = 1.5;
+                        var viewport = page.getViewport({ scale: scale });
+
+                        var canvas = document.createElement('canvas');
+                        var context = canvas.getContext('2d');
+                        canvas.width = viewport.width;
+                        canvas.height = viewport.height;
+
+                        page.render({
+                            canvasContext: context,
+                            viewport: viewport
+                        });
+
+                        document.getElementById('pdf-container-{{ estudio.id_Estudio }}').innerHTML = ''; 
+                        document.getElementById('pdf-container-{{ estudio.id_Estudio }}').appendChild(canvas);
+                    });
+                }
+            </script>
+        {% empty %}
+            <p>No hay estudios registrados para este paciente.</p>
+        {% endfor %}
+    </div>
+</center>

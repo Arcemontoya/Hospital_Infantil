@@ -52,6 +52,13 @@ class Paciente(models.Model):
         limit_choices_to={'user__userprofile__funcionalidad': 'medico'},
     )
 
+    enfermeros_Encargados = models.ManyToManyField(
+        UserProfile,
+        related_name="pacientes_asignados",
+        limit_choices_to={'user__userprofile__funcionalidad': 'enfermero'},
+        blank=True
+    )
+
     paciente_Habilitado= models.CharField(max_length=15,
                                           choices=PACIENTE_ACTIVO_CHOICES,
                                           default="Habilitado")
@@ -68,7 +75,6 @@ class Paciente(models.Model):
 # Mandar recordatorio de suministro por paciente
 # Crear otra tabla relacional entre medicamento(tratamiento) y hora de suministro
 # Modulación de DB
-
 
 class Tratamiento(models.Model):
     TRATAMIENTO_ACTIVO_CHOICES = [
@@ -123,7 +129,7 @@ class Tratamiento(models.Model):
     )
 
     # ESTE LOS MANEJA EL ENFERMERO
-    historial_aplicacion = models.DateTimeField(null=True)
+    #historial_aplicacion = models.DateTimeField(null=True)
 
 
 class HistorialAplicacion(models.Model):
