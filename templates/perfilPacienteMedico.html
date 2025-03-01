@@ -93,6 +93,18 @@
                     <h3>Duración de la terapia: {{ tratamiento.duracion_Terapia }} días</h3>
                     <h3>Otras indicaciones: {{ tratamiento.nombre_Medicamento }}</h3>
                     <p>{{ tratamiento.otras_Indicaciones }}</p>
+                                        <div class="section-title"><h2>Historial de Aplicaciones.</h2></div>
+                    {% if tratamiento.historiales.all %}
+                        <ul>
+                            {% for historial in tratamiento.historiales.all %}
+                                <h3><h3>Aplicado el {{ historial.fecha_aplicacion|timezone:"America/Tijuana"|date:"d/m/Y h:i A" }}</h3>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+
+                        <h3>No hay aplicaciones registradas.</h3>
+                    {% endif %}
+                <a href="{% url 'edicionTratamiento' pk=tratamiento.pk %}"><button>Editar Tratamiento</button></a>
                 </div>
             {% endfor %}
         {% endif %}
@@ -111,6 +123,7 @@
                     <h3>Duración de la terapia: {{ tratamiento.duracion_Terapia }} días</h3>
                     <h3>Otras indicaciones: {{ tratamiento.nombre_Medicamento }}</h3>
                     <p>{{ tratamiento.otras_Indicaciones }}</p>
+                    <a href="{% url 'edicionTratamiento' pk=tratamiento.pk %}"><button>Editar Tratamiento</button></a>
                 </div>
             {% endfor %}
         {% endif %}

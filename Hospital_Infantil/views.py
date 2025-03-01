@@ -2,16 +2,19 @@ import profile
 from itertools import chain
 
 from django.contrib.auth.forms import AuthenticationForm
+import json
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse, FileResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView, UpdateView, ListView, DetailView
 
-from .forms import RegisterForm, PacienteForm, UserProfileForm, TratamientoForm, EstudiosForm, RadiografiasForm
+from .forms import RegisterForm, PacienteForm, UserProfileForm, TratamientoForm, EstudiosForm, RadiografiasForm, \
+    SuministroTratamiento
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import login as auth_login
 from django.utils import timezone
@@ -91,7 +94,7 @@ def pacientesEnfermero(request):
 # --------------------------------------------| REGISTRO DE PACIENTES |--------------------------------------------
 # Funciona no implementado URL
 class RegistroPaciente(FormView):
-    template_name = 'testing.html'
+    template_name = 'registroPaciente.html'
     form_class = PacienteForm
     success_url = reverse_lazy('mostrarPacientesEnfermero')
 
@@ -160,8 +163,8 @@ class perfilPaciente(DetailView):
 # Eliminar
 def perfilPacienteEnfermero(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
-    tratamientosActivos = Tratamiento.objects.filter(paciente=expediente, tratamiento_activo="activo")
-    tratamientosInactivos = Tratamiento.objects.filter(paciente=expediente, tratamiento_activo="Inactivo")
+    tratamientosActivos = Tratamiento.objects.filter(paciente=expediente, tratamiento_activo="activo").prefetch_related("historiales")
+    tratamientosInactivos = Tratamiento.objects.filter(paciente=expediente, tratamiento_activo="Inactivo").prefetch_related("historiales")
     radiografias = Radiografias.objects.filter(paciente=expediente)
     estudios = Estudios.objects.filter(paciente=expediente)
     return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente, 'tratamientosActivos': tratamientosActivos,
@@ -339,42 +342,48 @@ def mostrarRadiografiaEnfermero(request, id_Radiografia, expediente):
     radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
     return render(request, 'radiografiaEnfermero.html', {'radiografia': radiografia, "paciente": paciente})
 
-# Eliminar
-def listaTratamientosEnfermero(request, expediente):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-    tratamientos = Tratamiento.objects.filter(paciente=expediente)
-    return render(request, "listaTratamientosEnfermero.html", {'paciente': paciente, 'tratamientos': tratamientos})
 
-# Refactorizar
+# Refactorizar (Aplicalo dentro de la interfaz)
 def actualizacion_Aplicacion_Tratamiento(request, expediente, id_tratamiento):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_tratamiento, paciente=paciente)
 
-    if request.method == 'POST':
-        form = TratamientoForm(request.POST, instance=tratamiento)
-        if form.is_valid():
-            # Guardar el tratamiento actualizado
-            tratamiento_actualizado = form.save()
+    if request.method == "POST":
+        print(f"Tratamiento antes de la actualización: {tratamiento.tratamiento_activo}")
 
-            # Registrar el historial de aplicación
-            HistorialAplicacion.objects.create(
-                tratamiento=tratamiento_actualizado,
-                fecha_aplicacion=timezone.now()
-            )
+        HistorialAplicacion.objects.create(tratamiento=tratamiento, fecha_aplicacion=timezone.now())
 
-            messages.success(request, "Tratamiento editado y aplicación registrada con éxito.")
-            return redirect('perfilPacienteEnfermero', expediente=paciente.expediente)
-        else:
-            messages.error(request, "Por favor, corrige los errores en el formulario.")
-    else:
-        form = TratamientoForm(instance=tratamiento)
+        # Actualizar el tratamiento
+        tratamiento.save()
 
-    # Renderizar el formulario
-    return render(request, 'actualizacion_Aplicacion_Tratamiento.html', {
-        'form': form,
-        'paciente': paciente,
-        'tratamiento': tratamiento
-    })
+        print(f"Tratamiento después de la actualización: {tratamiento.tratamiento_activo}")
+
+        return redirect(request.META.get('HTTP_REFERER', 'mostrarPacientesEnfermero'))
+
+    return redirect('mostrarPacientesEnfermero')
+
+# Edición de Historial de Suministro
+class edicionHistorialSuministro(UpdateView):
+    model = HistorialAplicacion
+    template_name = "edicion_Suministro_Tratamiento.html"
+    form_class = SuministroTratamiento
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tratamiento"] = self.object.tratamiento
+        context["historial_aplicaciones"] = HistorialAplicacion.objects.filter(tratamiento=self.object.tratamiento)
+        return context
+
+# Forma parte de edicionHistorialSuministro
+@csrf_exempt
+def actualizar_historial(request, id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        historial = get_object_or_404(HistorialAplicacion, id=id)
+        historial.fecha_aplicacion = data.get("fecha_aplicacion")
+        historial.save()
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False}, status=400)
 
 # Refactorizar
 def historial_aplicacion_por_paciente(request, expediente):
@@ -456,7 +465,7 @@ class RegistroTratamiento(FormView):
 # --------------------------------------------| EDICION DE TRATAMIENTO |--------------------------------------------
 class edicionTratamientos(UpdateView):
     model = Tratamiento
-    template_name = "testing.html"
+    template_name = "editarTratamiento.html"
     form_class = TratamientoForm
     #success_url =
 

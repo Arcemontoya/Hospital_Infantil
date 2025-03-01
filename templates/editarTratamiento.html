@@ -24,7 +24,7 @@
     <body>
 
         <center>
-            <form action="{% url 'edicionTratamiento' expediente=paciente.expediente id_tratamiento=tratamiento.id_Tratamiento%}" method="post">
+            <form action="{% url 'edicionTratamiento' pk=tratamiento.id_Tratamiento%}" method="post">
                 {% csrf_token %}
                 
                 <div class="form-container">
@@ -61,10 +61,7 @@
                 <div class="form-container">
                     <div class="section-title"><h2>Aplicación de tratamiento</h2></div>
                     {{ form.tratamiento_activo }}
-    
-                    <h3>Actualizar tratamiento</h3>
-                    {{ form.historial_aplicacion }}
-    
+                    
                 </div>
 
             <a href="{% url 'mostrarPacientesMedico' %}">

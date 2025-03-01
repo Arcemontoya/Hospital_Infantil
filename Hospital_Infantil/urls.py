@@ -24,7 +24,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, edicionTratamiento, \
     edicionPaciente, logout_view, listaTratamientos, RegistroEstudios, RegistroRadiografias, \
     desplieguePacientesHabilitados, desplieguePacientesDeshabilitados, edicionPacientes, perfilPaciente, \
-    edicionTratamientos
+    edicionTratamientos, actualizar_historial
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -73,16 +73,19 @@ urlpatterns = [
     path('ver_pdfRadiografias/<int:id_Radiografia>/', views.ver_pdfRadiografias, name='ver_pdfRadiografias'),
     path('paciente/<int:expediente>/actualizar_tratamiento/<int:id_tratamiento>/',
          views.actualizacion_Aplicacion_Tratamiento, name="actualizacionTratamiento"),
-    path('paciente/<int:expediente>/listaTratamientosEnfermero/', views.listaTratamientosEnfermero, name='listaTratamientosEnfermero'),
+   # path('paciente/<int:expediente>/listaTratamientosEnfermero/', views.listaTratamientosEnfermero, name='listaTratamientosEnfermero'),
     path('paciente/pacientesDeshabilitados', views.pacientesDeshabilitados, name='pacientesDeshabilitados'),
     path('deshabilitarPaciente/<int:expediente>', views.deshabilitarPaciente, name='deshabilitarPaciente'),
     path('habilitarPaciente/<int:expediente>', views.habilitarPaciente, name="habilitarPaciente"),
+
+    path("actualizar-historial/<int:id>/", actualizar_historial, name="actualizar_historial"),
 
     # ------------------------------------------------| INTERFACES DE MEDICO |------------------------------------------------
     path('paciente/<int:expediente>/agregar_tratamiento/', RegistroTratamiento.as_view(), name='agregarTratamiento'),
     path('pacientesMedico/', views.mostrarPacientesMedico, name="mostrarPacientesMedico"),
     path('perfilPacienteMedico/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
-    path('paciente/<int:expediente>/editar_tratamiento/<int:id_tratamiento>/', views.edicionTratamiento, name='edicionTratamiento'),
+    #path('paciente/<int:expediente>/editar_tratamiento/<int:id_tratamiento>/', views.edicionTratamiento, name='edicionTratamiento'),
+    path('paciente/<int:pk>/', edicionTratamientos.as_view(), name = "edicionTratamiento"),
     path('paciente/<int:expediente>/listaTratamiento/', views.listaTratamientos, name='listaTratamientos'),
     path('estudioyGabineteMedico/<int:expediente>/', views.estudios_GabineteMedico,
          name="estudioyGabineteMedico"),
