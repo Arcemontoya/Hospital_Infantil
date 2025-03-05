@@ -21,10 +21,12 @@ from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios, 
 # --------------------------------------------| LOGIN |--------------------------------------------
 class CustomLoginView(View):
     def get(self, request):
+        print("Enters GET CustomLoginView")
         form = AuthenticationForm()
         return render(request, 'registration/login.html', {'form': form})
 
     def post(self, request):
+        print("Enters POST CustomLoginView")
         form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')

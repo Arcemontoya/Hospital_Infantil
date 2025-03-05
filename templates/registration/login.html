@@ -18,7 +18,7 @@
             <div class="form-container">
 
                 <form method="post">
-                    
+                {% csrf_token %}
                 <div class="alert-container">
                     {% if messages %}
                         {% for message in messages %}
