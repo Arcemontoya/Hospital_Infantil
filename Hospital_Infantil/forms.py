@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django import forms
 from django.conf import settings
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.timezone import now
@@ -244,3 +244,7 @@ class RadiografiasForm(forms.ModelForm):
     class Meta:
         model = Radiografias
         fields= ["nombre_Radiografia", "fecha_realizada", "radiografia"]
+
+class CustomAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'input input-bordered w-full'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'input input-bordered w-full'}))
