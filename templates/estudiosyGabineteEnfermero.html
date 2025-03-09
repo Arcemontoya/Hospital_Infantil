@@ -10,7 +10,7 @@
 
 
     <head>
-        <link rel="stylesheet" href="{% static 'CSS/estudiosYGabinete.css' %}">
+        <link rel="stylesheet" href="{% static 'CSS/interfazGeneral.css' %}">
         <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
 
         <!-------REFERENCIAS PARA IMAGENES--------->
@@ -93,13 +93,15 @@
         </table>
     </body>
 
+
+    
     <div class="fixed-bottom-border">
+        <a href="{% url 'mostrarPacientesEnfermero' %}">
             <div class="icon-item">
-                <a href="{% url 'mostrarPacientesEnfermero' %}">
                     <img src="{% static 'assets/interfaz/patients.png' %}">
                     <p>Pacientes</p>
-                </a>
             </div>
+        </a>
             
             <!---->
             <div class="icon-item dropdown">
@@ -114,13 +116,13 @@
             </div>
             <!---->
 
+            <a href="{% url 'signosVitales' %}">
             <div class="icon-item">
-                <a href="{% url 'signosVitales' %}">
                     <img src="{% static 'assets/interfaz/vitalSigns.png' %}">
                     <p>Signos V.</p>
-                </a>
             </div>
-    
+            </a>
+
             <div class="icon-item">
                 <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
                 <!-- Menú desplegable -->

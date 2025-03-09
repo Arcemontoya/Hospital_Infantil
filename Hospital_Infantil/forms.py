@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.utils.timezone import now
 
 
-from .models import Paciente, Tratamiento, UserProfile, Estudios, Radiografias
+from .models import Paciente, Tratamiento, UserProfile, Estudios, Radiografias, HistorialAplicacion
 
 
 class RegisterForm(UserCreationForm):
@@ -110,6 +110,11 @@ class PacienteForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'placeholder': 'Ingrese la nota de enfermería.'})
     )
 
+    enfermeros_Encargados = forms.ModelMultipleChoiceField(
+        queryset=UserProfile.objects.filter(user__userprofile__funcionalidad="enfermero"),
+        required=False # Modificar
+    )
+
     medico_Encargado = forms.ModelChoiceField(
         queryset=UserProfile.objects.filter(funcionalidad='medico'),
         required=True,
@@ -120,7 +125,7 @@ class PacienteForm(forms.ModelForm):
     class Meta:
         model = Paciente
         fields = ["nombre", "apellido_paterno", "apellido_materno", "fecha_ingreso", "fecha_nacimiento",
-                  "cirugia_realizada", "peso", "altura", "diagnostico_clinico_prequirurgico", "nota_enfermeria", "medico_Encargado"]
+                  "cirugia_realizada", "peso", "altura", "diagnostico_clinico_prequirurgico", "nota_enfermeria", "enfermeros_Encargados", "medico_Encargado"]
 
 
 class TratamientoForm(forms.ModelForm):
@@ -152,6 +157,7 @@ class TratamientoForm(forms.ModelForm):
     )
 
     # Este los manejará el enfermero
+    """
     historial_aplicacion = forms.DateTimeField(
         required=False,
         initial=timezone.localtime,
@@ -162,11 +168,12 @@ class TratamientoForm(forms.ModelForm):
             }
         )
     )
+    """
 
     class Meta:
         model = Tratamiento
         fields = ['nombre_Medicamento', 'dosis_Administrada', 'via_Administracion', 'frecuencia_Dosis',
-                  'tiempo_Dosis', 'duracion_Terapia', 'otras_Indicaciones', "tratamiento_activo", "historial_aplicacion"]
+                  'tiempo_Dosis', 'duracion_Terapia', 'otras_Indicaciones', "tratamiento_activo"]
 
         widgets = {
             'via_Administracion' : forms.Select(
@@ -191,8 +198,26 @@ class TratamientoForm(forms.ModelForm):
             )
         }
 
+
+class SuministroTratamiento(forms.ModelForm):
+    fecha_aplicacion = forms.DateTimeField(
+        required=False,
+        initial=timezone.localtime,
+        widget=forms.DateTimeInput(
+            format='%Y-%m-%d %H:%M:%S',  # Formato para la fecha y hora
+            attrs={
+                'type': 'datetime-local',  # Activa un selector de fecha y hora en navegadores modernos
+            }
+        )
+    )
+
+    class Meta:
+        model = HistorialAplicacion
+        fields = ["fecha_aplicacion"]
+
 class EstudiosForm(forms.ModelForm):
     nombre_Estudio = forms.CharField(
+
         required=True,
         widget=forms.TextInput(attrs={'placeholder' : 'Ingrese el nombre del estudio.'}),
     )

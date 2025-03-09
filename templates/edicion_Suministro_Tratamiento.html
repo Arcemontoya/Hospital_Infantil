@@ -1,0 +1,58 @@
+{% load static %}
+<script xmlns="http://www.w3.org/1999/html">
+    function goBack() {
+        window.history.back();
+    }
+</script>
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <link rel="stylesheet" href="{% static 'CSS/forms.css' %}">
+    <script></script>
+    <div class="fixed-top-border">
+        <a onclick="goBack()">
+            <img src="{% static 'assets/Interfaz/previous.png' %}">
+        </a>
+        <h1>Actualización de Tratamiento</h1>
+    </div>
+</head>
+
+<body>
+    <center>
+        <div class="form-container">
+            <div class="section-title"><h2>Historial de Aplicaciones</h2></div>
+
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Fecha Aplicación</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for aplicacion in historial_aplicaciones %}
+                        <tr>
+                            <td>
+                                <input type="datetime-local" id="fecha_{{ aplicacion.id }}" 
+                                    value="{{ aplicacion.fecha_aplicacion|date:'Y-m-d\TH:i' }}" 
+                                    readonly>
+                            </td>
+                            <td>
+                                <button onclick="editarFecha({{ aplicacion.id }})">Editar</button>
+                                <button onclick="guardarFecha({{ aplicacion.id }})">Guardar</button>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="2">No hay aplicaciones registradas.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </center>
+
+</body>
+</html>
