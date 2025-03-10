@@ -14,29 +14,29 @@
 <head>
     <link rel="stylesheet" href="{% static 'CSS/interfazGeneral.css' %}">
 
-    <div class="fixed-top-border"> 
+    <div class="fixed-top-border">
         <h1>Pacientes</h1>
     </div>
 
     <!--BOTON DE MAS Y PACIENTES DESHABILITADOS-->
     <link href="{% static 'assets/Interfaz/plus.png' %}" rel="icon" type="image/png">
     <link href="{% static 'assets/Interfaz/disabledPatients.png' %}" rel="icon" type="image/png">
+    {% if user_profile.funcionalidad == "enfermero" %}
+        <div class="image-container">
+            <a href=" {% url 'registroPaciente' %}">
+            <img src="{% static 'assets/Interfaz/plus.png' %}">
+            </a>
 
-    
-    <div class="image-container">
-        <a href=" {% url 'registroPaciente' %}">
-        <img src="{% static 'assets/Interfaz/plus.png' %}">
-        </a>
-        
-        <a href="{% url 'pacientesDeshabilitados' %}">
-        <img src="{% static 'assets/Interfaz/disabledPatients.png' %}">
-        </a>
-    </div>
+            <a href="{% url 'pacientesDeshabilitados' %}">
+            <img src="{% static 'assets/Interfaz/disabledPatients.png' %}">
+            </a>
+        </div>
+    {% endif %}
 
 </head>
 
 <body>
-          
+
     <table>
         <thead>
             <tr>
@@ -46,7 +46,8 @@
             </tr>
         </thead>
         <tbody>
-            {% for paciente in Pacientes %}
+            {% for paciente in pacientes %}
+
                 {% if paciente.paciente_Habilitado == "Habilitado" %}
                 <tr onclick="window.location='{% url 'perfilPacienteEnfermero' paciente.expediente %}'" style="cursor: pointer;">
                     <td>{{ paciente.nombre }}</td>

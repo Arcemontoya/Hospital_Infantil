@@ -45,10 +45,8 @@ class CustomLoginView(View):
                 # Redirige según la funcionalidad
                 if role == 'administrador':
                     return redirect('usuarios')  # Vista de administrador
-                elif role == 'medico':
-                    return redirect('mostrarPacientesMedico')  # Vista de médico
-                elif role == 'enfermero':
-                    return redirect('mostrarPacientesEnfermero')  # Vista de enfermero
+                elif role == 'medico' or role == 'enfermero':
+                    return redirect('pacientes')  # Vista de medico y enfermero
             else:
                 messages.error(request, "Nombre de usuario o contraseña incorrectos.")
         else:
@@ -63,14 +61,23 @@ def logout_view(request):
 
     # Refactorización Exitosa (No implementado el URL)
 class desplieguePacientesHabilitados(ListView):
-    template_name = "testing.html"
+    template_name = "Patients/pacientes.html"
     context_object_name = "pacientes"
 
     def get_queryset(self):
-        if (self.request.user.userprofile.funcionalidad == "medico"):
-            return Paciente.objects.filter(medico_Encargado=self.request.user.userprofile, paciente_Habilitado="Habilitado")
+        user_profile = self.request.user.userprofile
+        print(f"Usuario: {self.request.user}, Funcionalidad: {user_profile.funcionalidad}")
+
+        if user_profile.funcionalidad == "medico":
+            pacientes = Paciente.objects.filter(medico_Encargado=user_profile, paciente_Habilitado="Habilitado")
+        elif user_profile.funcionalidad == "enfermero":
+            pacientes = Paciente.objects.filter(enfermeros_Encargados=user_profile, paciente_Habilitado="Habilitado")
         else:
-            return Paciente.objects.filter(paciente_Habilitado="Habilitado")
+            pacientes = Paciente.objects.all()
+
+        print(f"Pacientes encontrados: {pacientes.count()} -> {list(pacientes)}")  # Imprime los pacientes
+        return pacientes
+
 
 
     # Refactorización exitosa (No implementado URL)
@@ -84,11 +91,6 @@ class desplieguePacientesDeshabilitados(ListView):
 
 
 
-# --------------------------------------------| INTERFACES DE ENFERMERO |--------------------------------------------
-
-# Eliminar
-def pacientesEnfermero(request):
-    return render(request, "pacientesEnfermero.html")
 
 
 # --------------------------------------------| REGISTRO DE PACIENTES |--------------------------------------------
@@ -694,18 +696,15 @@ def signosVitales(request):
 
 # --------------------------------------------| INTERFACES DE MUESTRA DE DATOS |--------------------------------------------
 
-# Eliminar
-def mostrarPacientesEnfermero(request):
-    pacientes = Paciente.objects.filter(paciente_Habilitado="Habilitado")
-    return render(request, 'pacientesEnfermero.html', {'Pacientes': pacientes})
+class Pacientes(ListView):
+    template_name = "Patients/pacientes.html"
+
+
 
 # Eliminar
 def mostrarPacientesDeshabilitados(request):
     pacientes = Paciente.objects.filter(paciente_Habilitado="Deshabilitado")
     return render(request, 'pacientesDeshabilitados.html', {'Pacientes': pacientes})
 
-# Eliminar
-def mostrarPacientesMedico(request):
-    pacientes = Paciente.objects.filter(medico_Encargado__user=request.user, paciente_Habilitado="Habilitado")
-    return render(request, 'pacientesMedico.html', {'Pacientes': pacientes})
+
 

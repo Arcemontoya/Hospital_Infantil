@@ -24,7 +24,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, edicionTratamiento, \
     edicionPaciente, logout_view, listaTratamientos, RegistroEstudios, RegistroRadiografias, \
     desplieguePacientesHabilitados, desplieguePacientesDeshabilitados, edicionPacientes, perfilPaciente, \
-    edicionTratamientos, actualizar_historial
+    edicionTratamientos, actualizar_historial, Pacientes
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -59,7 +59,6 @@ urlpatterns = [
 
     # ------------------------------------------------| INTERFACES DE ENFERMERO |------------------------------------------------
     # Mostrar pacientesEnfermero
-    path('pacientesEnfermero/', views.mostrarPacientesEnfermero, name='mostrarPacientesEnfermero'),
     path('registroPaciente/', RegistroPaciente.as_view(), name="registroPaciente"),
     path('pacientes/editar/<int:expediente>/', views.edicionPaciente, name="editarPaciente"),
     path('registroEstudios/<int:expediente>/', RegistroEstudios.as_view(), name="registroEstudios"),
@@ -82,7 +81,6 @@ urlpatterns = [
 
     # ------------------------------------------------| INTERFACES DE MEDICO |------------------------------------------------
     path('paciente/<int:expediente>/agregar_tratamiento/', RegistroTratamiento.as_view(), name='agregarTratamiento'),
-    path('pacientesMedico/', views.mostrarPacientesMedico, name="mostrarPacientesMedico"),
     path('perfilPacienteMedico/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
     #path('paciente/<int:expediente>/editar_tratamiento/<int:id_tratamiento>/', views.edicionTratamiento, name='edicionTratamiento'),
     path('paciente/<int:pk>/', edicionTratamientos.as_view(), name = "edicionTratamiento"),
@@ -105,8 +103,15 @@ urlpatterns = [
     path('signosVitales/', views.signosVitales, name="signosVitales"),
 
     path('perfilPacienteEnfermero/<int:expediente>/', views.perfilPacienteEnfermero, name="perfilPacienteEnfermero"),
-    path('perfilPacienteMedico/<int:expediente>/', views.perfilPacienteMedico, name="perfilPacienteMedico")
+    path('perfilPacienteMedico/<int:expediente>/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
+
+
+    # ------------------------------------------------| URL REFACTOR |------------------------------------------------
+
+    path('pacientes/', desplieguePacientesHabilitados.as_view(), name='pacientes')
+
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
