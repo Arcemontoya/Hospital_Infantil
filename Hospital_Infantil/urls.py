@@ -108,7 +108,8 @@ urlpatterns = [
 
     # ------------------------------------------------| URL REFACTOR |------------------------------------------------
 
-    path('pacientes/', desplieguePacientesHabilitados.as_view(), name='pacientes')
+    path('pacientes/', desplieguePacientesHabilitados.as_view(), name='pacientes'),
+    path('pacientes/<int:pk>', perfilPaciente.as_view(), name="perfilPaciente"),
 
 ]
 

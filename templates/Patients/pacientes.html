@@ -49,7 +49,7 @@
             {% for paciente in pacientes %}
 
                 {% if paciente.paciente_Habilitado == "Habilitado" %}
-                <tr onclick="window.location='{% url 'perfilPacienteEnfermero' paciente.expediente %}'" style="cursor: pointer;">
+                <tr onclick="window.location='{% url 'perfilPaciente' paciente.expediente %}'" style="cursor: pointer;">
                     <td>{{ paciente.nombre }}</td>
                     <td>{{ paciente.expediente }}</td>
                     <td>{{ paciente.fecha_ingreso }}</td>

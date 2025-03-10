@@ -141,7 +141,7 @@ def edicionPaciente(request, expediente):
         form = PacienteForm(request.POST, instance=paciente)
         if form.is_valid():
             form.save(commit=True)
-            return redirect('mostrarPacientesEnfermero')
+            return redirect('pacientes')
     else:
         form = PacienteForm(instance=paciente)
     return render(request, 'editarPaciente.html', {'form': form, 'paciente': paciente})
@@ -151,13 +151,13 @@ def edicionPaciente(request, expediente):
 # Funciona, no implementado en URL (Incluye tratamientos)
 class perfilPaciente(DetailView):
     model = Paciente
-    template_name = 'Testing.html'
+    template_name = 'Patients/perfilPaciente.html'
     context_object_name = "paciente"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tratamientos_activos'] = Tratamiento.objects.filter(paciente_id = self.object, tratamiento_activo='activo')
-        context['tratamientos_inactivos'] = Tratamiento.objects.filter(paciente_id = self.object, tratamiento_activo='Inactivo')
+        context['tratamientos_activos'] = Tratamiento.objects.filter(paciente_id = self.object, tratamiento_activo='activo').prefetch_related("historiales")
+        context['tratamientos_inactivos'] = Tratamiento.objects.filter(paciente_id = self.object, tratamiento_activo='Inactivo').prefetch_related("historiales")
         return context
 
 # --------------------------------------------| TRATAMIENTO DE PACIENTES |--------------------------------------------
@@ -169,7 +169,7 @@ def perfilPacienteEnfermero(request, expediente):
     tratamientosInactivos = Tratamiento.objects.filter(paciente=expediente, tratamiento_activo="Inactivo").prefetch_related("historiales")
     radiografias = Radiografias.objects.filter(paciente=expediente)
     estudios = Estudios.objects.filter(paciente=expediente)
-    return render(request, "perfilPacienteEnfermero.html", {'paciente': paciente, 'tratamientosActivos': tratamientosActivos,
+    return render(request, "Patients/pacientes.html", {'paciente': paciente, 'tratamientosActivos': tratamientosActivos,
                                                          'tratamientosInactivos': tratamientosInactivos, 'estudios': estudios, 'radiografias': radiografias})
 
 
@@ -360,11 +360,11 @@ def actualizacion_Aplicacion_Tratamiento(request, expediente, id_tratamiento):
 
         print(f"Tratamiento después de la actualización: {tratamiento.tratamiento_activo}")
 
-        return redirect(request.META.get('HTTP_REFERER', 'mostrarPacientesEnfermero'))
+        return redirect(request.META.get('HTTP_REFERER', 'pacientes'))
 
-    return redirect('mostrarPacientesEnfermero')
+    return redirect('pacientes')
 
-# Edición de Historial de Suministro
+# Edición de Historial de Suministrologout_view
 class edicionHistorialSuministro(UpdateView):
     model = HistorialAplicacion
     template_name = "edicion_Suministro_Tratamiento.html"
@@ -413,14 +413,14 @@ def deshabilitarPaciente(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     paciente.paciente_Habilitado = "Deshabilitado"
     paciente.save()
-    return redirect('mostrarPacientesEnfermero')
+    return redirect('pacientes')
 
 # No mover
 def habilitarPaciente(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
     paciente.paciente_Habilitado = "Habilitado"
     paciente.save()
-    return redirect("mostrarPacientesEnfermero")
+    return redirect("pacientes")
 
 # Refactorizar
 def pacientesDeshabilitados(request):
