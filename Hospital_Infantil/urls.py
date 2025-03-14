@@ -21,10 +21,10 @@ from django.urls import path, include
 from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, edicionTratamiento, \
-    edicionPaciente, logout_view, listaTratamientos, RegistroEstudios, RegistroRadiografias, \
+from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, \
+    logout_view, RegistroEstudios, RegistroRadiografias, \
     desplieguePacientesHabilitados, desplieguePacientesDeshabilitados, edicionPacientes, perfilPaciente, \
-    edicionTratamientos, actualizar_historial
+    edicionTratamientos, actualizar_historial, EstudiosYGabinete, mostrarRadiografias
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,40 +41,17 @@ urlpatterns = [
     # Mostrar usuarios
     path('usuarios/', views.mostrarUsuarios, name='mostrarUsuarios'),
 
-    #Mostrar usuarios deshabilitados
-    path('usuariosDeshabilitados/', views.mostrarUsuariosDeshabilitados, name='mostrarUsuariosDeshabilitados'),
-
-    #Mostrar pacientes deshabilitados
-    path('pacientesDeshabilitados/', views.mostrarPacientesDeshabilitados, name='mostrarPacientesDeshabilitados'),
-
-    # ------------------------------------------------| TESTING |------------------------------------------------
-
-    #path('estudios/pdf/<int:pk>/', mostrarDetallesEstudios.as_view(), name='ver_pdfEstudios'),
-    #path('testing/<int:paciente_id>/', views.EstudiosYGabinete.as_view(), name='name'), así se manda a llamar Estudios y Radiografía combinados
-    #path('testing/<int:pk>/', edicionPacientes.as_view(), name = "edicionPacientes"), así se manda a llamar
-    #path('testing/<int:expendiente>/<int:pk>', edicionTratamientos.as_view(), name = "perfilPaciente"), Así se edita un medicamento
-
-
-
-
     # ------------------------------------------------| INTERFACES DE ENFERMERO |------------------------------------------------
     # Mostrar pacientesEnfermero
-    path('pacientesEnfermero/', views.mostrarPacientesEnfermero, name='mostrarPacientesEnfermero'),
     path('registroPaciente/', RegistroPaciente.as_view(), name="registroPaciente"),
-    path('pacientes/editar/<int:expediente>/', views.edicionPaciente, name="editarPaciente"),
+    path('pacientes/editar/<int:expediente>/', edicionPacientes.as_view(), name="editarPaciente"),
     path('registroEstudios/<int:expediente>/', RegistroEstudios.as_view(), name="registroEstudios"),
     path('registroRadiografias/<int:expediente>/', RegistroRadiografias.as_view(), name="registroRadiografias"),
-    path('pacientesDeshabiltados/', views.pacientesDeshabilitados, name="pacientesDeshabilitados"),
-    path('estudioyGabineteEnfermero/<int:expediente>/', views.estudios_GabineteEnfermero, name="estudioyGabineteEnfermero"),
-    path('estudioEnfermero/<int:expediente>/<int:id_Estudio>/', views.mostrarEstudioEnfermero,
-         name='mostrarEstudioEnfermero'),
-    path('radiografiaEnfermero/<int:expediente>/<int:id_Radiografia>/', views.mostrarRadiografiaEnfermero, name="mostrarRadiografiaEnfermero"),
     path('ver_pdfEstudios/<int:id_Estudio>/', views.ver_pdfEstudios, name='ver_pdfEstudios'),
     path('ver_pdfRadiografias/<int:id_Radiografia>/', views.ver_pdfRadiografias, name='ver_pdfRadiografias'),
     path('paciente/<int:expediente>/actualizar_tratamiento/<int:id_tratamiento>/',
          views.actualizacion_Aplicacion_Tratamiento, name="actualizacionTratamiento"),
-   # path('paciente/<int:expediente>/listaTratamientosEnfermero/', views.listaTratamientosEnfermero, name='listaTratamientosEnfermero'),
-    path('paciente/pacientesDeshabilitados', views.pacientesDeshabilitados, name='pacientesDeshabilitados'),
+    path('paciente/pacientesDeshabilitados', desplieguePacientesDeshabilitados.as_view(), name='pacientesDeshabilitados'),
     path('deshabilitarPaciente/<int:expediente>', views.deshabilitarPaciente, name='deshabilitarPaciente'),
     path('habilitarPaciente/<int:expediente>', views.habilitarPaciente, name="habilitarPaciente"),
 
@@ -82,15 +59,7 @@ urlpatterns = [
 
     # ------------------------------------------------| INTERFACES DE MEDICO |------------------------------------------------
     path('paciente/<int:expediente>/agregar_tratamiento/', RegistroTratamiento.as_view(), name='agregarTratamiento'),
-    path('pacientesMedico/', views.mostrarPacientesMedico, name="mostrarPacientesMedico"),
-    path('perfilPacienteMedico/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
-    #path('paciente/<int:expediente>/editar_tratamiento/<int:id_tratamiento>/', views.edicionTratamiento, name='edicionTratamiento'),
-    path('paciente/<int:pk>/', edicionTratamientos.as_view(), name = "edicionTratamiento"),
-    path('paciente/<int:expediente>/listaTratamiento/', views.listaTratamientos, name='listaTratamientos'),
-    path('estudioyGabineteMedico/<int:expediente>/', views.estudios_GabineteMedico,
-         name="estudioyGabineteMedico"),
-    path('estudio/<int:id_Estudio>/', views.mostrarEstudioMedico, name="mostrarEstudioMedico"),
-    path('radiografia/<int:id_Radiografia>/', views.mostrarRadiografiaMedico, name="mostrarRadiografiaMedico"),
+    path('paciente/<int:expediente>/editar_tratamiento/<int:pk>/', edicionTratamientos.as_view(), name = "edicionTratamiento"),
 
     # ------------------------------------------------| INTERFACES DE ADMINISTRADOR |------------------------------------------------
     path('registroUsuario/', RegistroUsuario.as_view(), name="registroUsuario"),
@@ -104,9 +73,17 @@ urlpatterns = [
     # ------------------------------------------------| INTERFACES GENERALES |------------------------------------------------
     path('signosVitales/', views.signosVitales, name="signosVitales"),
 
-    path('perfilPacienteEnfermero/<int:expediente>/', views.perfilPacienteEnfermero, name="perfilPacienteEnfermero"),
-    path('perfilPacienteMedico/<int:expediente>/', views.perfilPacienteMedico, name="perfilPacienteMedico")
+
+    # ------------------------------------------------| URL REFACTOR |------------------------------------------------
+
+    path('pacientes/', desplieguePacientesHabilitados.as_view(), name='pacientes'),
+    path('pacientes/<int:pk>', perfilPaciente.as_view(), name="perfilPaciente"),
+    path('pacientes/<int:expediente>/estudiosyGabinete/', EstudiosYGabinete.as_view(), name='estudiosyGabinete'),
+    path('radiografia/<int:expediente>/<int:id_Radiografia>/', views.mostrarRadiografias, name='radiografia'),
+    path('estudio/<int:expediente>/<int:id_Estudio>/', views.mostrarEstudios, name='estudio')
+
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

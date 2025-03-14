@@ -130,35 +130,76 @@
         </script>
     </center>
 
-
-    <div class="fixed-bottom-border">
-        <center>
-            <a href=" {% url 'mostrarPacientesMedico' %}">
-            <div class="icon-container">
-                <div class="icon-item">
+    {%  if user_profile.funcionalidad == "enfermero" %}
+        <div class="fixed-bottom-border">
+            <div class="icon-item">
+                <a href="{% url 'pacientes' %}">
                     <img src="{% static 'assets/interfaz/patients.png' %}">
                     <p>Pacientes</p>
+                </a>
+            </div>
+        
+        <!---->
+            <div class="icon-item dropdown">
+                    <a href="#" role="button" id="dropdownAgregar" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{% static 'assets/interfaz/plus.png' %}">
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownAgregar">
+                        <li><a href="{% url 'registroEstudios' expediente=paciente.expediente %}" class="dropdown-item">Registrar estudio</a></li>
+                        <li><a href="{% url 'registroRadiografias' expediente=paciente.expediente %}" class="dropdown-item">Registrar radiografia</a></li>
+                    </ul>
+                    <p>Agregar</p>
                 </div>
-            </a>
-            <a href=" {% url 'signosVitales' %}">
+                <!---->
+        
                 <div class="icon-item">
-                    <img src="{% static 'assets/interfaz/vitalSigns.png' %}">
-                    <p>Signos V.</p>
+                    <a href="{% url 'signosVitales' %}">
+                        <img src="{% static 'assets/interfaz/vitalSigns.png' %}">
+                        <p>Signos V.</p>
+                    </a>
                 </div>
-            </a>
+        
                 <div class="icon-item">
                     <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
-
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Llamar paciente</a></li>
-                        <li><a class="dropdown-item" href="#">Llamar enfermero</a></li>
+                        <li><a href="{% url 'editarPaciente' expediente=paciente.expediente %}" class="dropdown-item">Editar paciente</a></li>
+                        <li><a class="dropdown-item" href="#">Llamar doctor</a></li>
                     </ul>
-
                 </div>
-            </div>
-        </center>
-    </div>
+        </div>
+    {% endif %}
+
+    {%  if user_profile.funcionalidad == "medico" %}
+        <div class="fixed-bottom-border">
+            <center>
+                <a href=" {% url 'pacientes' %}">
+                <div class="icon-container">
+                    <div class="icon-item">
+                        <img src="{% static 'assets/interfaz/patients.png' %}">
+                        <p>Pacientes</p>
+                    </div>
+                </a>
+                <a href=" {% url 'signosVitales' %}">
+                    <div class="icon-item">
+                        <img src="{% static 'assets/interfaz/vitalSigns.png' %}">
+                        <p>Signos V.</p>
+                    </div>
+                </a>
+                    <div class="icon-item">
+                        <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
+    
+                        <!-- Menú desplegable -->
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Llamar enfermero</a></li>
+                        </ul>
+    
+                    </div>
+                </div>
+            </center>
+        </div>
+    {% endif %}
+    
     
 
 </body>
