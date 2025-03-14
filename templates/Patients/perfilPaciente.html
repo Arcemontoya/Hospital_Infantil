@@ -1,4 +1,4 @@
--......<{% load static %}
+{% load static %}
 {% load tz %}
 
 <!DOCTYPE HTML>
@@ -87,7 +87,6 @@
                 <div class="form-container">
                     <div class="section-title"><h2>Tratamiento {{ forloop.counter }}</h2></div>
                     <h3>Estado del tratamiento: {{ tratamiento.tratamiento_activo }}</h3>
-                    <h3>Última aplicación: {{ tratamiento.historial_aplicacion|timezone:"America/Tijuana"|date:"h:i A" }}</h3>
                     <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
                     <h3>Dosis administrada: {{ tratamiento.dosis_Administrada }}</h3>
                     <h3>Vía de administración: {{ tratamiento.via_Administracion }}</h3>
@@ -115,7 +114,7 @@
                         <h3>No hay aplicaciones registradas.</h3>
                     {% endif %}
                     {% if user_profile.funcionalidad == "medico" %}
-                        <a href="{% url 'edicionTratamiento' pk=tratamiento.pk %}"><button>Editar Tratamiento</button></a>
+                        <a href="{% url 'edicionTratamiento'  expediente=paciente.expediente pk=tratamiento.id_Tratamiento  %}"><button>Editar Tratamiento</button></a>
                     {% endif %}
                     {% if user_profile.funcionalidad == "enfermero" %}
                         <form method="POST" action="{% url 'actualizacionTratamiento' expediente=paciente.expediente id_tratamiento=tratamiento.id_Tratamiento %}">
@@ -135,7 +134,6 @@
                 <div class="form-container">
                     <div class="section-title"><h2>Tratamiento {{ forloop.counter }}</h2></div>
                     <h3>Estado del tratamiento: {{ tratamiento.tratamiento_activo }}</h3>
-                    <h3>Última aplicación: {{ tratamiento.historial_aplicacion|timezone:"America/Tijuana"|date:"h:i A" }}</h3>
                     <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
                     <h3>Dosis administrada: {{ tratamiento.dosis_Administrada }}</h3>
                     <h3>Vía de administración: {{ tratamiento.via_Administracion }}</h3>
@@ -185,7 +183,7 @@
                         <li><a href = "{% url 'editarPaciente' expediente=paciente.expediente %}" class="dropdown-item">Editar paciente</a></li>
                         <li><a href = "{% url 'mostrarPacientesDeshabilitados'%}" class="dropdown-item">Pacientes deshabilitados</a></li>
                         <li><a class="dropdown-item" href="#">Llamar doctor</a></li>
-                        <li><a href = "{% url 'estudioyGabineteEnfermero' expediente=paciente.expediente %}" class="dropdown-item">Estudios y gabinete</a></li>
+                        <li><a href = "{% url 'estudiosyGabinete' expediente=paciente.expediente %}" class="dropdown-item">Estudios y gabinete</a></li>
                     </ul>
 
                 </div>
@@ -218,7 +216,7 @@
                             <li><a class="dropdown-item" href="{% url 'agregarTratamiento' expediente=paciente.expediente %}">Agregar Tratamiento</a></li>
                             <li><a class="dropdown-item" href="#">Llamar paciente</a></li>
                             <li><a class="dropdown-item" href="#">Llamar enfermero</a></li>
-                            <li><a href = "{% url 'estudioyGabineteMedico' expediente=paciente.expediente %}" class="dropdown-item">Estudios y gabinete</a></li>
+                            <li><a href = "{% url 'estudiosyGabinete' expediente=paciente.expediente %}" class="dropdown-item">Estudios y gabinete</a></li>
                         </ul>
     
                     </div>

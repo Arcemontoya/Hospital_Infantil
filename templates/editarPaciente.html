@@ -24,75 +24,65 @@
 
 <body>
     <center>
-        <form action="{% url 'editarPaciente' expediente=paciente.expediente %}" method="post">
-            {% csrf_token %}
-            <div class="form-container">
-                <div class="section-title">
-                    <h2>Características del paciente</h2>
+            <form action="{% url 'editarPaciente' expediente=paciente.expediente %}" method="post">
+                {% csrf_token %}
+                <div class="form-container">
+                    <div class="section-title"><h2>Características del paciente</h2></div>
+
+                    <h3>Nombre: </h3>
+                    {{ form.nombre }}
+
+                    <h3>Apellido paterno: </h3>
+                    {{ form.apellido_paterno }}
+
+                    <h3>Apellido materno: </h3>
+                    {{ form.apellido_materno }}
+
+                    <h3>Fecha de nacimiento: </h3>
+                    {{ form.fecha_nacimiento }}
+
+                    <h3>Fecha de ingreso: </h3>
+                    {{ form.fecha_ingreso }}
+
+                    <h3>Altura: </h3>
+                    {{ form.altura }}
+
+                    <h3>Peso: </h3>
+                    {{ form.peso }}
+
                 </div>
 
-                <h3> 
-                    Nombre:
-                    <input type="text" name="nombre" value="{{ form.nombre.value }}" required maxlength="100">
-                </h3>
-`
-                <h3>Apellido paterno: 
-                    <input type="text" name="apellido_paterno" value="{{ form.apellido_paterno.value }}" required maxlength="100">
-                </h3>
+                <div class="form-container">
+                    <div class="section-title"><h2>Cirugía</h2></div>
 
-                <h3>Apellido materno: 
-                    <input type="text" name="apellido_materno" value="{{ form.apellido_materno.value }}" required maxlength="100">
-                </h3>
+                    <h3>Cirugía realizada: </h3>
+                    {{ form.cirugia_realizada }}
 
-                <h3>Fecha de nacimiento: 
-                    <input type="date" name="fecha_nacimiento" value="{{ form.fecha_nacimiento.value }}" required>
-                </h3>
 
-                <h3>Fecha de ingreso: 
-                    <input type="date" name="fecha_ingreso" value="{{ form.fecha_ingreso.value }}" required>
-                </h3>
-
-                <h3>Altura (cm): 
-                    <input type="number" name="altura" value="{{ form.altura.value }}" required min="0" max="300">
-                </h3>
-
-                <h3>Peso (kg): 
-                    <input type="number" name="peso" value="{{ form.peso.value }}" required min="0" max="200">
-                </h3>
-            </div>
-
-            <div class="form-container">
-                <div class="section-title">
-                    <h2>Cirugía</h2>
+                    <h3>Diagnóstico clínico prequirúrgico</h3>
+                    {{ form.diagnostico_clinico_prequirurgico }}
                 </div>
 
-                <h3>Cirugía realizada: 
-                    <input type="text" name="cirugia_realizada" value="{{ form.cirugia_realizada.value }}" required maxlength="100">
-                </h3>
+                <div class="form-container">
+                    <div class="section-title"><h2>Nota de enfermería</h2></div>
 
-                <h3>Diagnóstico clínico prequirúrgico
-                    <input type="text" name="diagnostico_clinico_prequirurgico" value="{{ form.diagnostico_clinico_prequirurgico.value }}" required maxlength="300">
-                </h3>
-            </div>
-
-            <div class="form-container">
-                <div class="section-title">
-                    <h2>Nota de enfermería</h2>
+                    <h3>Ingrese nota de enfermería</h3>
+                    {{ form.nota_enfermeria }}
                 </div>
 
-                <h3>Ingrese nota de enfermería
-                    <input type="text" name="nota_enfermeria" value="{{ form.nota_enfermeria.value }}" required maxlength="300">
-                </h3>
-            </div>
+                 <div class="form-container">
+                    <div class="section-title"><h2>Enfermeros Encargados</h2></div>
 
-            <div class="form-container">
-                <div class="section-title">
-                    <h2>Médico encargado</h2>
+                    <h3>Seleccione a los enfermeros encargados:</h3>
+                    {{ form.enfermeros_Encargados }}
                 </div>
 
-                <h3>Seleccione el médico encargado</h3>
-                {{ form.medico_Encargado }} 
-            </div>
+                <div class="form-container">
+                    <div class="section-title"><h2>Médico encargado</h2></div>
+
+                    <h3>Seleccione el médico encargado</h3>
+                    {{ form.medico_Encargado }}
+                </div>
             <a href="{% url 'pacientes' %}">
                 <button type="submit"><b>Registrar</b></button>
             </a>

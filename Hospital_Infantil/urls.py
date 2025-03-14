@@ -21,10 +21,10 @@ from django.urls import path, include
 from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, edicionTratamiento, \
-    edicionPaciente, logout_view, listaTratamientos, RegistroEstudios, RegistroRadiografias, \
+from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, \
+    edicionPaciente, logout_view, RegistroEstudios, RegistroRadiografias, \
     desplieguePacientesHabilitados, desplieguePacientesDeshabilitados, edicionPacientes, perfilPaciente, \
-    edicionTratamientos, actualizar_historial, Pacientes
+    edicionTratamientos, actualizar_historial, EstudiosYGabinete, mostrarRadiografias
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -81,12 +81,9 @@ urlpatterns = [
 
     # ------------------------------------------------| INTERFACES DE MEDICO |------------------------------------------------
     path('paciente/<int:expediente>/agregar_tratamiento/', RegistroTratamiento.as_view(), name='agregarTratamiento'),
-    path('perfilPacienteMedico/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
     #path('paciente/<int:expediente>/editar_tratamiento/<int:id_tratamiento>/', views.edicionTratamiento, name='edicionTratamiento'),
-    path('paciente/<int:pk>/', edicionTratamientos.as_view(), name = "edicionTratamiento"),
-    path('paciente/<int:expediente>/listaTratamiento/', views.listaTratamientos, name='listaTratamientos'),
-    path('estudioyGabineteMedico/<int:expediente>/', views.estudios_GabineteMedico,
-         name="estudioyGabineteMedico"),
+    #path('paciente/<int:expediente>/editar_tratamiento/<int:id_tratamiento>/', edicionTratamientos.as_view(), name = "edicionTratamiento"),
+    path('paciente/<int:expediente>/editar_tratamiento/<int:pk>/', edicionTratamientos.as_view(), name = "edicionTratamiento"),
     path('estudio/<int:id_Estudio>/', views.mostrarEstudioMedico, name="mostrarEstudioMedico"),
     path('radiografia/<int:id_Radiografia>/', views.mostrarRadiografiaMedico, name="mostrarRadiografiaMedico"),
 
@@ -102,14 +99,14 @@ urlpatterns = [
     # ------------------------------------------------| INTERFACES GENERALES |------------------------------------------------
     path('signosVitales/', views.signosVitales, name="signosVitales"),
 
-    path('perfilPacienteEnfermero/<int:expediente>/', views.perfilPacienteEnfermero, name="perfilPacienteEnfermero"),
-    path('perfilPacienteMedico/<int:expediente>/', views.perfilPacienteMedico, name="perfilPacienteMedico"),
-
 
     # ------------------------------------------------| URL REFACTOR |------------------------------------------------
 
     path('pacientes/', desplieguePacientesHabilitados.as_view(), name='pacientes'),
     path('pacientes/<int:pk>', perfilPaciente.as_view(), name="perfilPaciente"),
+    path('pacientes/<int:expediente>/estudiosyGabinete/', EstudiosYGabinete.as_view(), name='estudiosyGabinete'),
+    path('radiografia/<int:expediente>/<int:id_Radiografia>/', views.mostrarRadiografias, name='radiografia'),
+    path('estudio/<int:expediente>/<int:id_Estudio>/', views.mostrarEstudios, name='estudio')
 
 ]
 

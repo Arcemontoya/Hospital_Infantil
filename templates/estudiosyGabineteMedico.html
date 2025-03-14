@@ -114,8 +114,7 @@
 
                     <!-- Menú desplegable -->
                     <ul class="dropdown-menu">
-                        <li><a href = "{% url 'agregarTratamiento' expediente=paciente.expediente %}" class="dropdown-item">Agregar tratamiento</a></li>
-                        <li><a href = "{% url 'listaTratamientos' expediente=paciente.expediente %}" class="dropdown-item">Editar tratamiento</a></li>
+                        <li><a href = "{% url 'agregarTratamiento' paciente_id=paciente.expediente %}" class="dropdown-item">Agregar tratamiento</a></li>
                         <li><a class="dropdown-item" href="#">Llamar paciente</a></li>
                         <li><a class="dropdown-item" href="#">Llamar enfermero</a></li>
                     </ul>

@@ -24,7 +24,6 @@ from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios, 
 
 # --------------------------------------------| LOGIN |--------------------------------------------
 
-# Modificar
 class CustomLoginView(View):
     def get(self, request):
         form = AuthenticationForm()
@@ -59,7 +58,6 @@ def logout_view(request):
 
 # --------------------------------------------| DESPLIEGUE DE PACIENTES |--------------------------------------------
 
-    # Refactorización Exitosa (No implementado el URL)
 class desplieguePacientesHabilitados(ListView):
     template_name = "Patients/pacientes.html"
     context_object_name = "pacientes"
@@ -89,16 +87,12 @@ class desplieguePacientesDeshabilitados(ListView):
         return Paciente.objects.filter(paciente_Habilitado="Deshabilitado")
 
 
-
-
-
-
 # --------------------------------------------| REGISTRO DE PACIENTES |--------------------------------------------
 # Funciona no implementado URL
 class RegistroPaciente(FormView):
     template_name = 'registroPaciente.html'
     form_class = PacienteForm
-    success_url = reverse_lazy('mostrarPacientesEnfermero')
+    success_url = reverse_lazy('pacientes')
 
     def form_valid(self, form):
         form.save()
@@ -206,7 +200,7 @@ class RegistroEstudios(FormView):
         estudio_registro.paciente = paciente
         estudio_registro.save()
 
-        self.success_url = reverse('estudioyGabineteEnfermero', args=[expediente])
+        self.success_url = reverse('estudiosyGabinete', args=[expediente])
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -240,7 +234,7 @@ class RegistroRadiografias(FormView):
         estudio_registro.paciente = paciente
         estudio_registro.save()
 
-        self.success_url = reverse('estudioyGabineteEnfermero', args=[expediente])
+        self.success_url = reverse('estudiosyGabinete', args=[expediente])
         return super().form_valid(form)
 
     def form_invalid(self, form):
@@ -252,33 +246,21 @@ class RegistroRadiografias(FormView):
 
 # --------------------------------------------| MOSTRAR ESTUDIOS Y GABINETE |--------------------------------------------
 class EstudiosYGabinete(ListView):
-    template_name = "Testing.html"
-    context_object_name = "estudiosRadiografias"
+    template_name = "estudiosyGabinete.html"
+    context_object_name = "estudiosyGabinete"
 
     def get_queryset(self):
-        paciente_id = self.kwargs.get('paciente_id')
+        paciente_id = self.kwargs.get('expediente')
         estudios = Estudios.objects.filter(paciente_id=paciente_id)
         radiografias = Radiografias.objects.filter(paciente_id=paciente_id)
         return list(chain(estudios, radiografias))
 
-""" PENDIENTE
-class mostrarDetallesEstudios(DetailView):
-    model = Paciente
-    template_name = "Testing.html"
-    context_object_name = "estudios"
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['estudios'] = Estudios.objects.filter(paciente_id=self.object)
+        paciente_expediente  = self.kwargs.get('expediente')
+        context["paciente"] = get_object_or_404(Paciente, expediente=paciente_expediente)
         return context
 
-    def get_pdf(self, request, id_Estudio):
-        estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
-        archivo_pdf = estudio.estudio
-        response = FileResponse(archivo_pdf.open(), content_type='application/pdf')
-        response['Content-Disposition'] = f'inline; filename="{archivo_pdf.name}"'
-        return response
-"""
 
 # No mover
 def ver_pdfEstudios(request, id_Estudio):
@@ -289,30 +271,6 @@ def ver_pdfEstudios(request, id_Estudio):
 
     return response
 
-""" PENDIENTE
-class mostrarDetallesRadiografia(DetailView):
-    Model = Paciente
-    #template_name = "Testing.html"
-    context_object_name = "radiografias"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        expediente = self.kwargs.get('expediente')
-        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
-        context['expediente'] = expediente
-        context['paciente'] = paciente
-        return context
-
-    # Eliminar
-    def get_pdf(request, id_Radiografia):
-        radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
-        archivo_pdf = radiografia.radiografia
-        response = FileResponse(archivo_pdf.open(), content_type='application/pdf')
-        response['Content-Disposition'] = f'inline; filename="{archivo_pdf.name}"'
-
-        return response
-"""
-
 # No mover
 def ver_pdfRadiografias(request, id_Radiografia):
     radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
@@ -321,6 +279,16 @@ def ver_pdfRadiografias(request, id_Radiografia):
     response['Content-Disposition'] = f'inline; filename="{archivo_pdf.name}"'
 
     return response
+
+def mostrarEstudios(request, expediente, id_Estudio):
+    paciente = get_object_or_404(Paciente, expediente = expediente)
+    estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+    return render(request, 'Studies and X-Rays/estudios.html', {'estudio': estudio, "paciente": paciente})
+
+def mostrarRadiografias(request, expediente, id_Radiografia):
+    paciente = get_object_or_404(Paciente, expediente = expediente)
+    radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
+    return render(request, 'Studies and X-Rays/radiografias.html', {'radiografia': radiografia, "paciente": paciente})
 
 # No mover
 def mostrarEstudioMedico(request, id_Estudio):
@@ -387,26 +355,6 @@ def actualizar_historial(request, id):
         return JsonResponse({"success": True})
     return JsonResponse({"success": False}, status=400)
 
-# Refactorizar
-def historial_aplicacion_por_paciente(request, expediente):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-    historial = HistorialAplicacion.objects.filter(tratamiento__paciente=paciente).order_by('-fecha_aplicacion')
-
-    return render(request, 'historial_aplicacion_paciente.html', {
-        'paciente': paciente,
-        'historial': historial
-    })
-
-
-# Refactorizar
-def historial_aplicacion_por_tratamiento(request, id_tratamiento):
-    tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_tratamiento)
-    historial = tratamiento.historiales.all().order_by('-fecha_aplicacion')  # Ordenar por fecha descendente
-
-    return render(request, 'historialAplicacion.html', {
-        'tratamiento': tratamiento,
-        'historial': historial
-    })
 
 # No mover
 def deshabilitarPaciente(request, expediente):
@@ -461,8 +409,8 @@ class RegistroTratamiento(FormView):
         return super().form_invalid(form)
 
     def get_success_url(self):
-        expediente = self.kwargs.get('expediente')
-        return reverse_lazy('perfilPacienteMedico', kwargs={'expediente': expediente})
+        paciente = get_object_or_404(Paciente, expediente=self.kwargs.get('expediente'))
+        return reverse_lazy('perfilPaciente', kwargs={'pk': paciente.pk})
 
 # --------------------------------------------| EDICION DE TRATAMIENTO |--------------------------------------------
 class edicionTratamientos(UpdateView):
@@ -483,7 +431,9 @@ class edicionTratamientos(UpdateView):
     def form_valid(self, form):
         form.save()
         messages.success(self.request, "Tratamiento editado con éxito.")
-        return super().form_valid(form)
+        expediente = self.kwargs.get('expediente')
+        paciente = Paciente.objects.get(expediente=expediente)
+        return redirect(reverse('perfilPaciente', kwargs={'pk': paciente.pk}))
 
     def form_invalid(self, form):
         print(form.errors)
@@ -493,61 +443,9 @@ class edicionTratamientos(UpdateView):
         return super().form_invalid(form)
 
 
-# ELIMINAR
-def edicionTratamiento(request, expediente, id_tratamiento):
-    usuario=request.user.userprofile.funcionalidad
-    # Obtener el paciente y el tratamiento asociado
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-    tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_tratamiento, paciente=paciente)
-
-
-    if request.method == 'POST':
-        # Crear un formulario con los datos enviados
-        form = TratamientoForm(request.POST, instance=tratamiento)
-        if form.is_valid():
-            form.save()  # Guardar cambios en el tratamiento
-            messages.success(request, "Tratamiento editado con éxito.")
-            if (usuario == 'medico'):
-                return redirect('perfilPacienteMedico', expediente=paciente.expediente)
-            elif (usuario == 'enfermero'):
-                return redirect('perfilPacienteEnfermero', expediente=paciente.expediente)
-        else:
-            messages.error(request, "Por favor, corrige los errores en el formulario.")
-    else:
-        # Crear el formulario con la instancia del tratamiento para editar
-        form = TratamientoForm(instance=tratamiento)
-
-    return render(request, 'editarTratamiento.html', {'form': form, 'paciente': paciente, 'tratamiento': tratamiento})
-
 # --------------------------------------------| ESTUDIOS Y GABINETE |--------------------------------------------
 
 
-# Eliminar
-def perfilPacienteMedico(request, expediente):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-    tratamientosActivos = Tratamiento.objects.filter(paciente=expediente)
-    tratamientosInactivos = Tratamiento.objects.filter(paciente=expediente)
-    radiografias = Radiografias.objects.filter(paciente=expediente)
-    estudios = Estudios.objects.filter(paciente=expediente)
-    return render(request, "perfilPacienteMedico.html", {'paciente': paciente, 'tratamientosActivos': tratamientosActivos, 'tratamientosInactivos': tratamientosInactivos,
-                  'estudios': estudios, 'radiografias': radiografias})
-
-
-# REFACTORIZAR
-def listaTratamientos(request, expediente):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-    tratamientos = Tratamiento.objects.filter(paciente=expediente)
-    return render(request, "listaTratamientos.html", {'paciente': paciente, 'tratamientos': tratamientos})
-
-# Eliminar
-def estudios_GabineteMedico(request, expediente):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-
-    estudios = Estudios.objects.filter(paciente=paciente)
-    radiografias = Radiografias.objects.filter(paciente=paciente)
-
-    return render(request, 'estudiosyGabineteMedico.html',
-                  context={'paciente': paciente, 'estudios': estudios, 'radiografias': radiografias})
 
 
 # --------------------------------------------| INTERFACES DE ADMINISTRADOR |--------------------------------------------
@@ -695,9 +593,6 @@ def signosVitales(request):
 
 
 # --------------------------------------------| INTERFACES DE MUESTRA DE DATOS |--------------------------------------------
-
-class Pacientes(ListView):
-    template_name = "Patients/pacientes.html"
 
 
 
