@@ -101,6 +101,10 @@
 
 }
 
+.fixed-top-border img{
+    scale: 40%;
+}
+
 h2{
     font-family: Montserrat;
     font-size: 40px;
