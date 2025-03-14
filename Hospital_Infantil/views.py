@@ -56,399 +56,7 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
-# --------------------------------------------| DESPLIEGUE DE PACIENTES |--------------------------------------------
-
-class desplieguePacientesHabilitados(ListView):
-    template_name = "Patients/pacientes.html"
-    context_object_name = "pacientes"
-
-    def get_queryset(self):
-        user_profile = self.request.user.userprofile
-        print(f"Usuario: {self.request.user}, Funcionalidad: {user_profile.funcionalidad}")
-
-        if user_profile.funcionalidad == "medico":
-            pacientes = Paciente.objects.filter(medico_Encargado=user_profile, paciente_Habilitado="Habilitado")
-        elif user_profile.funcionalidad == "enfermero":
-            pacientes = Paciente.objects.filter(enfermeros_Encargados=user_profile, paciente_Habilitado="Habilitado")
-        else:
-            pacientes = Paciente.objects.all()
-
-        print(f"Pacientes encontrados: {pacientes.count()} -> {list(pacientes)}")  # Imprime los pacientes
-        return pacientes
-
-
-
-    # Refactorización exitosa (No implementado URL)
-class desplieguePacientesDeshabilitados(ListView):
-    #template_name = "testing.html"
-    context_object_name = "pacientes"
-
-    def get_queryset(self):
-        return Paciente.objects.filter(paciente_Habilitado="Deshabilitado")
-
-
-# --------------------------------------------| REGISTRO DE PACIENTES |--------------------------------------------
-# Funciona no implementado URL
-class RegistroPaciente(FormView):
-    template_name = 'registroPaciente.html'
-    form_class = PacienteForm
-    success_url = reverse_lazy('pacientes')
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, "Usuario registrado con éxito.")
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        print(form.errors)
-        for field, errors in form.errors.items():
-            for error in errors:
-                print(f"Error en el campo '{field}': {error}")
-        return super().form_invalid(form)
-
-# --------------------------------------------| EDICION DE PACIENTES |--------------------------------------------
-
-    # Refactorización exitosa (No implementado URL)
-class edicionPacientes(UpdateView):
-    model = Paciente
-    template_name = "testing.html"
-    form_class = PacienteForm
-    #success_url =
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, "Paciente editado con éxito.")
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        print(form.errors)
-        for field, errors in form.errors.items():
-            for error in errors:
-                print(f"Error en el campo '{field}': {error}")
-        return super().form_invalid(form)
-
-
-# Eliminar
-def edicionPaciente(request, expediente):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-    if request.method == 'POST':
-        form = PacienteForm(request.POST, instance=paciente)
-        if form.is_valid():
-            form.save(commit=True)
-            return redirect('pacientes')
-    else:
-        form = PacienteForm(instance=paciente)
-    return render(request, 'editarPaciente.html', {'form': form, 'paciente': paciente})
-
-# --------------------------------------------| PERFIL DE PACIENTES |--------------------------------------------
-
-# Funciona, no implementado en URL (Incluye tratamientos)
-class perfilPaciente(DetailView):
-    model = Paciente
-    template_name = 'Patients/perfilPaciente.html'
-    context_object_name = "paciente"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['tratamientos_activos'] = Tratamiento.objects.filter(paciente_id = self.object, tratamiento_activo='activo').prefetch_related("historiales")
-        context['tratamientos_inactivos'] = Tratamiento.objects.filter(paciente_id = self.object, tratamiento_activo='Inactivo').prefetch_related("historiales")
-        return context
-
-# --------------------------------------------| TRATAMIENTO DE PACIENTES |--------------------------------------------
-
-# Eliminar
-def perfilPacienteEnfermero(request, expediente):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-    tratamientosActivos = Tratamiento.objects.filter(paciente=expediente, tratamiento_activo="activo").prefetch_related("historiales")
-    tratamientosInactivos = Tratamiento.objects.filter(paciente=expediente, tratamiento_activo="Inactivo").prefetch_related("historiales")
-    radiografias = Radiografias.objects.filter(paciente=expediente)
-    estudios = Estudios.objects.filter(paciente=expediente)
-    return render(request, "Patients/pacientes.html", {'paciente': paciente, 'tratamientosActivos': tratamientosActivos,
-                                                         'tratamientosInactivos': tratamientosInactivos, 'estudios': estudios, 'radiografias': radiografias})
-
-
-# Eliminar
-def estudios_GabineteEnfermero(request, expediente):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-
-    estudios = Estudios.objects.filter(paciente=paciente)
-    radiografias = Radiografias.objects.filter(paciente=paciente)
-
-    return render(request, 'estudiosyGabineteEnfermero.html',
-                  context={'paciente': paciente, 'estudios': estudios, 'radiografias': radiografias})
-
-# --------------------------------------------| REGISTRO DE ESTUDIOS |--------------------------------------------
-class RegistroEstudios(FormView):
-    template_name = 'registroEstudio.html'
-    form_class = EstudiosForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        expediente = self.kwargs.get('expediente')
-        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
-        context['expediente'] = expediente
-        context['paciente'] = paciente
-        return context
-
-
-    def form_valid(self, form):
-        expediente = self.kwargs.get('expediente')
-        paciente = get_object_or_404(Paciente, expediente=expediente)
-
-        # Asociar el tratamiento con el paciente
-        estudio_registro = form.save(commit=False)
-        estudio_registro.paciente = paciente
-        estudio_registro.save()
-
-        self.success_url = reverse('estudiosyGabinete', args=[expediente])
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        print(form.errors)
-        for field, errors in form.errors.items():
-            for error in errors:
-                print(f"Error en el campo '{field}': {error}")
-        return super().form_invalid(form)
-
-# --------------------------------------------| REGISTRO DE RADIOGRAFIAS |--------------------------------------------
-
-class RegistroRadiografias(FormView):
-    template_name = 'registroRadiografia.html'
-    form_class = RadiografiasForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        expediente = self.kwargs.get('expediente')
-        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
-        context['expediente'] = expediente
-        context['paciente'] = paciente
-        return context
-
-
-    def form_valid(self, form):
-        expediente = self.kwargs.get('expediente')
-        paciente = get_object_or_404(Paciente, expediente=expediente)
-
-        # Asociar el tratamiento con el paciente
-        estudio_registro = form.save(commit=False)
-        estudio_registro.paciente = paciente
-        estudio_registro.save()
-
-        self.success_url = reverse('estudiosyGabinete', args=[expediente])
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        print(form.errors)
-        for field, errors in form.errors.items():
-            for error in errors:
-                print(f"Error en el campo '{field}': {error}")
-        return super().form_invalid(form)
-
-# --------------------------------------------| MOSTRAR ESTUDIOS Y GABINETE |--------------------------------------------
-class EstudiosYGabinete(ListView):
-    template_name = "estudiosyGabinete.html"
-    context_object_name = "estudiosyGabinete"
-
-    def get_queryset(self):
-        paciente_id = self.kwargs.get('expediente')
-        estudios = Estudios.objects.filter(paciente_id=paciente_id)
-        radiografias = Radiografias.objects.filter(paciente_id=paciente_id)
-        return list(chain(estudios, radiografias))
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        paciente_expediente  = self.kwargs.get('expediente')
-        context["paciente"] = get_object_or_404(Paciente, expediente=paciente_expediente)
-        return context
-
-
-# No mover
-def ver_pdfEstudios(request, id_Estudio):
-    estudios = get_object_or_404(Estudios, id_Estudio=id_Estudio)
-    archivo_pdf = estudios.estudio
-    response = FileResponse(archivo_pdf.open(), content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename="{archivo_pdf.name}"'
-
-    return response
-
-# No mover
-def ver_pdfRadiografias(request, id_Radiografia):
-    radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
-    archivo_pdf = radiografia.radiografia
-    response = FileResponse(archivo_pdf.open(), content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename="{archivo_pdf.name}"'
-
-    return response
-
-def mostrarEstudios(request, expediente, id_Estudio):
-    paciente = get_object_or_404(Paciente, expediente = expediente)
-    estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
-    return render(request, 'Studies and X-Rays/estudios.html', {'estudio': estudio, "paciente": paciente})
-
-def mostrarRadiografias(request, expediente, id_Radiografia):
-    paciente = get_object_or_404(Paciente, expediente = expediente)
-    radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
-    return render(request, 'Studies and X-Rays/radiografias.html', {'radiografia': radiografia, "paciente": paciente})
-
-# No mover
-def mostrarEstudioMedico(request, id_Estudio):
-    estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
-    return render(request, 'estudioMedico.html', {'estudio': estudio})
-
-# No mover
-def mostrarRadiografiaMedico(request, id_Radiografia):
-    radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
-    return render(request, 'radiografiaMedico.html', {'radiografia': radiografia})
-
-# No mover
-def mostrarEstudioEnfermero(request, id_Estudio, expediente):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-    estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
-    return render(request, 'estudioEnfermero.html', {'estudio': estudio, "paciente": paciente})
-
-# No mover
-def mostrarRadiografiaEnfermero(request, id_Radiografia, expediente):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-    radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
-    return render(request, 'radiografiaEnfermero.html', {'radiografia': radiografia, "paciente": paciente})
-
-
-# Refactorizar (Aplicalo dentro de la interfaz)
-def actualizacion_Aplicacion_Tratamiento(request, expediente, id_tratamiento):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-    tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_tratamiento, paciente=paciente)
-
-    if request.method == "POST":
-        print(f"Tratamiento antes de la actualización: {tratamiento.tratamiento_activo}")
-
-        HistorialAplicacion.objects.create(tratamiento=tratamiento, fecha_aplicacion=timezone.now())
-
-        # Actualizar el tratamiento
-        tratamiento.save()
-
-        print(f"Tratamiento después de la actualización: {tratamiento.tratamiento_activo}")
-
-        return redirect(request.META.get('HTTP_REFERER', 'pacientes'))
-
-    return redirect('pacientes')
-
-# Edición de Historial de Suministrologout_view
-class edicionHistorialSuministro(UpdateView):
-    model = HistorialAplicacion
-    template_name = "edicion_Suministro_Tratamiento.html"
-    form_class = SuministroTratamiento
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["tratamiento"] = self.object.tratamiento
-        context["historial_aplicaciones"] = HistorialAplicacion.objects.filter(tratamiento=self.object.tratamiento)
-        return context
-
-# Forma parte de edicionHistorialSuministro
-@csrf_exempt
-def actualizar_historial(request, id):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        historial = get_object_or_404(HistorialAplicacion, id=id)
-        historial.fecha_aplicacion = data.get("fecha_aplicacion")
-        historial.save()
-        return JsonResponse({"success": True})
-    return JsonResponse({"success": False}, status=400)
-
-
-# No mover
-def deshabilitarPaciente(request, expediente):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-    paciente.paciente_Habilitado = "Deshabilitado"
-    paciente.save()
-    return redirect('pacientes')
-
-# No mover
-def habilitarPaciente(request, expediente):
-    paciente = get_object_or_404(Paciente, expediente=expediente)
-    paciente.paciente_Habilitado = "Habilitado"
-    paciente.save()
-    return redirect("pacientes")
-
-# Refactorizar
-def pacientesDeshabilitados(request):
-    pacientes = Paciente.objects.filter(paciente_Habilitado="Deshabilitado")
-    return render(request, "pacientesDeshabilitados.html", context={"pacientes" : pacientes})
-
-# --------------------------------------------| INTERFACES DE MEDICO |--------------------------------------------
-
-class RegistroTratamiento(FormView):
-    template_name = "registroTratamiento.html"
-    form_class = TratamientoForm
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        expediente = self.kwargs.get('expediente')
-        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
-        context['expediente'] = expediente
-        context['paciente'] = paciente
-        return context
-
-    def form_valid(self, form):
-        expediente = self.kwargs.get('expediente')
-        paciente = get_object_or_404(Paciente, expediente=expediente)
-
-        # Asociar el tratamiento con el paciente
-        tratamiento = form.save(commit=False)
-        tratamiento.paciente = paciente
-        tratamiento.save()
-
-        # Redirige después de guardar, por ejemplo, a la vista del perfil del paciente
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        print(form.errors)
-        for field, errors in form.errors.items():
-            for error in errors:
-                print(f"Error en el campo '{field}': {error}")
-        return super().form_invalid(form)
-
-    def get_success_url(self):
-        paciente = get_object_or_404(Paciente, expediente=self.kwargs.get('expediente'))
-        return reverse_lazy('perfilPaciente', kwargs={'pk': paciente.pk})
-
-# --------------------------------------------| EDICION DE TRATAMIENTO |--------------------------------------------
-class edicionTratamientos(UpdateView):
-    model = Tratamiento
-    template_name = "editarTratamiento.html"
-    form_class = TratamientoForm
-    #success_url =
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        expediente = self.kwargs.get('expediente')
-        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
-        context['expediente'] = expediente
-        context['paciente'] = paciente
-        return context
-
-
-    def form_valid(self, form):
-        form.save()
-        messages.success(self.request, "Tratamiento editado con éxito.")
-        expediente = self.kwargs.get('expediente')
-        paciente = Paciente.objects.get(expediente=expediente)
-        return redirect(reverse('perfilPaciente', kwargs={'pk': paciente.pk}))
-
-    def form_invalid(self, form):
-        print(form.errors)
-        for field, errors in form.errors.items():
-            for error in errors:
-                print(f"Error en el campo '{field}': {error}")
-        return super().form_invalid(form)
-
-
-# --------------------------------------------| ESTUDIOS Y GABINETE |--------------------------------------------
-
-
-
-
-# --------------------------------------------| INTERFACES DE ADMINISTRADOR |--------------------------------------------
+# --------------------------------------------| VISTA DE ADMINISTRADOR |--------------------------------------------
 
 class RegistroUsuario(FormView):
     template_name = 'registroUsuario.html'
@@ -579,9 +187,337 @@ def mostrarUsuariosDeshabilitados(request):
 
 # Refactorizar
 def usuariosDeshabilitados(request):
-    users = User.objects.select_related('user_profile').filter(is_active=False)
+    users = User.objects.select_related('userprofile').filter(is_active=False)
     return render(request, "usuariosDeshabilitados.html", {'users': users})
 
+
+# --------------------------------------------| DESPLIEGUE DE PACIENTES |--------------------------------------------
+
+class desplieguePacientesHabilitados(ListView):
+    template_name = "Patients/pacientes.html"
+    context_object_name = "pacientes"
+
+    def get_queryset(self):
+        user_profile = self.request.user.userprofile
+        print(f"Usuario: {self.request.user}, Funcionalidad: {user_profile.funcionalidad}")
+
+        if user_profile.funcionalidad == "medico":
+            pacientes = Paciente.objects.filter(medico_Encargado=user_profile, paciente_Habilitado="Habilitado")
+        elif user_profile.funcionalidad == "enfermero":
+            pacientes = Paciente.objects.filter(enfermeros_Encargados=user_profile, paciente_Habilitado="Habilitado")
+        else:
+            pacientes = Paciente.objects.all()
+
+        print(f"Pacientes encontrados: {pacientes.count()} -> {list(pacientes)}")  # Imprime los pacientes
+        return pacientes
+
+
+class desplieguePacientesDeshabilitados(ListView):
+    template_name = "pacientesDeshabilitados.html"
+    context_object_name = "pacientes"
+
+    def get_queryset(self):
+        return Paciente.objects.filter(paciente_Habilitado="Deshabilitado")
+
+
+# --------------------------------------------| REGISTRO DE PACIENTES |--------------------------------------------
+# Funciona no implementado URL
+class RegistroPaciente(FormView):
+    template_name = 'registroPaciente.html'
+    form_class = PacienteForm
+    success_url = reverse_lazy('pacientes')
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Usuario registrado con éxito.")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print(form.errors)
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(f"Error en el campo '{field}': {error}")
+        return super().form_invalid(form)
+
+# --------------------------------------------| EDICION DE PACIENTES |--------------------------------------------
+class edicionPacientes(UpdateView):
+    model = Paciente
+    template_name = "editarPaciente.html"
+    form_class = PacienteForm
+    slug_field = "expediente"
+    slug_url_kwarg = "expediente"
+
+    def get_object(self):
+        expediente = self.kwargs.get('expediente')
+        return get_object_or_404(Paciente, expediente=expediente)
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Paciente editado con éxito.")
+        expediente = self.kwargs.get('expediente')
+        paciente = Paciente.objects.get(expediente=expediente)
+        return redirect(reverse('perfilPaciente', kwargs={'pk': paciente.expediente}))
+
+    def form_invalid(self, form):
+        print(form.errors)
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(f"Error en el campo '{field}': {error}")
+        return super().form_invalid(form)
+
+
+
+# --------------------------------------------| PERFIL DE PACIENTES |--------------------------------------------
+
+class perfilPaciente(DetailView):
+    model = Paciente
+    template_name = 'Patients/perfilPaciente.html'
+    context_object_name = "paciente"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tratamientos_activos'] = Tratamiento.objects.filter(paciente_id = self.object, tratamiento_activo='activo').prefetch_related("historiales")
+        context['tratamientos_inactivos'] = Tratamiento.objects.filter(paciente_id = self.object, tratamiento_activo='Inactivo').prefetch_related("historiales")
+        return context
+
+
+# --------------------------------------------| REGISTRO DE ESTUDIOS |--------------------------------------------
+class RegistroEstudios(FormView):
+    template_name = 'registroEstudio.html'
+    form_class = EstudiosForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
+        context['expediente'] = expediente
+        context['paciente'] = paciente
+        return context
+
+
+    def form_valid(self, form):
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente)
+
+        # Asociar el tratamiento con el paciente
+        estudio_registro = form.save(commit=False)
+        estudio_registro.paciente = paciente
+        estudio_registro.save()
+
+        self.success_url = reverse('estudiosyGabinete', args=[expediente])
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print(form.errors)
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(f"Error en el campo '{field}': {error}")
+        return super().form_invalid(form)
+
+# --------------------------------------------| REGISTRO DE RADIOGRAFIAS |--------------------------------------------
+
+class RegistroRadiografias(FormView):
+    template_name = 'registroRadiografia.html'
+    form_class = RadiografiasForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
+        context['expediente'] = expediente
+        context['paciente'] = paciente
+        return context
+
+
+    def form_valid(self, form):
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente)
+
+        # Asociar el tratamiento con el paciente
+        estudio_registro = form.save(commit=False)
+        estudio_registro.paciente = paciente
+        estudio_registro.save()
+
+        self.success_url = reverse('estudiosyGabinete', args=[expediente])
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print(form.errors)
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(f"Error en el campo '{field}': {error}")
+        return super().form_invalid(form)
+
+# --------------------------------------------| MOSTRAR ESTUDIOS Y GABINETE |--------------------------------------------
+class EstudiosYGabinete(ListView):
+    template_name = "estudiosyGabinete.html"
+    context_object_name = "estudiosyGabinete"
+
+    def get_queryset(self):
+        paciente_id = self.kwargs.get('expediente')
+        estudios = Estudios.objects.filter(paciente_id=paciente_id)
+        radiografias = Radiografias.objects.filter(paciente_id=paciente_id)
+        return list(chain(estudios, radiografias))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        paciente_expediente  = self.kwargs.get('expediente')
+        context["paciente"] = get_object_or_404(Paciente, expediente=paciente_expediente)
+        return context
+
+
+# No mover
+def ver_pdfEstudios(request, id_Estudio):
+    estudios = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+    archivo_pdf = estudios.estudio
+    response = FileResponse(archivo_pdf.open(), content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="{archivo_pdf.name}"'
+
+    return response
+
+# No mover
+def ver_pdfRadiografias(request, id_Radiografia):
+    radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
+    archivo_pdf = radiografia.radiografia
+    response = FileResponse(archivo_pdf.open(), content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="{archivo_pdf.name}"'
+
+    return response
+
+def mostrarEstudios(request, expediente, id_Estudio):
+    paciente = get_object_or_404(Paciente, expediente = expediente)
+    estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+    return render(request, 'Studies and X-Rays/estudios.html', {'estudio': estudio, "paciente": paciente})
+
+def mostrarRadiografias(request, expediente, id_Radiografia):
+    paciente = get_object_or_404(Paciente, expediente = expediente)
+    radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
+    return render(request, 'Studies and X-Rays/radiografias.html', {'radiografia': radiografia, "paciente": paciente})
+
+
+# Refactorizar (Aplicalo dentro de la interfaz)
+def actualizacion_Aplicacion_Tratamiento(request, expediente, id_tratamiento):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_tratamiento, paciente=paciente)
+
+    if request.method == "POST":
+        print(f"Tratamiento antes de la actualización: {tratamiento.tratamiento_activo}")
+
+        HistorialAplicacion.objects.create(tratamiento=tratamiento, fecha_aplicacion=timezone.now())
+
+        # Actualizar el tratamiento
+        tratamiento.save()
+
+        print(f"Tratamiento después de la actualización: {tratamiento.tratamiento_activo}")
+
+        return redirect(request.META.get('HTTP_REFERER', 'pacientes'))
+
+    return redirect('pacientes')
+
+# Edición de Historial de Suministrologout_view
+class edicionHistorialSuministro(UpdateView):
+    model = HistorialAplicacion
+    template_name = "edicion_Suministro_Tratamiento.html"
+    form_class = SuministroTratamiento
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tratamiento"] = self.object.tratamiento
+        context["historial_aplicaciones"] = HistorialAplicacion.objects.filter(tratamiento=self.object.tratamiento)
+        return context
+
+# Forma parte de edicionHistorialSuministro
+@csrf_exempt
+def actualizar_historial(request, id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        historial = get_object_or_404(HistorialAplicacion, id=id)
+        historial.fecha_aplicacion = data.get("fecha_aplicacion")
+        historial.save()
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False}, status=400)
+
+
+# No mover
+def deshabilitarPaciente(request, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    paciente.paciente_Habilitado = "Deshabilitado"
+    paciente.save()
+    return redirect('pacientes')
+
+# No mover
+def habilitarPaciente(request, expediente):
+    paciente = get_object_or_404(Paciente, expediente=expediente)
+    paciente.paciente_Habilitado = "Habilitado"
+    paciente.save()
+    return redirect("pacientes")
+
+
+# --------------------------------------------| INTERFACES DE MEDICO |--------------------------------------------
+
+class RegistroTratamiento(FormView):
+    template_name = "registroTratamiento.html"
+    form_class = TratamientoForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
+        context['expediente'] = expediente
+        context['paciente'] = paciente
+        return context
+
+    def form_valid(self, form):
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente)
+
+        # Asociar el tratamiento con el paciente
+        tratamiento = form.save(commit=False)
+        tratamiento.paciente = paciente
+        tratamiento.save()
+
+        # Redirige después de guardar, por ejemplo, a la vista del perfil del paciente
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print(form.errors)
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(f"Error en el campo '{field}': {error}")
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        paciente = get_object_or_404(Paciente, expediente=self.kwargs.get('expediente'))
+        return reverse_lazy('perfilPaciente', kwargs={'pk': paciente.pk})
+
+# --------------------------------------------| EDICION DE TRATAMIENTO |--------------------------------------------
+class edicionTratamientos(UpdateView):
+    model = Tratamiento
+    template_name = "editarTratamiento.html"
+    form_class = TratamientoForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
+        context['expediente'] = expediente
+        context['paciente'] = paciente
+        return context
+
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Tratamiento editado con éxito.")
+        expediente = self.kwargs.get('expediente')
+        paciente = Paciente.objects.get(expediente=expediente)
+        return redirect(reverse('perfilPaciente', kwargs={'pk': paciente.pk}))
+
+    def form_invalid(self, form):
+        print(form.errors)
+        for field, errors in form.errors.items():
+            for error in errors:
+                print(f"Error en el campo '{field}': {error}")
+        return super().form_invalid(form)
 
 
 # --------------------------------------------| INTERFACES DE VISTA GENERAL |--------------------------------------------
@@ -590,16 +526,6 @@ def usuariosDeshabilitados(request):
 def signosVitales(request):
     return HttpResponse(render(request, "signosVitales.html"))
 
-
-
-# --------------------------------------------| INTERFACES DE MUESTRA DE DATOS |--------------------------------------------
-
-
-
-# Eliminar
-def mostrarPacientesDeshabilitados(request):
-    pacientes = Paciente.objects.filter(paciente_Habilitado="Deshabilitado")
-    return render(request, 'pacientesDeshabilitados.html', {'Pacientes': pacientes})
 
 
 
