@@ -1,4 +1,4 @@
-## Comporobaciones
+## Comprobaciones
 Agregada la comprobacion de cajas de texto en editar paciente
 **Se sugiere primero cambiar los html**
 
@@ -13,3 +13,4 @@ Se modificó el HTML y estructura de la DB para guardar todos los historiales de
 ## RAMA DE DUPLICADO DE HTML
 ### Fecha de modificación 08/03/2025
 Se agregó un nuevo archivo context_processors.py, permitirá otorgar contexto del tipo de usuario a los html, solución al duplicado de html.
+Se agregó un archivo de JavaScript que permitirá visualizar PDF (utilizado en estudios.html y radiografia.html)
