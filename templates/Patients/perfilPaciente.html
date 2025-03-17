@@ -2,7 +2,7 @@
 {% load tz %}
 
 <!DOCTYPE HTML>
-<HTML lang="en">
+<HTML lang="en" xmlns="http://www.w3.org/1999/html">
 
     <head>
         <div class="fixed-top-border"><h1>Perfil del paciente</h1></div>
@@ -84,7 +84,7 @@
             {% if tratamientos_activos %}
             <div class="section-title"><h2>Tratamientos Activos</h2></div>
             {% for tratamiento in tratamientos_activos %}
-                <div class="form-container">
+                <div class="form-container" id="tratamiento-{{ tratamiento.id_Tratamiento }}">
                     <div class="section-title"><h2>Tratamiento {{ forloop.counter }}</h2></div>
                     <h3>Estado del tratamiento: {{ tratamiento.tratamiento_activo }}</h3>
                     <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
@@ -104,7 +104,26 @@
                                     <h3><h3>Aplicado el {{ historial.fecha_aplicacion|timezone:"America/Tijuana"|date:"d/m/Y h:i A" }}</h3>
                                 {% endif %}
                                 {% if user_profile.funcionalidad == "enfermero" %}
-                                    <h3><h3>Aplicado el {{ historial.fecha_aplicacion|timezone:"America/Tijuana"|date:"d/m/Y h:i A" }}</h3>
+                                    <ul id="historial-{{ tratamiento.id_Tratamiento }}">
+                                        <table>
+                                            <td><h3>Aplicado el {{ historial.fecha_aplicacion|timezone:"America/Tijuana"|date:"d/m/Y h:i A" }}</h3></td>
+                                            <td>
+                                                <button class="historial-btn"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editarModal"
+                                                    data-id="{{ historial.id }}"
+                                                    data-fecha="{{ historial.fecha_aplicacion|date:'Y-m-d\TH:i' }}">
+                                                    Editar Aplicación
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button class="eliminar-btn historial-btn"
+                                                    data-id="{{ historial.id }}">
+                                                    Eliminar Aplicación
+                                                </button>
+                                            </td>
+                                        </table>
+                                    </ul>
                                 {% endif %}
                                 
                             {% endfor %}
@@ -114,7 +133,17 @@
                         <h3>No hay aplicaciones registradas.</h3>
                     {% endif %}
                     {% if user_profile.funcionalidad == "medico" %}
-                        <a href="{% url 'edicionTratamiento'  expediente=paciente.expediente pk=tratamiento.id_Tratamiento  %}"><button>Editar Tratamiento</button></a>
+                        <table>
+                            <td>
+                                <a href="{% url 'edicionTratamiento'  expediente=paciente.expediente pk=tratamiento.id_Tratamiento  %}"><button>Editar Tratamiento</button></a>
+                            </td>
+                            <td>
+                                <button class="eliminartratamiento-btn"
+                                    data-id="{{ tratamiento.id_Tratamiento }}">
+                                    Eliminar Tratamiento
+                                </button>
+                            </td>
+                        </table>
                     {% endif %}
                     {% if user_profile.funcionalidad == "enfermero" %}
                         <form method="POST" action="{% url 'actualizacionTratamiento' expediente=paciente.expediente id_tratamiento=tratamiento.id_Tratamiento %}">
@@ -146,6 +175,35 @@
         {% endif %}
 
         </center>
+
+        <!-- Modal de Edición (ENFERMERO)-->
+        <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editarModalLabel">Editar Aplicación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editarForm" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" id="historial_id" name="historial_id">
+
+                            <label for="fecha_aplicacion">Fecha de Aplicación:</label>
+                            <input type="datetime-local" id="fecha_aplicacion" name="fecha_aplicacion" class="form-control">
+                            <br>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <script src="{% static 'JavaScript/actualizarSuministro.js' %}"></script>
+        <script src="{% static 'JavaScript/eliminarTratamiento.js' %}"></script>
+        <script src="{% static 'JavaScript/eliminarHistorialAplicacion.js' %}"></script>
+        <script src="{% static 'JavaScript/editarSuministroTratamiento.js' %}"></script>
+
     </body>
 
     <!------- FONDO INTERACTUABLE -------->

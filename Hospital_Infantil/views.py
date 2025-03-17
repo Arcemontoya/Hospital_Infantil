@@ -8,6 +8,7 @@ from django.http import HttpResponse, FileResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.template.defaulttags import now
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -410,11 +411,11 @@ def actualizacion_Aplicacion_Tratamiento(request, expediente, id_tratamiento):
 
         print(f"Tratamiento después de la actualización: {tratamiento.tratamiento_activo}")
 
-        return redirect(request.META.get('HTTP_REFERER', 'pacientes'))
+        return redirect(f"{request.META.get('HTTP_REFERER', 'pacientes')}#tratamiento-{id_tratamiento}")
 
     return redirect('pacientes')
 
-# Edición de Historial de Suministrologout_view
+# --------------------------------------------| EDICION HISTORIAL DE SUMINISTRO DE TRATAMIENTO |--------------------------------------------
 class edicionHistorialSuministro(UpdateView):
     model = HistorialAplicacion
     template_name = "edicion_Suministro_Tratamiento.html"
@@ -426,17 +427,26 @@ class edicionHistorialSuministro(UpdateView):
         context["historial_aplicaciones"] = HistorialAplicacion.objects.filter(tratamiento=self.object.tratamiento)
         return context
 
+
 # Forma parte de edicionHistorialSuministro
 @csrf_exempt
-def actualizar_historial(request, id):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        historial = get_object_or_404(HistorialAplicacion, id=id)
-        historial.fecha_aplicacion = data.get("fecha_aplicacion")
-        historial.save()
-        return JsonResponse({"success": True})
-    return JsonResponse({"success": False}, status=400)
+def actualizar_historial(request, id_Tratamiento):
+    try:
+        tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_Tratamiento)
+        # Aquí puedes actualizar el tratamiento según sea necesario
+        tratamiento.fecha_aplicacion = request.POST.get('fecha_aplicacion')
+        tratamiento.save()
+        return JsonResponse({'success': True, 'fecha_aplicacion': tratamiento.fecha_aplicacion})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
+@csrf_exempt
+def eliminar_historial(request, id):
+    if request.method == "DELETE":
+        historial = get_object_or_404(HistorialAplicacion, id=id)
+        historial.delete()
+        return JsonResponse({"sucess": True})
+    return JsonResponse({"sucess": False}, status=400)
 
 # No mover
 def deshabilitarPaciente(request, expediente):
@@ -518,6 +528,16 @@ class edicionTratamientos(UpdateView):
             for error in errors:
                 print(f"Error en el campo '{field}': {error}")
         return super().form_invalid(form)
+
+@csrf_exempt
+def eliminar_Tratamiento(request, id_Tratamiento):
+    if request.method == "DELETE":
+        tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_Tratamiento)
+        tratamiento.delete()
+        return JsonResponse({"sucess": True})
+    return JsonResponse({"sucess": False}, status=400)
+
+    
 
 
 # --------------------------------------------| INTERFACES DE VISTA GENERAL |--------------------------------------------

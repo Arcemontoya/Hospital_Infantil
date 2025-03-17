@@ -24,7 +24,8 @@ from django.contrib.auth.views import LoginView, LogoutView
 from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, \
     logout_view, RegistroEstudios, RegistroRadiografias, \
     desplieguePacientesHabilitados, desplieguePacientesDeshabilitados, edicionPacientes, perfilPaciente, \
-    edicionTratamientos, actualizar_historial, EstudiosYGabinete, mostrarRadiografias
+    edicionTratamientos, actualizar_historial, EstudiosYGabinete, mostrarRadiografias, eliminar_historial, \
+    eliminar_Tratamiento
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -80,7 +81,11 @@ urlpatterns = [
     path('pacientes/<int:pk>', perfilPaciente.as_view(), name="perfilPaciente"),
     path('pacientes/<int:expediente>/estudiosyGabinete/', EstudiosYGabinete.as_view(), name='estudiosyGabinete'),
     path('radiografia/<int:expediente>/<int:id_Radiografia>/', views.mostrarRadiografias, name='radiografia'),
-    path('estudio/<int:expediente>/<int:id_Estudio>/', views.mostrarEstudios, name='estudio')
+    path('estudio/<int:expediente>/<int:id_Estudio>/', views.mostrarEstudios, name='estudio'),
+    path("actualizar-historial/<int:id_Tratamiento>/", actualizar_historial, name="actualizar_historial"),
+    path('eliminar_historial/<int:id>/', eliminar_historial, name='eliminar_historial'),
+
+    path('eliminar_tratamiento/<int:id_Tratamiento>/', eliminar_Tratamiento, name='eliminar_tratamiento'),
 
 ]
 
