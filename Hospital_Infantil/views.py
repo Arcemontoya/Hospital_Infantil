@@ -21,6 +21,8 @@ from django.utils import timezone
 
 from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios, HistorialAplicacion
 
+def index(request):
+    return render(request, 'index.html')
 
 # --------------------------------------------| LOGIN |--------------------------------------------
 
