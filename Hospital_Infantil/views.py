@@ -21,24 +21,34 @@ from django.utils import timezone
 
 from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios, HistorialAplicacion
 
+import logging
+
 def index(request):
     return render(request, 'index.html')
 
 # --------------------------------------------| LOGIN |--------------------------------------------
-
+logger = logging.getLogger(__name__)
 class CustomLoginView(View):
     def get(self, request):
         form = AuthenticationForm()
         return render(request, 'registration/login.html', {'form': form})
 
     def post(self, request):
+        logger.info("Ingresando al login")
         form = AuthenticationForm(data=request.POST)
+        
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
                 auth_login(request, user)
+                
+                # Verifica si hay un 'next' en la URL para redirigir
+                next_url = request.GET.get('next')
+                if next_url:
+                    return redirect(next_url)
+
                 # Obtiene la funcionalidad del perfil de usuario
                 user_profile = UserProfile.objects.get(user=user)
                 role = user_profile.funcionalidad
@@ -46,12 +56,15 @@ class CustomLoginView(View):
                 # Redirige según la funcionalidad
                 if role == 'administrador':
                     return redirect('usuarios')  # Vista de administrador
-                elif role == 'medico' or role == 'enfermero':
+                elif role in ['medico', 'enfermero']:
                     return redirect('pacientes')  # Vista de medico y enfermero
             else:
-                messages.error(request, "Nombre de usuario o contraseña incorrectos.")
+                logger.info("Usuario o contraseña incorrectos.")
+                messages.error(request, "Nombre de usuario o contraseña incorrectos.") #Revisar error de redirección
         else:
+            logger.info("Usuario o contraseña incorrectos.")
             messages.error(request, "Nombre de usuario o contraseña incorrectos.")
+        
         return render(request, 'registration/login.html', {'form': form})
 
 def logout_view(request):
