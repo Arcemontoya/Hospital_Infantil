@@ -66,13 +66,9 @@
             <div class="form-container">
                 <div class="section-title"><h2>Aplicación de tratamiento</h2></div>
                 {{ form.tratamiento_activo }}
-
-                <h3>Actualizar tratamiento</h3>
-                {{ form.historial_aplicacion }}
-
             </div>
 
-        <a href="{% url 'mostrarPacientesMedico' %}">
+        <a href="{% url 'pacientes' %}">
             <button type="submit"><b>Registrar</b></button>
         </a>
     </form>

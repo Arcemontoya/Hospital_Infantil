@@ -17,14 +17,14 @@
                 <img src="{% static 'assets/Interfaz/previous.png' %}">
             </a>
 
-            <h1>Edición de paciente.</h1>
+            <h1>Edición de Tratamiento.</h1>
         </div>
     </head>
 
     <body>
 
         <center>
-            <form action="{% url 'edicionTratamiento' pk=tratamiento.id_Tratamiento%}" method="post">
+            <form action="{% url 'edicionTratamiento' expediente=paciente.expediente pk=tratamiento.id_Tratamiento %}" method="post">
                 {% csrf_token %}
                 
                 <div class="form-container">
@@ -64,7 +64,7 @@
                     
                 </div>
 
-            <a href="{% url 'mostrarPacientesMedico' %}">
+            <a href="{% url 'pacientes' %}">
                 <button type="submit"><b>Registrar</b></button>
             </a>
         </form>
