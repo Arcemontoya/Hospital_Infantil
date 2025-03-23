@@ -1,0 +1,55 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Recuperacion de cuenta{% endblock %}
+
+{% block content %}
+<div class="flex min-h-screen flex-col justify-center items-center px-[5vw] py-[5vh]">
+    
+    <!-- Titulo e imagen -->
+    <div class="w-full max-w-[80%] text-center">
+        <img class="mx-auto h-[10vh] w-auto" src="{% static 'assets/logo.png' %}" alt="Hospital Infantil de las Californias">
+        <h2 class="mt-[5vh] font-bold tracking-tight text-gray-900">Recuperación de contraseña</h2>
+    </div>
+
+
+    <!-- Mensaje para el usuario -->
+    <div class="w-full max-w-[80%] mx-auto text-justify">
+        <h2 class="mt-[3vh] font-bold tracking-tight text-gray-500">Se enviará un correo electrónico con un código para verificar su identidad.</h2>
+    </div>
+
+
+
+    <!-- Campo de correo electronico -->
+    <div class="mt-[5vh] w-full max-w-[70vw] border-2 border-[#355E9F] rounded-lg p-[5vh]">
+
+        <!-- Mensaje de error en caso de no encontrar el correo en la bd -->
+        <div class="alert-container">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert bg-red-200 text-red-800 p-2 rounded-md">
+                        <h2>{{ message }}</h2>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <form class="space-y-[3vh]" method="POST" action="{% url 'recuperarCuenta' %}">
+            {% csrf_token %}
+            
+            <label for="email" class="block font-medium text-gray-900">Correo electrónico</label>
+            <input type="email" id="email" name="email" 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                placeholder="correo@ejemplo.com" required>
+        
+            <button type="submit" class="form-button w-full text-[2vh] p-[1.5vh] rounded-lg">Enviar codigo</button>
+        </form>
+
+    </div>
+
+
+
+</div>
+
+{% endblock content %}
