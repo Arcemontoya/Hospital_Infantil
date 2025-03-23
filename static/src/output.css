@@ -10,11 +10,14 @@
     --color-red-500: oklch(0.637 0.237 25.331);
     --color-red-600: oklch(0.577 0.245 27.325);
     --color-red-800: oklch(0.444 0.177 26.899);
+    --color-green-600: oklch(0.627 0.194 149.214);
     --color-blue-300: oklch(0.809 0.105 251.813);
     --color-blue-500: oklch(0.623 0.214 259.815);
     --color-blue-600: oklch(0.546 0.245 262.881);
+    --color-blue-700: oklch(0.488 0.243 264.376);
     --color-indigo-500: oklch(0.585 0.233 277.117);
     --color-indigo-600: oklch(0.511 0.262 276.966);
+    --color-purple-600: oklch(0.558 0.288 302.321);
     --color-gray-100: oklch(0.967 0.003 264.542);
     --color-gray-200: oklch(0.928 0.006 264.531);
     --color-gray-300: oklch(0.872 0.01 258.338);
@@ -28,6 +31,8 @@
     --color-white: #fff;
     --spacing: 0.25rem;
     --container-sm: 24rem;
+    --container-md: 28rem;
+    --container-lg: 32rem;
     --container-xl: 36rem;
     --container-2xl: 42rem;
     --text-xs: 0.75rem;
@@ -311,6 +316,9 @@
   .left-0 {
     left: calc(var(--spacing) * 0);
   }
+  .left-\[2vh\] {
+    left: 2vh;
+  }
   .isolate {
     isolation: isolate;
   }
@@ -549,6 +557,13 @@
     width: calc(var(--spacing) * 5);
     height: calc(var(--spacing) * 5);
   }
+  .size-6 {
+    width: calc(var(--spacing) * 6);
+    height: calc(var(--spacing) * 6);
+  }
+  .h-6 {
+    height: calc(var(--spacing) * 6);
+  }
   .h-15 {
     height: calc(var(--spacing) * 15);
   }
@@ -609,6 +624,9 @@
   .w-1\/2 {
     width: calc(1/2 * 100%);
   }
+  .w-6 {
+    width: calc(var(--spacing) * 6);
+  }
   .w-15 {
     width: calc(var(--spacing) * 15);
   }
@@ -662,6 +680,12 @@
   }
   .max-w-full {
     max-width: 100%;
+  }
+  .max-w-lg {
+    max-width: var(--container-lg);
+  }
+  .max-w-md {
+    max-width: var(--container-md);
   }
   .max-w-none {
     max-width: none;
@@ -1068,11 +1092,21 @@
   .justify-items-stretch {
     justify-items: stretch;
   }
+  .gap-2 {
+    gap: calc(var(--spacing) * 2);
+  }
   .gap-16 {
     gap: calc(var(--spacing) * 16);
   }
   .gap-20 {
     gap: calc(var(--spacing) * 20);
+  }
+  .space-y-2 {
+    :where(& > :not(:last-child)) {
+      --tw-space-y-reverse: 0;
+      margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
+      margin-block-end: calc(calc(var(--spacing) * 2) * calc(1 - var(--tw-space-y-reverse)));
+    }
   }
   .space-y-4 {
     :where(& > :not(:last-child)) {
@@ -1364,6 +1398,9 @@
   .bg-blue-600 {
     background-color: var(--color-blue-600);
   }
+  .bg-gray-100 {
+    background-color: var(--color-gray-100);
+  }
   .bg-gray-400 {
     background-color: var(--color-gray-400);
   }
@@ -1608,8 +1645,14 @@
   .pr-\[4vh\] {
     padding-right: 4vh;
   }
+  .pb-\[2vh\] {
+    padding-bottom: 2vh;
+  }
   .pb-\[5vh\] {
     padding-bottom: 5vh;
+  }
+  .pl-\[6vh\] {
+    padding-left: 6vh;
   }
   .text-center {
     text-align: center;
@@ -1786,6 +1829,9 @@
   .text-blue-500 {
     color: var(--color-blue-500);
   }
+  .text-blue-600 {
+    color: var(--color-blue-600);
+  }
   .text-gray-500 {
     color: var(--color-gray-500);
   }
@@ -1797,6 +1843,15 @@
   }
   .text-gray-900 {
     color: var(--color-gray-900);
+  }
+  .text-green-600 {
+    color: var(--color-green-600);
+  }
+  .text-purple-600 {
+    color: var(--color-purple-600);
+  }
+  .text-red-600 {
+    color: var(--color-red-600);
   }
   .text-red-800 {
     color: var(--color-red-800);
@@ -2261,6 +2316,13 @@
       }
     }
   }
+  .hover\:bg-blue-700 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-blue-700);
+      }
+    }
+  }
   .hover\:bg-gray-600 {
     &:hover {
       @media (hover: hover) {
@@ -2362,6 +2424,11 @@
       right: calc(var(--spacing) * 0);
     }
   }
+  .landscape\:left-\[3vh\] {
+    @media (orientation: landscape) {
+      left: 3vh;
+    }
+  }
   .landscape\:h-\[5vw\] {
     @media (orientation: landscape) {
       height: 5vw;
@@ -2416,6 +2483,11 @@
   .landscape\:pt-\[17vh\] {
     @media (orientation: landscape) {
       padding-top: 17vh;
+    }
+  }
+  .landscape\:pl-\[8vh\] {
+    @media (orientation: landscape) {
+      padding-left: 8vh;
     }
   }
   .dark\:divide-gray-600 {

@@ -27,38 +27,6 @@
     </div>
 </main>
 
-<div class="fixed-bottom-border">
-    <center>
-        <a href="{% url 'usuarios' %}">
-            <div class="icon-container">
-                <div class="icon-item">
-                    <img src="{% static 'assets/interfaz/user.png' %}">
-                    <p>Usuarios</p>
-                </div>
-        </a>
-        <a href="{% url 'registroUsuario' %}">
-            <div class="icon-item">
-                <img src="{% static 'assets/interfaz/plus.png' %}">
-                <p>Nuevo usuario</p>
-            </div>
-        </a>
-        <div class="icon-item dropdown">
-            <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false"
-                class="dropdown-toggle">
-            <p>Más</p>
-
-            <!-- Menú desplegable -->
-            <ul class="dropdown-menu">
-                <li><a href="{% url 'deshabilitar_usuario' id=user.id %}" class="dropdown-item"
-                        onclick="return confirm('¿Estás seguro de que deseas deshabilitar este usuario?')">Deshabilitar
-                        usuario</a></li>
-                <li><a href="{% url 'edicionUsuario' id=user.id %}" class="dropdown-item">Editar usuario</a></li>
-            </ul>
-        </div>
-</div>
-</center>
-</div>
-
 <footer class="fixed bottom-0 w-full bg-[#355E9F] h-[8vh] landscape:h-[15vh] flex justify-center items-center">
     <div class="w-full flex flex-row justify-center items-center gap-16 landscape:gap-24 relative">
         <!-- Botón Usuarios -->
