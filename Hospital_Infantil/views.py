@@ -13,6 +13,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView, UpdateView, ListView, DetailView
 from django.utils.translation import gettext as _
+from django.template.loader import render_to_string
 
 from .forms import EditUserForm, RegisterForm, PacienteForm, UserProfileForm, TratamientoForm, EstudiosForm, RadiografiasForm, \
     SuministroTratamiento
@@ -309,6 +310,11 @@ class RegistroPaciente(FormView):
             for error in errors:
                 print(f"Error en el campo '{field}': {error}")
         return super().form_invalid(form)
+    
+def agregar_enfermero(request):
+    form = PacienteForm()
+    form_html = render_to_string('partials/enfermero_form.html', {'form': form}, request=request)
+    return HttpResponse(form_html)
 
 # --------------------------------------------| EDICION DE PACIENTES |--------------------------------------------
 class edicionPacientes(UpdateView):
