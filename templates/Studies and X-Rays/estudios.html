@@ -3,6 +3,30 @@
     function goBack() {
         window.history.back();
     }
+
+    function toggleActions() {
+        const actionsContainer = document.getElementById('actions-container');
+        if (actionsContainer.style.display === 'none') {
+            actionsContainer.style.display = 'flex';
+        } else {
+            actionsContainer.style.display = 'none';
+        }
+    }
+    
+    function mostrarFormReemplazo() {
+        document.getElementById('reemplazo-form-container').style.display = 'flex';
+    }
+    
+    function ocultarFormReemplazo() {
+        document.getElementById('reemplazo-form-container').style.display = 'none';
+    }
+    
+    function confirmarEliminar() {
+        if (confirm('¿Está seguro que desea eliminar este estudio? Esta acción no se puede deshacer.')) {
+            // Redirigir a la URL de eliminación
+            window.location.href = "{% url 'eliminar_estudio' id_Estudio=estudio.id_Estudio expediente=paciente.expediente %}";
+        }
+    }
 </script>
 
 <!DOCTYPE html>
@@ -52,6 +76,61 @@
                 background-color: #1e355f;   
                 color: #ffffff;
             }
+
+            /* Estilos para el contenedor de acciones */
+            #actions-container {
+                display: flex;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+            
+            /* Estilos para el formulario de reemplazo */
+            .form-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 2000;
+            }
+
+            .form-popup {
+                background-color: white;
+                padding: 20px;
+                border-radius: 8px;
+                width: 500px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .form-buttons {
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+                margin-top: 20px;
+            }
+            
+            #btnAcciones, #btnReemplazar, #btnEliminar {
+                background-color: #355e9f;
+                font-family: Montserrat;
+                width: 400px;
+                height: 100px;
+                font-size: 60px;
+                color: white;
+                border-radius: 8px;
+                margin-bottom: 10px;
+            }
+            
+            #btnEliminar {
+                background-color: #E32525;
+            }
         </style> 
 
         <!-- Bootstrap JS y Popper.js -->
@@ -69,6 +148,13 @@
         </div>
 
         <div class="pdf-navigation">
+            <button id="btnAcciones" onclick="toggleActions()">Acciones</button>
+
+            <div id="actions-container" style="display: none;">
+                <button id="btnReemplazar" onclick="mostrarFormReemplazo()">Reemplazar</button>
+                <button id="btnEliminar" onclick="confirmarEliminar()">Eliminar</button>
+            </div>
+
             <div class="button-container">
                 <button onclick="previousPage()">Pág. Anterior</button>
                 <button onclick="nextPage()">Pág. Siguiente</button>
@@ -76,6 +162,24 @@
             <div class="page-info">
                 <h3>Página: <span id="page-num">1</span> de <span id="page-count">1</span></h3>
             </div>        
+        </div>
+
+        <!-- Formulario oculto para reemplazar el archivo -->
+        <div id="reemplazo-form-container" style="display: none;" class="form-overlay">
+            <div class="form-popup">
+                <h3>Reemplazar estudio</h3>
+                <form id="reemplazo-form" method="post" enctype="multipart/form-data" action="{% url 'reemplazar_estudio' id_Estudio=estudio.id_Estudio %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="nuevo_archivo">Seleccione el nuevo archivo:</label>
+                        <input type="file" id="nuevo_archivo" name="nuevo_archivo" accept="application/pdf" required>
+                    </div>
+                    <div class="form-buttons">
+                        <button type="submit">Guardar</button>
+                        <button type="button" onclick="ocultarFormReemplazo()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
         </div>
 
         <div id="pdf-container" style="width: 100%; height: 80vh; overflow: auto;"></div>

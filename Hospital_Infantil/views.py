@@ -1,13 +1,13 @@
 import profile
+import os
+import json
 from itertools import chain
 
 from django.contrib.auth.forms import AuthenticationForm
-import json
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, FileResponse, JsonResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.shortcuts import redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -394,6 +394,49 @@ def mostrarRadiografias(request, expediente, id_Radiografia):
     radiografia = get_object_or_404(Radiografias, id_Radiografia=id_Radiografia)
     return render(request, 'Studies and X-Rays/radiografias.html', {'radiografia': radiografia, "paciente": paciente})
 
+# Función para reemplazar un estudio
+def reemplazar_estudio(request, id_Estudio):
+    if request.method == 'POST':
+        estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+        paciente = estudio.paciente
+        
+        # Verificar si se proporcionó un nuevo archivo
+        if 'nuevo_archivo' in request.FILES:
+            # Eliminar el archivo anterior si existe
+            if estudio.estudio:
+                if os.path.isfile(estudio.estudio.path):
+                    os.remove(estudio.estudio.path)
+            
+            # Guardar el nuevo archivo
+            estudio.estudio = request.FILES['nuevo_archivo']
+            estudio.save()
+            
+            messages.success(request, 'El estudio ha sido reemplazado correctamente.')
+        else:
+            messages.error(request, 'No se proporcionó un archivo para reemplazar el estudio.')
+        
+        return redirect('estudio', expediente=paciente.expediente, id_Estudio=id_Estudio)
+    
+    # Si no es POST, redirigir a la página del estudio
+    return redirect('estudio', expediente=estudio.paciente.expediente, id_Estudio=id_Estudio)
+
+# Función para eliminar un estudio
+def eliminar_estudio(request, id_Estudio, expediente):
+    estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+    paciente = estudio.paciente
+    
+    # Eliminar el archivo físico si existe
+    if estudio.estudio:
+        if os.path.isfile(estudio.estudio.path):
+            os.remove(estudio.estudio.path)
+    
+    # Eliminar el registro de la base de datos
+    estudio.delete()
+    
+    messages.success(request, 'El estudio ha sido eliminado correctamente.')
+    
+    # Redirigir a la página de estudios y gabinete
+    return redirect('estudiosyGabinete', expediente=expediente)
 
 # Refactorizar (Aplicalo dentro de la interfaz)
 def actualizacion_Aplicacion_Tratamiento(request, expediente, id_tratamiento):

@@ -54,7 +54,8 @@ urlpatterns = [
     path('paciente/pacientesDeshabilitados', desplieguePacientesDeshabilitados.as_view(), name='pacientesDeshabilitados'),
     path('deshabilitarPaciente/<int:expediente>', views.deshabilitarPaciente, name='deshabilitarPaciente'),
     path('habilitarPaciente/<int:expediente>', views.habilitarPaciente, name="habilitarPaciente"),
-
+    path('reemplazar_estudio/<int:id_Estudio>/', views.reemplazar_estudio, name='reemplazar_estudio'),
+    path('eliminar_estudio/<int:id_Estudio>/<int:expediente>/', views.eliminar_estudio, name='eliminar_estudio'),
     path("actualizar-historial/<int:id>/", actualizar_historial, name="actualizar_historial"),
 
     # ------------------------------------------------| INTERFACES DE MEDICO |------------------------------------------------
