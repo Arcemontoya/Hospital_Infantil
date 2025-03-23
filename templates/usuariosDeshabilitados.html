@@ -5,15 +5,15 @@
 
 {% block content %}
 <!-- Barra superior -->
-<header class="bg-[#355E9F] h-16 w-full fixed top-0 flex items-center justify-center shadow-md">
-    <h1 class="text-white text-xl font-bold">Usuarios deshabilitados</h1>
+<header class="bg-[#355E9F] h-[8vh] landscape:h-[15vh] w-full fixed top-0 flex items-center justify-center shadow-md">
+    <h1 class="text-white font-bold">Usuarios deshabilitados</h1>
 </header>
 
-<main class="flex flex-col items-center pt-24 px-10 max-w-full">
+<main class="flex flex-col items-center pt-[10vh] landscape:pt-[17vh] max-w-full h-[calc(100vh-6vh)] overflow-hidden pb-[5vh]">
     <!-- Contenedor de la tabla -->
-    <div class="relative overflow-x-auto w-[95%] border-2 border-[#355E9F] rounded-lg">
-        <table class="table-container">
-            <thead class="text-white uppercase bg-[#355E9F]">
+    <div class="relative overflow-x-auto overflow-y-auto w-[95%] border-2 border-[#355E9F] rounded-lg">
+        <table class="table-container text-xs sm:text-sm md:text-base lg:text-lg">
+            <thead class="text-white uppercase bg-[#355E9F] sticky top-0 z-10">
                 <tr class="bg-[#355E9F]">
                     <th class="py-2 px-4 rounded-tl-sm">Nombre</th>
                     <th class="py-2 px-4">ID</th>
@@ -37,18 +37,19 @@
     </div>
 </main>
 
-<div class="fixed bottom-0 w-full bg-[#355E9F] p-4 flex justify-center">
-    <div class="fixed-bottom-border">
-        <div class="flex flex-row items-center gap-20">
-            <a href="{% url 'usuarios' %}" class="flex flex-col items-center">
-                <img src="{% static 'assets/interfaz/user.png' %}" class="w-15 h-15">
-                <p class="text-white">Usuarios</p>
-            </a>
-            <a href="{% url 'registroUsuario' %}" class="flex flex-col items-center">
-                <img src="{% static 'assets/interfaz/plus.png' %}" class="w-15 h-15">
-                <p class="text-white">Nuevo usuario</p>
-            </a>
-        </div>
+<footer class="fixed bottom-0 w-full bg-[#355E9F] h-[8vh] landscape:h-[15vh] flex justify-center items-center">
+    <div class="w-full flex flex-row justify-center items-center gap-16 landscape:gap-24">
+        <!-- Botón Usuarios -->
+        <a href="{% url 'usuarios' %}" class="flex flex-col items-center">
+            <img src="{% static 'assets/interfaz/user.png' %}" class="w-[4vh] h-[4vh] landscape:w-[6vh] landscape:h-[6vh]">
+            <p class="text-white">Usuarios</p>
+        </a>
+
+        <!-- Botón Nuevo Usuario -->
+        <a href="{% url 'registroUsuario' %}" class="flex flex-col items-center">
+            <img src="{% static 'assets/interfaz/plus.png' %}" class="w-[4vh] h-[4vh] landscape:w-[6vh] landscape:h-[6vh]">
+            <p class="text-white">Nuevo usuario</p>
+        </a>
     </div>
-</div>
+</footer>
 {% endblock %}

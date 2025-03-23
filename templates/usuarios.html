@@ -5,14 +5,14 @@
 
 {% block content %}
 <!-- Barra superior -->
-<header class="bg-[#355E9F] h-16 w-full fixed top-0 flex items-center justify-center shadow-md">
-    <h1 class="text-white text-xl font-bold">Usuarios</h1>
+<header class="bg-[#355E9F] h-[8vh] landscape:h-[15vh] w-full fixed top-0 flex items-center justify-center shadow-md">
+    <h1 class="text-white font-bold">Usuarios</h1>
 </header>
 
-<main class="flex flex-col items-center pt-24 px-10 max-w-full h-[calc(100vh-6rem-5vh)] overflow-hidden pb-[5vh]">
+<main class="flex flex-col items-center pt-[10vh] landscape:pt-[17vh] max-w-full h-[calc(100vh-6vh)] overflow-hidden pb-[5vh]">
     <!-- Contenedor de la tabla -->
     <div class="relative overflow-x-auto overflow-y-auto w-[95%] border-2 border-[#355E9F] rounded-lg">
-        <table class="table-container">
+        <table class="table-container text-xs sm:text-sm md:text-base lg:text-lg">
             <thead class="text-white uppercase bg-[#355E9F] sticky top-0 z-10">
                 <tr class="bg-[#355E9F]">
                     <th class="py-2 px-4 rounded-tl-sm">Nombre</th>
@@ -38,40 +38,37 @@
 </main>
 
 <!-- Botón de agregar usuario -->
-<div class="fixed right-[5%] pb-[5vh]">
+<div class="fixed right-[5vh] bottom-[10vh]">
     <a href="{% url 'registroUsuario' %}">
-        <img src="{% static 'assets/Interfaz/plus.png' %}" class="w-15 h-15">
+        <img src="{% static 'assets/Interfaz/plus.png' %}" class="w-[10vw] h-[10vw] landscape:w-[5vw] landscape:h-[5vw]">
     </a>
 </div>
 
 <!-- Menú inferior -->
-<div class="fixed bottom-0 w-full bg-[#355E9F] p-3 flex justify-center items-center">
-    <div class="flex flex-col items-center relative">
-        <button id="dropdownMenuIconHorizontalButton" data-dropdown-toggle="dropdownDotsHorizontal"
-            class="p-1 text-sm font-medium text-center text-white bg-[#355E9F] rounded-lg hover:bg-blue-600 focus:ring-4 focus:outline-none"
-            type="button">
-            <svg class="w-8 h-8" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                viewBox="0 0 16 3">
+
+<footer class="fixed bottom-0 w-full bg-[#355E9F] h-[8vh] md:h-[9vh] flex justify-center items-center">
+    <div class="flex flex-col items-center relative w-full">
+        <button id="dropdownMenuIconHorizontalButton"
+            class="text-white bg-[#355E9F] hover:bg-blue-500 focus:outline-none w-auto h-full flex items-center justify-center">
+            <svg class="w-[4vw] h-[4vw]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor" viewBox="0 0 16 3">
                 <path
                     d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
             </svg>
         </button>
-        <p class="uppercase mt-2 text-white text-center font-bold">Más</p>
+        <!-- <p class="uppercase mt-1 text-white text-center font-bold text-xs md:text-sm absolute bottom[-1vh]">Más</p> -->
     </div>
     <div id="dropdownDotsHorizontal"
-        class="z-50 bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-60 dark:bg-gray-700 dark:divide-gray-600 hidden absolute bottom-30">
-        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200 text-center"
-            aria-labelledby="dropdownMenuIconHorizontalButton">
+        class="z-50 bg-black divide-y divide-gray-100 rounded-lg shadow-sm w-60 hidden absolute bottom-[8vh] md:bottom-[15vh]">
+        <ul class="py-2 text-gray-700 text-center" aria-labelledby="dropdownMenuIconHorizontalButton">
             <li>
                 <a href="{% url 'usuariosDeshabilitados' %}"
-                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Usuarios
+                    class="block text-white px-4 py-2 hover:bg-gray-600">Usuarios
                     deshabilitados</a>
             </li>
         </ul>
     </div>
-</div>
-</div>
-</div>
+</footer>
 <script>
     document.getElementById("dropdownMenuIconHorizontalButton").addEventListener("click", function () {
         document.getElementById("dropdownDotsHorizontal").classList.toggle("hidden");

@@ -28,7 +28,6 @@ from .views import index, RegistroPaciente, RegistroUsuario, CustomLoginView, Re
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', index, name='index'),
     # Manejo de usuarios
     path('', include('django.contrib.auth.urls')),
 
