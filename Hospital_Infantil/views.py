@@ -4,7 +4,7 @@ from itertools import chain
 from django.contrib.auth.forms import AuthenticationForm
 import json
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, FileResponse, JsonResponse
+from django.http import HttpResponse, FileResponse, JsonResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
@@ -12,8 +12,10 @@ from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import FormView, UpdateView, ListView, DetailView
+from django.utils.translation import gettext as _
+from django.template.loader import render_to_string
 
-from .forms import RegisterForm, PacienteForm, UserProfileForm, TratamientoForm, EstudiosForm, RadiografiasForm, \
+from .forms import EditUserForm, RegisterForm, PacienteForm, UserProfileForm, TratamientoForm, EstudiosForm, RadiografiasForm, \
     SuministroTratamiento
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import login as auth_login
@@ -21,35 +23,57 @@ from django.utils import timezone
 
 from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios, HistorialAplicacion
 
+import logging
+from django.contrib.messages import get_messages
+
+def index(request):
+    return render(request, 'index.html')
 
 # --------------------------------------------| LOGIN |--------------------------------------------
-
+logger = logging.getLogger(__name__)
 class CustomLoginView(View):
     def get(self, request):
+        # Guardar la URL de referencia en la sesión si no viene de un error
+        if 'prev_page' not in request.session or request.META.get('HTTP_REFERER') != request.build_absolute_uri():
+            request.session['prev_page'] = request.META.get('HTTP_REFERER', '/')
+
+        # Limpia los mensajes pendientes
+        storage = get_messages(request)
+        for _ in storage:
+            pass
+
         form = AuthenticationForm()
         return render(request, 'registration/login.html', {'form': form})
 
     def post(self, request):
+        logger.info("Ingresando al login")
         form = AuthenticationForm(data=request.POST)
+
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=password)
             if user is not None:
                 auth_login(request, user)
-                # Obtiene la funcionalidad del perfil de usuario
+
+                # Verifica si hay un 'next' en la URL para redirigir
+                next_url = request.GET.get('next')
+                if (next_url):
+                    return redirect(next_url)
+
+                # Redirige según el rol del usuario
                 user_profile = UserProfile.objects.get(user=user)
                 role = user_profile.funcionalidad
-
-                # Redirige según la funcionalidad
                 if role == 'administrador':
-                    return redirect('usuarios')  # Vista de administrador
-                elif role == 'medico' or role == 'enfermero':
-                    return redirect('pacientes')  # Vista de medico y enfermero
+                    return redirect('usuarios')
+                elif role in ['medico', 'enfermero']:
+                    return redirect('pacientes')
             else:
-                messages.error(request, "Nombre de usuario o contraseña incorrectos.")
+                form.add_error(None, "Nombre de usuario o contraseña incorrectos.")
         else:
+            logger.info("Usuario o contraseña incorrectos.")
             messages.error(request, "Nombre de usuario o contraseña incorrectos.")
+
         return render(request, 'registration/login.html', {'form': form})
 
 def logout_view(request):
@@ -57,22 +81,36 @@ def logout_view(request):
     return redirect('login')
 
 # --------------------------------------------| VISTA DE ADMINISTRADOR |--------------------------------------------
-
 class RegistroUsuario(FormView):
     template_name = 'registroUsuario.html'
-    success_url = reverse_lazy('usuarios')
     form_class = RegisterForm
+
+    def dispatch(self, request, *args, **kwargs):
+        """ Guarda la URL de referencia al acceder a la vista """
+        if 'prev_page' not in request.session or not request.session['prev_page']:
+            request.session['prev_page'] = request.META.get('HTTP_REFERER', reverse_lazy('usuarios'))
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_success_url(self):
+        """ Usa la URL guardada en la sesión y la limpia después de usarla """
+        return self.request.session.pop('prev_page', reverse_lazy('usuarios'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
         if 'profile_form' not in context:
             context['profile_form'] = UserProfileForm()
+
+        # Consumir mensajes para que se eliminen después de mostrarlos
+        storage = get_messages(self.request)
+        context['messages'] = list(storage)  # Pasar los mensajes al contexto y vaciarlos
+        
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = None
         form = self.get_form()
-        profile_form = UserProfileForm(self.request.POST)
+        profile_form = UserProfileForm(request.POST)
 
         if form.is_valid() and profile_form.is_valid():
             return self.form_valid(form, profile_form)
@@ -82,66 +120,100 @@ class RegistroUsuario(FormView):
     def form_valid(self, form, profile_form):
         try:
             user = form.save()
-
             profile = profile_form.save(commit=False)
             profile.user = user
             profile.save()
 
-            # Agregacion de grupos
             grupo_nombre = profile.funcionalidad
             grupo = Group.objects.filter(name=grupo_nombre).first()
-
             if grupo:
                 user.groups.add(grupo)
-                messages.success(self.request, f"Usuario registrado y asigndo al grupo {grupo_nombre}.")
+                messages.success(self.request, f"Usuario registrado y asignado al grupo {grupo_nombre}.")
             else:
                 messages.warning(self.request, f"Usuario registrado, pero no se encontró un grupo.")
+
             messages.success(self.request, "Usuario registrado con éxito.")
-            return super().form_valid(form)
+            return HttpResponseRedirect(self.get_success_url())  # Redirige a la página original
         except Exception as e:
             messages.error(self.request, f"Error al registrar el usuario: {e}")
             return self.form_invalid(form, profile_form)
 
     def form_invalid(self, form, profile_form):
-        print("Errores en los formularios:")
-        print(form.errors)
-        print(profile_form.errors)
+        # Diccionario de nombres personalizados para los campos
+        field_labels = {
+            'username': 'Nombre de usuario',
+            'email': 'Correo electrónico',
+            'password1': 'Contraseña',
+            'password2': 'Confirmación de contraseña',
+            'fecha_registro': 'Fecha de ingreso',
+            'cedula_profesional': 'Cédula profesional',
+            'funcionalidad': 'Rol del usuario'
+        }
+
+        error_messages = []
+        for field, errors in form.errors.items():
+            field_name = field_labels.get(field, field)  # Usa el nombre personalizado si está en el diccionario
+            for error in errors:
+                error_messages.append(f"{field_name}:\n {_(error)}")
+
+        for field, errors in profile_form.errors.items():
+            field_name = field_labels.get(field, field)
+            for error in errors:
+                error_messages.append(f"{field_name}: {_(error)}")
 
         return self.render_to_response(
-            self.get_context_data(form=form, profile_form=profile_form)
+            self.get_context_data(form=form, profile_form=profile_form, error_messages="\n".join(error_messages))
         )
 
 # Refactorizar
 def edicionUsuario(request, id):
-    # Obtener el usuario y perfil asociados, o mostrar un 404 si no se encuentran
+    # Obtener el usuario y su perfil, o lanzar un 404 si no existen
     user = get_object_or_404(User, id=id)
     user_profile = get_object_or_404(UserProfile, user=user)
 
     if request.method == "POST":
-        # Cargar el formulario con los datos enviados y las instancias actuales
-        user_form = RegisterForm(request.POST, instance=user)
+        # Formulario con los datos enviados y las instancias actuales
+        user_form = EditUserForm(request.POST, instance=user)
         profile_form = UserProfileForm(request.POST, instance=user_profile)
 
-        # Guardar los formularios si son válidos
         if user_form.is_valid() and profile_form.is_valid():
-            user_form.save(commit=True)
-            profile_form.save(commit=True)
-            messages.success(request, "Usuario actualizado con éxito.")
-            return redirect('perfilUsuario', id=user.id)
+            try:
+                user_form.save(commit=True)
+                profile_form.save(commit=True)
+                messages.success(request, "✅ Usuario actualizado con éxito.")
+                return redirect('perfilUsuario', id=user.id)
+            except Exception as e:
+                messages.error(request, f"❌ Error al actualizar el usuario: {e}")
         else:
-            messages.error(request, "Hubo un error al actualizar el usuario.")
+            # Agregar errores específicos a los mensajes
+            for field, errors in user_form.errors.items():
+                for error in errors:
+                    messages.error(request, f"❌ {user_form.fields[field].label}: {error}")
+            
+            for field, errors in profile_form.errors.items():
+                for error in errors:
+                    messages.error(request, f"❌ {profile_form.fields[field].label}: {error}")
+
+            messages.error(request, "⚠️ Hubo errores en el formulario. Por favor, revisa los campos.")
+
     else:
-        # Inicializar los formularios con los datos actuales del usuario y perfil
+        # Inicializar los formularios con datos actuales
         user_form = RegisterForm(instance=user)
         profile_form = UserProfileForm(instance=user_profile)
 
-    # Renderizar la página con los formularios y datos actuales
-    return render(request, 'editarUsuario.html', {
+    # Renderizar la plantilla con los formularios y los mensajes
+    response = render(request, 'editarUsuario.html', {
         'user_form': user_form,
         'profile_form': profile_form,
         'user_data': user,
         'profile_data': user_profile
     })
+
+    # Limpiar mensajes de error después de mostrarlos
+    storage = messages.get_messages(request)
+    storage.used = True
+
+    return response
 
 # Refactorizar
 def deshabilitar_Usuario(request, id):
@@ -238,6 +310,11 @@ class RegistroPaciente(FormView):
             for error in errors:
                 print(f"Error en el campo '{field}': {error}")
         return super().form_invalid(form)
+    
+def agregar_enfermero(request):
+    form = PacienteForm()
+    form_html = render_to_string('partials/enfermero_form.html', {'form': form}, request=request)
+    return HttpResponse(form_html)
 
 # --------------------------------------------| EDICION DE PACIENTES |--------------------------------------------
 class edicionPacientes(UpdateView):

@@ -21,14 +21,13 @@ from django.urls import path, include
 from . import views
 from django.contrib.auth.views import LoginView, LogoutView
 
-from .views import RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, \
+from .views import index, RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, \
     logout_view, RegistroEstudios, RegistroRadiografias, \
     desplieguePacientesHabilitados, desplieguePacientesDeshabilitados, edicionPacientes, perfilPaciente, \
     edicionTratamientos, actualizar_historial, EstudiosYGabinete, mostrarRadiografias
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
     # Manejo de usuarios
     path('', include('django.contrib.auth.urls')),
 

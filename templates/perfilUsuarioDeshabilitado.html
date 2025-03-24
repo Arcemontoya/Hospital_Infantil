@@ -1,250 +1,106 @@
+{% extends '_base.html' %}
 {% load static %}
 
+{% block title %}Perfil del usuario{% endblock %}
 
-<script>
-    function goBack() {
-    window.history.back();
-    }
-</script>
+{% block content %}
+<!-- Barra superior -->
+<header class="bg-[#355E9F] h-[8vh] landscape:h-[15vh] w-full fixed top-0 flex items-center justify-center shadow-md">
+    <h1 class="text-white font-bold">{{ user.username }}</h1>
+</header>
 
-
-<!DOCTYPE html>
-<html lang="en">
-
-<style>
-    .fixed-top-border{
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 169.3px;
-        background-color: #355e9f;
-        z-index: 1000;
-
-        display: flex;
-        align-items: center;
-
-        font-family: Montserrat;
-        color: white;
-        padding: 10px;
-    }
-
-    .fixed-bottom-border
-    {
-        position: fixed;
-        bottom: 0px;
-        left: 0px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color:#355e9f;
-        padding: 10px;
-        height: 169.3px;
-    }
-
-    .icon-container
-    {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .icon-item
-    {
-        position: relative;
-        margin: 0 40px; /* Espaciado entre los íconos */
-        text-align: center; /* Asegura que el texto esté centrado */
-    }
-
-    .icon-item img
-    {
-        margin-bottom: 40px;
-        scale: 40%;
-    }
-
-    .icon-item p
-    {
-        position: absolute;
-        bottom: 0; /* Coloca el texto en la parte inferior del contenedor del ícono */
-        left: 50%;
-        color: white;
-        font-family: Montserrat;
-        font-size: 20px;
-        transform: translateX(-50%) translateY(-180%);
-    }
-
-    .form-container {
-        margin-top: 50px; /* Ajusta el margen superior para posicionar la sección */
-        padding: 20px; /* Espacio interno del contenedor */
-        background-color: white; /* Fondo blanco para el contenedor */
-        border-radius: 8px; /* Bordes redondeados */
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra */
-        width: 800px; /* Ancho del contenedor para que coincida con los inputs */
-        display: flex; /* Habilita Flexbox */
-        flex-direction: column; /* Organiza los elementos en una columna */
-        align-items: center;
-        margin-bottom: 200px;
-        margin-top: 200px;
-    }
-
-    .form-container h3
-    {
-        font-size: 35px;
-    }
-
-    .form-container p{
-        font-family: Calibri;
-        font-size: 30px;
-    }
-
-
-    .section-title
-    {
-        background-color: #EEEEEE;
-        width: 400px;
-        border-radius: 8px;
-        padding: 5px;
-        margin-bottom: 80px;
-        text-align: center;
-    }
-
-    .section-title h2
-    {
-        font-family: Montserrat;
-        font-size: 45px;
-    }
-
-    .fixed-top-border h1{
-        font-family: Montserrat;
-        font-size: 60px;
-
-    }
-
-    h2{
-        font-family: Montserrat;
-        font-size: 40px;
-    }
-
-    h3{
-        font-family: Calibri;
-        font-size: 30px;
-        align-self: flex-start; /* Alinear el h3 al inicio del contenedor */
-        text-align: left; /* Alinea el texto del h3 a la izquierda */
-        width: 100%; /* Asegura que el h3 ocupe todo el ancho disponible */
-        padding-left: 20px; /* Opcional: separa el texto del borde izquierdo */
-    }
-
-    p
-    {
-        font-family: Calibri; 
-        align-self: flex-start;
-        text-align: justify;
-    }
-    
-    img
-    {
-        scale: 40%;
-    }
-
-
-</style>
-
-<head>
-    <div class="fixed-top-border"><h1>Perfil del usuario deshabilitado</h1></div>
-
-        <!-------REFERENCIAS PARA IMAGENES--------->
-
-        <link href="{% static 'assets/Interfaz/user.png' %}" rel="icon" type="image/png">
-        <link href="{% static 'assets/Interfaz/plus.png' %}" rel="icon" type="image/png">
-        <link href="{% static 'assets/Interfaz/more.png' %}" rel="icon" type="image/png">
-
-        <!-------FIN REFERENCIAS PARA IMAGENES--------->
-
-
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-        
-        <style>
-            .dropdown-menu {
-                background-color: #355e9f;  
-                border-radius: 8px;
-                padding: 10px;
-                width: 800px;      /* Asegura que el menú tenga un ancho específico */
-                position: center;   /* Mantiene el menú en la posición fija */
-            }
-
-            .dropdown-item {
-                color: white;         
-                font-family: Montserrat;     
-                font-size: 30px;             
-                padding: 25px 35px;          
-                border-bottom: 1px solid white;  
-            }
-
-            .dropdown-item:hover {
-                background-color: #29477a;   
-                color: #ffffff;              
-                border-radius: 4px;         
-            }
-
-            .dropdown-item:focus {
-                background-color: #1e355f;   
-                color: #ffffff;
-            }
-        </style> 
-
-        <!-- Bootstrap JS y Popper.js -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"></script>
-
-    </div>
-</head>
-
-<body>
-    <center>
-        <div class="form-container">
-            <div class="section-title"><h2>{{ user.username }}</h2></div>
-            <form >
-            <h3>Fecha de ingreso: {{ user_profile.fecha_registro }}</h3>
-            <h3>ID del usuario: {{ user.id }}</h3>
-            <h3>Cedula profesional: {{ user_profile.cedula_profesional }}</h3>
-            <h3>Profesión: {{ user_profile.funcionalidad }}</h3>
-
-
+<main
+    class="flex flex-col items-center pt-[10vh] landscape:pt-[17vh] max-w-full min-h-[calc(100vh-6vh)] overflow-hidden pb-[5vh]">
+    <div class="w-[90%] max-w-xl bg-white shadow-lg border border-gray-300 rounded-lg p-6">
+        <!-- Título del usuario -->
+        <div class="text-center mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">{{ user.username }}</h2>
         </div>
 
-    </center>
-
-    <div class="fixed-bottom-border">
-        <center>
-            <a href = "{% url 'usuarios' %}">
-            <div class="icon-container">
-                <div class="icon-item">
-                    <img src="{% static 'assets/interfaz/user.png' %}">
-                    <p>Usuarios</p>
-                </div>
-            </a>
-            <a href = "{% url 'registroUsuario' %}">
-                <div class="icon-item">
-                    <img src="{% static 'assets/interfaz/plus.png' %}">
-                    <p>Nuevo usuario</p>
-                </div>
-            </a>
-                <div class="icon-item dropdown">
-                    <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
-                    <p>Más</p>
-                    
-                    <!-- Menú desplegable -->
-                    <ul class="dropdown-menu">
-                        <li><a href = "{% url 'habilitar_usuario' id=user.id %}" class="dropdown-item"
-                            onclick="return confirm('¿Estás seguro de que deseas habilitar este usuario?')">Habilitar usuario</a></li>
-                        <li><a href = "{% url 'edicionUsuario' id=user.id %}" class="dropdown-item">Editar usuario</a></li>
-                    </ul>
-                </div>
-            </div>
-        </center>
+        <!-- Información del usuario -->
+        <div class="space-y-4 text-gray-700">
+            <p><strong>Fecha de ingreso:</strong> {{ user_profile.fecha_registro }}</p>
+            <p><strong>ID del usuario:</strong> {{ user.id }}</p>
+            <p><strong>Cédula profesional:</strong> {{ user_profile.cedula_profesional }}</p>
+            <p><strong>Profesión:</strong> {{ user_profile.funcionalidad }}</p>
+        </div>
     </div>
+</main>
 
-</body>
+<footer class="fixed bottom-0 w-full bg-[#355E9F] h-[8vh] landscape:h-[15vh] flex justify-center items-center">
+    <div class="w-full flex flex-row justify-center items-center gap-16 landscape:gap-24 relative">
+        <!-- Botón Usuarios -->
+        <a href="{% url 'usuarios' %}" class="flex flex-col items-center">
+            <img src="{% static 'assets/interfaz/user.png' %}"
+                class="w-[4vh] h-[4vh] landscape:w-[6vh] landscape:h-[6vh]">
+            <p class="text-white">Usuarios</p>
+        </a>
 
-</html>
+        <!-- Botón Nuevo Usuario -->
+        <a href="{% url 'registroUsuario' %}" class="flex flex-col items-center">
+            <img src="{% static 'assets/interfaz/plus.png' %}"
+                class="w-[4vh] h-[4vh] landscape:w-[6vh] landscape:h-[6vh]">
+            <p class="text-white">Nuevo usuario</p>
+        </a>
+
+        <!-- Botón de menú con tres puntos -->
+        <div class="relative">
+            <button id="dropdownMenuIconHorizontalButton"
+                class="text-white bg-[#355E9F] hover:bg-blue-500 focus:outline-none w-auto h-full flex items-center justify-center">
+                <svg class="w-[4vw] h-[4vw]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                    viewBox="0 0 16 3">
+                    <path
+                        d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                </svg>
+            </button>
+
+            <!-- Dropdown derecha -->
+            <div id="dropdownDotsHorizontal"
+                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700 dark:divide-gray-600 absolute bottom-full right-0 mb-2">
+                <ul class="py-2 text-gray-700 text-center" aria-labelledby="dropdownMenuIconHorizontalButton">
+                    <div class="py-2">
+                        <li>
+                            <a href="#" class="block text-white px-4 py-2 hover:bg-gray-600"
+                                onclick="showConfirmModal('{% url 'habilitar_usuario' id=user.id %}')">
+                                Habilitar usuario
+                            </a>
+                        </li>
+                    </div>
+                    <div class="py-2">
+                        <li>
+                            <a href="{% url 'edicionUsuario' id=user.id %}"
+                                class="block text-white px-4 py-2 hover:bg-gray-600">Editar usuario</a>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Modal de confirmación (oculto por defecto) -->
+<div id="confirmModal" class="fixed inset-0 bg-black/50 flex justify-center items-center hidden z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
+        <h2 class="text-lg font-semibold">Confirmar acción</h2>
+        <p class="mt-2 text-gray-700">¿Estás seguro de que deseas habilitar este usuario?</p>
+        <div class="flex justify-around mt-4">
+            <button onclick="closeConfirmModal()" class="px-4 py-2 bg-gray-400 text-white rounded-md">Cancelar</button>
+            <a id="confirmButton" href="#" class="px-4 py-2 bg-red-600 text-white rounded-md">Habilitar</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("dropdownMenuIconHorizontalButton").addEventListener("click", function () {
+        document.getElementById("dropdownDotsHorizontal").classList.toggle("hidden");
+    });
+    function showConfirmModal(url) {
+        document.getElementById("confirmModal").classList.remove("hidden");
+        document.getElementById("confirmButton").href = url; // Asignar la URL al botón de confirmación
+    }
+
+    function closeConfirmModal() {
+        document.getElementById("confirmModal").classList.add("hidden");
+    }
+</script>
+{% endblock %}

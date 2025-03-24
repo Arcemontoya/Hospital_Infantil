@@ -1,179 +1,108 @@
+{% extends '_base.html' %}
 {% load static %}
-<script>
-    function goBack() {
-    window.history.back();
-    }
-</script>
+{% load widget_tweaks %}
 
-<!DOCTYPE html>
-<html lang="en">
-    <style>
-        .fixed-top-border {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 169.31px; /* Ajusta la altura según lo necesites */
-            background-color: #355e9f;
-            z-index: 1000;
+{% block title %}Registro de usuario{% endblock %}
 
-            /* Remover alineación y padding relacionados con el contenido */
-            display: flex;
-            align-items: center;
-        }
+{% block content %}
+<!-- Barra superior -->
+<header
+    class="bg-[#355E9F] h-[8vh] landscape:h-[15vh] w-full fixed top-0 flex items-center justify-center shadow-md relative">
+    <a href="{{ request.session.prev_page|default:'/' }}" class="absolute left-[2vh] landscape:left-[3vh]">
+        <img src="{% static 'assets/interfaz/previous.png' %}" alt="Back" class="w-[4vh] landscape:w-[6vh]">
+    </a>
 
 
-        .fixed-top-border img
-        {
-            
-            scale: 40%;
-        }
+    <h1 class="text-white font-bold ">Edicion de usuario</h1>
+</header>
 
+<main class="flex flex-col items-center pt-[10vh] landscape:pt-[17vh] max-w-full min-h-[calc(100vh-6vh)] pb-[2vh]">
+    <form action="{% url 'registroUsuario' %}" method="post" class="w-[90%] max-w-lg space-y-6">
+        {% csrf_token %}
 
-        .section-title
-        {
-            background-color: #EEEEEE;
-            font-family: Montserrat;
-            width: 350px;
-            border-radius: 8px;
-            padding: 5px;
-            margin-bottom: 80px;
-            text-align: center;
-        }
-        
+        <!-- Características del usuario -->
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center gap-2">
+                <svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                </svg>
+                <h2 class="text-lg font-bold">Información del usuario</h2>
+            </div>
+            <div class="mt-4 space-y-2">
+                <label class="block font-semibold">Nombre del usuario:</label>
+                {{ user_form.username|add_class:"form-input w-full text-[1.8vh] p-[1vh] rounded-lg" }}
 
-        .form-container {
-            
-                margin-top: 50px; /* Ajusta el margen superior para posicionar la sección */
-                padding: 20px; /* Espacio interno del contenedor */
-                background-color: white; /* Fondo blanco para el contenedor */
-                border-radius: 8px; /* Bordes redondeados */
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra */
-                width: 600px; /* Ancho del contenedor para que coincida con los inputs */
-                display: flex; /* Habilita Flexbox */
-                flex-direction: column; /* Organiza los elementos en una columna */
-                align-items: center;
-                margin-bottom: 200px;
-                margin-top: 200px;
-        }
+                <label class="block font-semibold">Fecha de ingreso:</label>
+                {{ profile_form.fecha_registro|add_class:"form-input w-full text-[1.8vh] p-[1vh] rounded-lg" }}
 
-        
+                <label class="block font-semibold">Correo:</label>
+                {{ user_form.email|add_class:"form-input w-full text-[1.8vh] p-[1vh] rounded-lg" }}
 
-        button
-        {
-                background-color: #355e9f;
-                font-family: Montserrat;
-                width: 400px;
-                height: 100px;
-                font-size: 60px;
-                color: white;
-                border-radius: 8px;
-        }
+            </div>
+        </div>
 
-        .form-container input {
-                width: 550px; /* Ancho completo del input */
-                height: 80px;
-                margin-bottom: 20px; /* Espacio entre los inputs */
-                padding: 10px;
-                font-family: Calibri;
-                font-size: 30px;
-                background-color: #EEEE;
-                border-color: #EEEE;
-                
-        }
+        <!-- Cédula profesional -->
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center gap-2">
+                <svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+                <h2 class="text-lg font-bold">Cédula profesional</h2>
+            </div>
+            <div class="mt-4">
+                {{ profile_form.cedula_profesional|add_class:"form-input w-full text-[1.8vh] p-[1vh] rounded-lg" }}
+            </div>
+        </div>
 
-        textarea
-        {
-            width: 600px; /* Ancho completo del input */
-            height: 500px;
-            background-color: #EEEE;
-            border-color: #EEEE; 
-            font-family: Calibri;
-            font-size: 30px;
-        }
+        <!-- Ocupación -->
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center gap-2">
+                <svg class="w-6 h-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
+                </svg>
+                <h2 class="text-lg font-bold">Rol del usuario</h2>
+            </div>
+            <div class="mt-4">
+                <label class="block font-semibold">Rol:</label>
+                {{ profile_form.funcionalidad|add_class:"form-input w-full text-[1.8vh] p-[1vh] rounded-lg" }}
+            </div>
+        </div>
 
-        select
-        {
-            width: 550px; /* Ancho completo del input */
-            height: 80px;
-            margin-bottom: 20px; /* Espacio entre los inputs */
-            padding: 10px;
-            font-family: Calibri;
-            font-size: 30px;
-            background-color: #EEEE;
-            border-color: #EEEE;    
-        }
-
-        h1{
-            font-family: Montserrat;
-            font-size: 60px;
-            color: white;
-        }
-
-        h2{
-            font-family: Montserrat;
-            font-size: 40px;
-        }
-
-        h3{
-            font-family: Calibri;
-            font-size: 30px;
-            align-self: flex-start; /* Alinear el h3 al inicio del contenedor */
-            text-align: left; /* Alinea el texto del h3 a la izquierda */
-            width: 100%; /* Asegura que el h3 ocupe todo el ancho disponible */
-            padding-left: 20px; /* Opcional: separa el texto del borde izquierdo */
-        }
-    </style>
-
-<head>
-
-    <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
-
-    <div class="fixed-top-border">
-        <a onclick="goBack()">
-            <img src="{% static 'assets/Interfaz/previous.png'%}">
-        </a>
-        <h1>Edición de usuario</h1>
-
+        <!-- Botón de envío -->
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">
+            <b>Registrar</b>
+        </button>
+    </form>
+    <!-- Modal de Error -->
+    <div id="errorModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-md text-center">
+            <h2 class="text-red-600 font-bold text-xl">Error en el formulario</h2>
+            <p id="errorText" class="text-gray-700 mt-2"></p>
+            <button onclick="closeModal()" class="mt-4 bg-red-600 text-white px-4 py-2 rounded-lg">Cerrar</button>
+        </div>
     </div>
 
-</head>
+</main>
+<script>
+    function showModal(message) {
+        document.getElementById("errorText").innerText = message;
+        document.getElementById("errorModal").classList.remove("hidden");
+    }
 
-<body>
-    <center>
-        <!-- Inicia el formulario -->
-        <form action="{% url 'edicionUsuario' id=user_data.id %}" method="post">
-            {% csrf_token %}
-            
-            <div class="form-container">
-                <div class="section-title"><h2>Características del usuario</h2></div>
-                <h3>Nombre del usuario: </h3>
-                {{ user_form.username }}
-                
-                <h3>Fecha de ingreso: </h3>
-                {{ profile_form.fecha_registro }}
-                
-                <h3>Correo: </h3>
-                {{ user_form.email }}
-                
-            </div>
+    function closeModal() {
+        document.getElementById("errorModal").classList.add("hidden");
+    }
 
-            <div class="form-container">
-                <div class="section-title"><h2>Cédula profesional</h2></div>
-                {{ profile_form.cedula_profesional }}
-            </div>
+    // Verificar si hay errores desde Django y mostrarlos
+    {% if error_messages %}
+    showModal("{{ error_messages|escapejs }}");
+    {% endif %}
+</script>
 
-            <div class="form-container">
-                <div class="section-title"><h2>Ocupación</h2></div>
-                <h3>Ocupación</h3>
-                {{ profile_form.funcionalidad }}
-
-
-            </div>
-                <button type="submit"><b>Registrar</b></button>
-        </form>
-    </center>
-</body>
-
-
-</html>
+{% endblock %}
