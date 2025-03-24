@@ -1,94 +1,139 @@
+{% extends '_base.html' %}
 {% load static %}
-<script>
-    function goBack() {
-        window.history.back();
-    }
-</script>
+{% load widget_tweaks %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% block title %}Registro de usuario{% endblock %}
 
-<head>
-        <link rel="stylesheet" href="{% static 'CSS/forms.css' %}">
-        
-    <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
+{% block content %}
+<!-- Barra superior -->
+<header
+    class="bg-[#355E9F] h-[8vh] landscape:h-[15vh] w-full fixed top-0 flex items-center justify-center shadow-md relative">
+    <img src="{% static 'assets/interfaz/previous.png' %}" alt="Back"
+        class="w-[4vh] landscape:w-[6vh] absolute left-[2vh] landscape:left-[3vh]" onclick="window.history.back()">
 
-    <div class="fixed-top-border">
-        <a onclick="goBack()">
-            <img src="{% static 'assets/Interfaz/previous.png' %}">
-        </a>
-        <h1>Edición de paciente</h1>
+    <h1 class="text-white font-bold ">Edicion de datos de paciente</h1>
+</header>
 
-    </div>
-</head>
+<main class="flex flex-col items-center pt-[10vh] landscape:pt-[17vh] max-w-full min-h-[calc(100vh-6vh)] pb-[2vh]">
+    <form action="{% url 'editarPaciente' expediente=paciente.expediente %}" method="post"
+        class="w-[90%] max-w-lg space-y-6">
+        {% csrf_token %}
 
-<body>
-    <center>
-            <form action="{% url 'editarPaciente' expediente=paciente.expediente %}" method="post">
-                {% csrf_token %}
-                <div class="form-container">
-                    <div class="section-title"><h2>Características del paciente</h2></div>
+        <!-- Características del paciente -->
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center gap-2">
+                <svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                </svg>
+                <h2 class="text-lg font-bold">Características del paciente</h2>
+            </div>
+            <div class="mt-4 space-y-2">
+                <label class="block font-semibold">Nombre del paciente:</label>
+                {{ form.nombre|add_class:"form-input w-full text-sm p-[1vh] rounded-lg" }}
 
-                    <h3>Nombre: </h3>
-                    {{ form.nombre }}
+                <label class="block font-semibold">Apellido paterno:</label>
+                {{ form.apellido_paterno|add_class:"form-input w-full text-sm p-[1vh] rounded-lg" }}
 
-                    <h3>Apellido paterno: </h3>
-                    {{ form.apellido_paterno }}
+                <label class="block font-semibold">Apellido materno:</label>
+                {{ form.apellido_materno|add_class:"form-input w-full text-sm p-[1vh] rounded-lg" }}
 
-                    <h3>Apellido materno: </h3>
-                    {{ form.apellido_materno }}
+                <label class="block font-semibold">Fecha de nacimiento:</label>
+                {{ form.fecha_nacimiento|add_class:"form-input w-full text-sm p-[1vh] rounded-lg" }}
 
-                    <h3>Fecha de nacimiento: </h3>
-                    {{ form.fecha_nacimiento }}
+                <label class="block font-semibold">Fecha de ingreso:</label>
+                {{ form.fecha_ingreso|add_class:"form-input w-full text-sm p-[1vh] rounded-lg" }}
 
-                    <h3>Fecha de ingreso: </h3>
-                    {{ form.fecha_ingreso }}
+                <label class="block font-semibold">Altura:</label>
+                {{ form.altura|add_class:"form-input w-full text-sm p-[1vh] rounded-lg" }}
 
-                    <h3>Altura: </h3>
-                    {{ form.altura }}
+                <label class="block font-semibold">Peso:</label>
+                {{ form.peso|add_class:"form-input w-full text-sm p-[1vh] rounded-lg" }}
+            </div>
+        </div>
 
-                    <h3>Peso: </h3>
-                    {{ form.peso }}
+        <!-- Cirugia realizada -->
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center gap-2">
+                <svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+                <h2 class="text-lg font-bold">Cirugía</h2>
+            </div>
+            <label class="block font-semibold">Cirugia realizada:</label>
+            {{ form.cirugia_realizada|add_class:"form-input w-full text-sm p-[1vh] rounded-lg" }}
 
-                </div>
+            <label class="block font-semibold">Diagnóstico clínico prequirúrgico:</label>
+            {{ form.diagnostico_clinico_prequirurgico|add_class:"form-input w-full text-sm p-[1vh] rounded-lg" }}
+        </div>
 
-                <div class="form-container">
-                    <div class="section-title"><h2>Cirugía</h2></div>
+        <!-- Nota de enfermería -->
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center gap-2">
+                <svg class="w-6 h-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                </svg>
+                <h2 class="text-lg font-bold">Nota de enfermería</h2>
+            </div>
+            <label class="block font-semibold">Nota de enfermería::</label>
+            {{ form.nota_enfermeria|add_class:"form-input w-full text-sm p-[1vh] rounded-lg" }}
+        </div>
 
-                    <h3>Cirugía realizada: </h3>
-                    {{ form.cirugia_realizada }}
+        <!-- Enfermeros encargados -->
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center gap-2">
+                <svg class="w-6 h-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                </svg>
+                <h2 class="text-lg font-bold">Enfermeros encargados</h2>
+            </div>
+            <label class="block font-semibold">Enfermeros encargados:</label>
+            <div class="grid grid-cols-2 pt-2 gap-2">
+                {% for enfermero in form.enfermeros_Encargados.field.queryset %}
+                <label
+                    class="flex items-center gap-2 bg-gray-200 p-2 rounded-md hover:bg-gray-300 transition cursor-pointer">
+                    <input type="checkbox" name="{{ form.enfermeros_Encargados.html_name }}" value="{{ enfermero.id }}"
+                        class="form-checkbox text-blue-600 h-3 w-3">
+                    <span class="text-sm">{{ enfermero.user.username }}</span>
+                </label>
+                {% endfor %}
+            </div>
+        </div>
 
+        <!-- Médico encargado -->
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center gap-2">
+                <svg class="w-6 h-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M12 9v3.75m0-10.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.75c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.57-.598-3.75h-.152c-3.196 0-6.1-1.25-8.25-3.286Zm0 13.036h.008v.008H12v-.008Z" />
+                </svg>
+                <h2 class="text-lg font-bold">Médico encargado</h2>
+            </div>
+            <label class="block font-semibold">Seleccione el médico encargado:</label>
+            <select name="{{ form.medico_Encargado.name }}"
+                class="w-full p-2 text-sm bg-gray-200 hover:bg-gray-300 focus:ring-2 focus:ring-blue-500">
+                <option value="">Selecciona un médico...</option>
+                {% for medico in form.medico_Encargado.field.queryset %}
+                <option value="{{ medico.id }}">{{ medico.user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-                    <h3>Diagnóstico clínico prequirúrgico</h3>
-                    {{ form.diagnostico_clinico_prequirurgico }}
-                </div>
-
-                <div class="form-container">
-                    <div class="section-title"><h2>Nota de enfermería</h2></div>
-
-                    <h3>Ingrese nota de enfermería</h3>
-                    {{ form.nota_enfermeria }}
-                </div>
-
-                 <div class="form-container">
-                    <div class="section-title"><h2>Enfermeros Encargados</h2></div>
-
-                    <h3>Seleccione a los enfermeros encargados:</h3>
-                    {{ form.enfermeros_Encargados }}
-                </div>
-
-                <div class="form-container">
-                    <div class="section-title"><h2>Médico encargado</h2></div>
-
-                    <h3>Seleccione el médico encargado</h3>
-                    {{ form.medico_Encargado }}
-                </div>
-
-                <button type="submit"><b>Registrar</b></button>
-    </center>
+        <!-- Botón de envío centrado -->
+        <div class="flex justify-center">
+            <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 w-[50%]">
+                <b>Guardar cambios</b>
+            </button>
+        </div>
     </form>
-</body>
+</main>
 
-
-
-</html>
+{% endblock %}

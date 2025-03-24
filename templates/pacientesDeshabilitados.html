@@ -1,57 +1,71 @@
+{% extends '_base.html' %}
 {% load static %}
 
-<script>
-    function goBack() {
-    window.history.back();
-    }
-</script>
+{% block title %}Pacientes deshabilitados{% endblock %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% block content %}
+<!-- Barra superior -->
+<header
+    class="bg-[#355E9F] h-[8vh] landscape:h-[15vh] w-full fixed top-0 flex items-center justify-center shadow-md relative">
+    <a href="{% url 'pacientes' %}" class="absolute left-[2vh] landscape:left-[3vh]">
+        <img src="{% static 'assets/interfaz/previous.png' %}" alt="Back" class="w-[4vh] landscape:w-[6vh]">
+    </a>
 
-<!--PARTE SUPERIOR-->
+    <h1 class="text-white font-bold ">Pacientes deshabilitados</h1>
+</header>
 
-<head>
-    <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
-    <link rel="stylesheet" href="{% static 'CSS/interfazGeneral.css' %}">
-
-
-    <div class="fixed-top-border">
-        <a onclick="goBack()">
-        <img src="{% static 'assets/Interfaz/previous.png' %}">
-        </a>
-        <h1>Pacientes deshabilitados</h1>
-    </div>
-
-</head>
-
-<body>
-          
-    <table>
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Expediente</th>
-                <th>Fecha de ingreso</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for paciente in pacientes %}
+<main
+    class="flex flex-col items-center pt-[10vh] landscape:pt-[17vh] max-w-full h-[calc(100vh-6vh)] overflow-hidden pb-[5vh]">
+    <!-- Contenedor de la tabla -->
+    <div class="relative overflow-x-auto overflow-y-auto w-[95%] border-2 border-[#355E9F] rounded-lg">
+        <table class="table-container text-xs sm:text-sm md:text-base lg:text-lg">
+            <thead class="text-white uppercase bg-[#355E9F] sticky top-0 z-10">
+                <tr class="bg-[#355E9F]">
+                    <th class="py-2 px-4 rounded-tl-sm">Nombre</th>
+                    <th class="py-2 px-4">Expediente</th>
+                    <th class="py-2 px-4 rounded-tr">Fecha de ingreso</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for paciente in pacientes %}
                 {% if paciente.paciente_Habilitado == "Deshabilitado" %}
-                <tr onclick="window.location='{% url 'perfilPaciente' paciente.expediente %}'" style="cursor: pointer;">
-                    <td>{{ paciente.nombre }}</td>
-                    <td>{{ paciente.expediente }}</td>
-                    <td>{{ paciente.fecha_ingreso }}</td>
+                <tr class="tbody-tr-container" onclick="window.location='{% url 'perfilPaciente' paciente.expediente %}'">
+                    <td class="py-2 px-4">{{ paciente.nombre }}</td>
+                    <td class="py-2 px-4">{{ paciente.expediente }}</td>
+                    <td class="py-2 px-10">{{ paciente.fecha_ingreso }}</td>
                 </tr>
                 {% endif %}
-            {% empty %}
-            <tr>
-                <td colspan="3">No hay pacientes registrados</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-
-</body>
-
-</html>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center py-4 rounded-b-lg">No hay pacientes registrados</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+<!-- <table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Expediente</th>
+            <th>Fecha de ingreso</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for paciente in pacientes %}
+        {% if paciente.paciente_Habilitado == "Deshabilitado" %}
+        <tr onclick="window.location='{% url 'perfilPaciente' paciente.expediente %}'" style="cursor: pointer;">
+            <td>{{ paciente.nombre }}</td>
+            <td>{{ paciente.expediente }}</td>
+            <td>{{ paciente.fecha_ingreso }}</td>
+        </tr>
+        {% endif %}
+        {% empty %}
+        <tr>
+            <td colspan="3">No hay pacientes registrados</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table> -->
+{% endblock %}
