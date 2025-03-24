@@ -40,13 +40,6 @@ urlpatterns = [
     # Mostrar usuarios
     path('usuarios/', views.mostrarUsuarios, name='mostrarUsuarios'),
 
-    # Recuperar contraseña
-    path('recuperarCuenta/', views.recuperarCuenta, name='recuperarCuenta'),
-
-    path('verificarCodigo/', views.verificarCodigo, name="verificarCodigo"),
-
-    path('cambiarPassword/', views.cambiarPassword, name='cambiarPassword'),
-
     # ------------------------------------------------| INTERFACES DE ENFERMERO |------------------------------------------------
     # Mostrar pacientesEnfermero
     path('registroPaciente/', RegistroPaciente.as_view(), name="registroPaciente"),
