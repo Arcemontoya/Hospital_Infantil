@@ -25,9 +25,6 @@ from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios, 
 
 import logging
 from django.contrib.messages import get_messages
-from django.core.mail import send_mail
-import random
-from django.conf import settings
 
 def index(request):
     return render(request, 'index.html')
@@ -608,66 +605,4 @@ def signosVitales(request):
 
 
 
-# --------------------------------------------| RECUPERACION DE CUENTA |--------------------------------------------
-def recuperarCuenta(request):
-    if request.method == "POST":
-        email = request.POST.get("email")
 
-        try:
-            user = User.objects.get(email=email)
-            codigo = str(random.randint(100000, 999999))
-            request.session["codigo_recuperacion"] = codigo
-            request.session["email_recuperacion"] = email
-            send_mail(
-                subject="Código de Recuperación de Cuenta",
-                message=f"Tu código de recuperación es: {codigo}",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=False,
-            )
-            return redirect("verificarCodigo")
-
-        except User.DoesNotExist:
-            messages.error(request, "No existe una cuenta con ese correo.")
-
-    return render(request, "recuperacionCuenta.html")
-
-
-def verificarCodigo(request):
-    if request.method == "POST":
-        codigo_ingresado = request.POST.get("codigo")
-        codigo_guardado = request.session.get("codigo_recuperacion")
-
-        if codigo_ingresado == codigo_guardado:
-            return redirect("cambiarPassword")
-        else:
-            messages.error(request, "Código incorrecto. Inténtalo de nuevo.")
-
-    return render(request, "verificarCodigo.html")
-
-
-def cambiarPassword(request):
-    if request.method == "POST":
-        nueva_contraseña = request.POST.get("password")
-        confirmar_contraseña = request.POST.get("confirm_password")
-        email = request.session.get("email_recuperacion")
-
-        if not email:
-            messages.error(request, "Ocurrió un error. Vuelve a solicitar la recuperación de contraseña.")
-            return redirect("recuperarCuenta")
-
-        if nueva_contraseña != confirmar_contraseña:
-            messages.error(request, "Las contraseñas no coinciden.")
-            return redirect("cambiarPassword")
-
-        try:
-            usuario = User.objects.get(email=email)
-            usuario.set_password(nueva_contraseña)
-            usuario.save()
-            messages.success(request, "Contraseña cambiada exitosamente. Ahora puedes iniciar sesión.")
-            return redirect("login")
-        except User.DoesNotExist:
-            messages.error(request, "El usuario no existe.")
-            return redirect("recuperarCuenta")
-
-    return render(request, "cambiarPassword.html")

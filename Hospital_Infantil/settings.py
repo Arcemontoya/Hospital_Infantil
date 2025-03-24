@@ -142,12 +142,11 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # EMAIL SETTINGS:
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'eco.ecolohosting.info'
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-EMAIL_USE_TLS = False
-EMAIL_HOST_USER = "notificaciones@hospitalinfantil.org"
-EMAIL_HOST_PASSWORD = "Z#l_e8a(TatS"
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "abc@mail.com"
+EMAIL_HOST_PASSWORD = "emailpassword"
 
 """
     CORREGIR MODELO DE TRATAMIENTO
