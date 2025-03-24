@@ -33,18 +33,6 @@ class RegisterForm(UserCreationForm):
         model = User
         fields = ["username", "first_name", "last_name", "email", "password1", "password2"]
 
-class EditUserForm(forms.ModelForm):
-    email = forms.EmailField(
-        required=True,
-        widget=forms.EmailInput(attrs={'placeholder': 'Ingrese correo electrónico.'})
-    )
-    username = forms.CharField(
-        required=True,
-        widget=forms.TextInput(attrs={'placeholder': 'Ingrese nombre de usuario.'})
-    )
-    class Meta:
-        model = User
-        fields = ["username", "first_name", "last_name", "email"]
 class UserProfileForm(forms.ModelForm):
 
     fecha_registro = forms.DateField(
@@ -124,8 +112,7 @@ class PacienteForm(forms.ModelForm):
 
     enfermeros_Encargados = forms.ModelMultipleChoiceField(
         queryset=UserProfile.objects.filter(user__userprofile__funcionalidad="enfermero"),
-        required=False, # Modificar
-        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-control', 'placeholder': 'Selecciona el enfermero encargado.'}),
+        required=False # Modificar
     )
 
     medico_Encargado = forms.ModelChoiceField(
