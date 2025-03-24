@@ -1,6 +1,5 @@
 # Colores
 AZUL:       #355E9F
-AZUL-HOVER: #3560A6
 ROJO:       #E32525
 AMARILLO:   #FDD007
 VERDE:      #76BD42 
