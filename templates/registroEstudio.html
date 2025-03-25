@@ -1,68 +1,51 @@
+{% extends '_base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
-<script>
-    function goBack() {
-    window.history.back();
-    }
-</script>
+{% block title %}Registro de estudios{% endblock %}
 
+{% block content %}
+<!-- Barra superior -->
+<header
+    class="bg-[#355E9F] h-[8vh] landscape:h-[15vh] w-full fixed top-0 flex items-center justify-center shadow-md relative">
+    <img src="{% static 'assets/interfaz/previous.png' %}" alt="Back"
+        class="w-[4vh] landscape:w-[6vh] absolute left-[2vh] landscape:left-[3vh]" onclick="window.history.back()">
 
-<!DOCTYPE HTML>
-<HTML lang="en">
-
-
-
-<head>
-    <link rel="stylesheet" href="{% static 'CSS/forms.css' %}">
-    <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
-
-    <div class="fixed-top-border">
-
-        <a onclick="goBack()">
-            <img src="{% static 'assets/Interfaz/previous.png'%}">
-        </a>
-
-        <h1>Registro de estudios</h1>
-
-    </div>
-
-</head>
+    <h1 class="text-white font-bold ">Registro de estudios</h1>
+</header>
 
 
-<body>
-    <center>
-
-        
-        <form action="{% url 'registroEstudios' expediente=paciente.expediente %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-container">
-                <div class="section-title"><h2>Registro de estudio</h2></div>
-
-                <h3>Ingrese el nombre del estudio:</h3>
-
-                {{ form.nombre_Estudio }}
-
-                <h3>Ingrese la fecha en que se realizó el estudio:</h3>
-
-                {{ form.fecha_realizada }}
-
-                <h3>Ingrese el archivo PDF con el resultado del estudio: </h3>
-
-                {{ form.estudio }}
-
+<main class="flex flex-col items-center pt-[10vh] landscape:pt-[17vh] max-w-full min-h-[calc(100vh-6vh)] pb-[2vh]">
+    <form action="{% url 'registroEstudios' expediente=paciente.expediente %}" method="post" class="w-[90%] max-w-lg space-y-6">
+        {% csrf_token %}
+        <!-- Registro de estudio -->
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center gap-2">
+                <svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                </svg>
+                <h2 class="text-lg font-bold">Registro de estudio</h2>
             </div>
-
-            <a href="{% url 'estudiosyGabinete' expediente=paciente.expediente %}">
-                <button type="submit">
+            <div class="mt-4 space-y-2">
+                <label class="block font-semibold">Ingrese el nombre del estudio:</label>
+                {{ form.nombre_Estudio|add_class:"form-input w-full text-[1.8vh] p-[1vh] rounded-lg" }}
+                <label class="block font-semibold">Ingrese la fecha en que se realizó el estudio:</label>
+                {{ form.fecha_realizada|add_class:"form-input w-full text-[1.8vh] p-[1vh] rounded-lg" }}
+                <label class="block font-semibold">Ingrese el archivo PDF con el resultado del estudio:</label>
+                {{ form.estudio|add_class:"form-input w-full text-[1.8vh] p-[1vh] rounded-lg" }}
+            </div>
+        </div>
+        <!-- Botón de envío centrado -->
+        <div class="flex justify-center">
+            <!-- <a href="{% url 'estudiosyGabinete' expediente=paciente.expediente}"> -->
+                <button type="submit"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 w-auto">
                     <b>Registrar</b>
                 </button>
-            </a>
-        </form>
-
-    
-    </center>
-
-
-</body>
-
-</HTML>
+            <!-- </a> -->
+        </div>
+    </form>
+</main>
+{% endblock %}
