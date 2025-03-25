@@ -20,13 +20,15 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth import login as auth_login
 from django.utils import timezone
 
-from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios, HistorialAplicacion
+from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios, HistorialAplicacion, Notificacion
 
 import logging
 from django.contrib.messages import get_messages
 from django.core.mail import send_mail
 import random
 from django.conf import settings
+
+from .Notificaciones import ManejadorNotificaciones
 
 def index(request):
     return render(request, 'index.html')
@@ -302,7 +304,26 @@ class RegistroPaciente(FormView):
     success_url = reverse_lazy('pacientes')
 
     def form_valid(self, form):
-        form.save()
+
+        # Asignacion de valores
+        paciente = form.save()
+        enfermeros_asignados = form.cleaned_data['enfermeros_Encargados']
+        medico_encargado = form.cleaned_data['medico_Encargado']
+        
+        # Se crean N notificaciones para cada enfermero
+        for enfermero in enfermeros_asignados:
+            ManejadorNotificaciones.crear_notificacion_asignacion(
+                asignacion=enfermero, 
+                paciente=paciente
+            )
+
+        # Se crea una notificacion para un medico
+        ManejadorNotificaciones.crear_notificacion_asignacion(
+        asignacion=medico_encargado, 
+        paciente=paciente
+        )
+
+
         messages.success(self.request, "Usuario registrado con éxito.")
         return super().form_valid(form)
 
@@ -665,3 +686,16 @@ def cambiarPassword(request):
             return redirect("recuperarCuenta")
 
     return render(request, "cambiarPassword.html")
+
+
+
+
+# --------------------------------------------| NOTIFICACIONES |--------------------------------------------
+
+# SE QUEDAN COMO NO LEIDAS POR TERMINOS DE TESTING, PASAR A LEIDAS EN EL DEPLOY
+def verNotificaciones(request):
+
+    user_profile = UserProfile.objects.get(user=request.user)
+    notificaciones = Notificacion.objects.filter(usuario=user_profile, estado='no leida')
+    notificaciones.update(estado='no leida')
+    return render(request, 'VerNotificaciones.html', {'notificaciones': notificaciones})

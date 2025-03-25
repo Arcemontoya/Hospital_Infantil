@@ -9,6 +9,7 @@ from django.utils.timezone import now
 
 
 from .models import Paciente, Tratamiento, UserProfile, Estudios, Radiografias, HistorialAplicacion
+from .Notificaciones import ManejadorNotificaciones
 
 
 class RegisterForm(UserCreationForm):
