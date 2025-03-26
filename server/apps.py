@@ -10,7 +10,7 @@ def crear_grupos(sender, **kwargs):
 
 class HospitalInfantilConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = "Hospital_Infantil"
+    name = "server"
 
     def ready(self):
         post_migrate.connect(crear_grupos, sender=self)

@@ -15,7 +15,7 @@ def asignar_grupo_usuario(sender, instance, created, **kwargs):
 
 class HospitalInfantilConfig(AppConfig):
     default_auto_field = 'django.bd.models.BigAutoField'
-    name = "Hospital_Infantil"
+    name = "server"
 
     def ready(self):
-        import Hospital_Infantil.signals
+        import server.signals
