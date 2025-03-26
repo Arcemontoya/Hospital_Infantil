@@ -97,7 +97,6 @@ class RegistroUsuario(FormView):
                 messages.success(self.request, f"Usuario registrado y asigndo al grupo {grupo_nombre}.")
             else:
                 messages.warning(self.request, f"Usuario registrado, pero no se encontró un grupo.")
-            messages.success(self.request, "Usuario registrado con éxito.")
             return super().form_valid(form)
         except Exception as e:
             messages.error(self.request, f"Error al registrar el usuario: {e}")
