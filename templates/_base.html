@@ -1,24 +1,29 @@
-{% load compress %}
-{% load static %}
+{% load compress %} {% load static %}
 
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-white text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html
+  lang="en"
+  class="h-full bg-white text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Mi sitio{% endblock title %}</title>
 
     {% compress css %}
-    <link rel="stylesheet" href="{% static 'src/output.css' %}">
+    <link rel="stylesheet" href="{% static 'src/output.css' %}" />
     {% endcompress %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <script>
+      // Set the worker script path (REQUIRED for PDF.js)
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js";
+    </script>
+    <script src="{% static '/JavaScript/verPDF.js' %}"></script>
+  </head>
 
-</head>
-
-<body class="h-full">
-    {% block content %}
-    {% endblock content %}
-</body>
-
+  <body class="h-full">
+    {% block content %} {% endblock content %}
+  </body>
 </html>
