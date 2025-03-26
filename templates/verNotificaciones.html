@@ -1,0 +1,34 @@
+{% extends "_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Ver notificaciones{% endblock %}
+
+{% block content %}
+<div class="flex min-h-screen flex-col justify-center items-center px-[5vw] py-[5vh]">
+    
+    <!-- Titulo -->
+    <div class="w-full max-w-[80%] text-center">
+        <h2 class="mt-[5vh] font-bold tracking-tight text-gray-900">Notificaciones</h2>
+    </div>
+
+    <ul class="space-y-4">
+        {% for notificacion in notificaciones %}
+        <li class="bg-white p-4 rounded-lg shadow-md hover:bg-gray-50 transition-colors duration-300">
+            <div>
+                <strong class="text-lg font-semibold text-gray-800">{{ notificacion.mensaje }}</strong>
+                <p class="text-sm text-gray-500 mt-2">{{ notificacion.fecha_creacion }}</p>
+            </div>
+        </li>
+        {% empty %}
+        <p class="text-center text-gray-500 italic">No tienes notificaciones.</p>
+        {% endfor %}
+    </ul>
+
+
+
+
+
+</div>
+
+{% endblock content %}

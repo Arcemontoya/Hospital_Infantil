@@ -66,6 +66,9 @@ class Paciente(models.Model):
 
     def __str__(self):
         return self.nombre
+    
+    def getNombre(self):
+        return self.nombre + " " +self.apellido_paterno + " " + self.apellido_materno
 
 
 # ------------------------------------------ |TRATAMIENTO| ------------------------------------------------------------
@@ -157,3 +160,18 @@ class Radiografias(models.Model):
     fecha_realizada = models.DateField(default=timezone.now)
     radiografia = models.FileField(upload_to='radiografias/')
 
+
+
+# ------------------------------------------ |NOTIFICACIONES| ------------------------------------------------------------
+
+class Notificacion(models.Model):
+    # Por ahora solo se maneja un tipo de notificaciones
+
+    usuario = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    mensaje = models.TextField()
+    estado = models.CharField(max_length=20, choices=[('leida', 'Leida'), ('no leida', 'No leida')], default='no leida')
+    fecha_creacion = models.DateField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f"Notificacion de {self.usuario.user.get_full_name()}"
