@@ -1,230 +1,288 @@
+{% extends '_base.html' %}
 {% load static %}
-{% load tz %}
 
-<!DOCTYPE HTML>
-<HTML lang="en">
+{% block title %}Perfil paciente{% endblock %}
 
-    <head>
-        <div class="fixed-top-border"><h1>Perfil del paciente</h1></div>
-
-
-
-            <!-------REFERENCIAS PARA IMAGENES--------->
-
-            <link href="{% static 'assets/Interfaz/vitalSigns.png' %}" rel="icon" type="image/png">
-            <link href="{% static 'assets/Interfaz/patients.png' %}" rel="icon" type="image/png">
-            <link href="{% static 'assets/Interfaz/plus.png' %}" rel="icon" type="image/png">
-
-             <!-------FIN REFERENCIAS PARA IMAGENES--------->
-
-                     <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
-        <style>
-            .dropdown-menu {
-                background-color: #355e9f;
-                border-radius: 8px;
-                padding: 10px;
-                width: 800px;      /* Asegura que el menú tenga un ancho específico */
-                position: center;   /* Mantiene el menú en la posición fija */
-            }
-
-            .dropdown-item {
-                color: white;
-                font-family: Montserrat;
-                font-size: 30px;
-                padding: 25px 35px;
-                border-bottom: 1px solid white;
-            }
-
-            .dropdown-item:hover {
-                background-color: #29477a;
-                color: #ffffff;
-                border-radius: 4px;
-            }
-
-            .dropdown-item:focus {
-                background-color: #1e355f;
-                color: #ffffff;
-            }
-        </style>
-
-        <!-- Bootstrap JS y Popper.js -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"></script>
-
-        <link rel="stylesheet" href="{% static 'CSS/patientDisplay.css' %}">
-    </head>
-
-    <body>
-        <center>
-            <div class="form-container">
-                <div class="section-title"><h2><b>{{ paciente.nombre }} {{ paciente.apellido_paterno }} {{ paciente.apellido_materno }}</b></h2></div>
-                <h3>Fecha de ingreso: {{ paciente.fecha_ingreso }}</h3>
-                <h3>Fecha de nacimiento: {{ paciente.fecha_nacimiento }}</h3>
-                <h3>Expediente: {{ paciente.expediente }}</h3>
-                <h3>Peso(Kg): {{ paciente.peso }}</h3>
-                <h3>Altura(metros): {{ paciente.altura }}</h3>
-                <h3>Cirugía realizada: {{ paciente.cirugia_realizada }}</h3>
+{% block content %}
+<!-- Barra superior -->
+<header class="bg-[#355E9F] h-[8vh] landscape:h-[8vh] w-full fixed top-0 flex items-center justify-center shadow-md">
+    <h1 class="text-white font-bold">Usuarios</h1>
+</header>
+<main
+    class="flex flex-col items-center pt-[10vh] landscape:pt-[17vh] min-h-[calc(100vh-8vh)] pb-[10vh] landscape:pb-[20vh] items-center">
+    <div class="w-[90%] max-w-lg space-y-6">
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center w-full">
+                <svg class="w-6 h-6 text-blue-600 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                </svg>
+                <h2 class="font-bold text-center w-full">{{ paciente.nombre }} {{ paciente.apellido_paterno }} 
+                    {{paciente.apellido_materno }}</h2>
             </div>
-
-            <div class="form-container">
-                <div class="section-title"><h2>Diagnóstico clínico prequirúrgico</h2></div>
-                <p> {{ paciente.diagnostico_clinico_prequirurgico }}
-                    </p>
-            </div>
-
-            <div class="form-container">
-                <div class="section-title"><h2>Nota Enfermería</h2></div>
-                <p>{{ paciente.nota_enfermeria }}
-                    </p>
-            </div>
-
-            {% if tratamientos_activos %}
-            <div class="section-title"><h2>Tratamientos Activos</h2></div>
-            {% for tratamiento in tratamientos_activos %}
-                <div class="form-container">
-                    <div class="section-title"><h2>Tratamiento {{ forloop.counter }}</h2></div>
-                    <h3>Estado del tratamiento: {{ tratamiento.tratamiento_activo }}</h3>
-                    <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
-                    <h3>Dosis administrada: {{ tratamiento.dosis_Administrada }}</h3>
-                    <h3>Vía de administración: {{ tratamiento.via_Administracion }}</h3>
-                    <h3>Frecuencia de dosis: Cada {{ tratamiento.frecuencia_Dosis }} {{ tratamiento.tiempo_Dosis }}</h3>
-                    <h3>Duración de la terapia: {{ tratamiento.duracion_Terapia }} días</h3>
-                    <h3>Otras indicaciones: {{ tratamiento.nombre_Medicamento }}</h3>
-                    <p>{{ tratamiento.otras_Indicaciones }}</p>
-
-
-                    <div class="section-title"><h2>Historial de Aplicaciones.</h2></div>
-                    {% if tratamiento.historiales.all %}
-                        <ul>
-                            {% for historial in tratamiento.historiales.all %}
-                                {% if user_profile.funcionalidad == "medico" %}
-                                    <h3><h3>Aplicado el {{ historial.fecha_aplicacion|timezone:"America/Tijuana"|date:"d/m/Y h:i A" }}</h3>
-                                {% endif %}
-                                {% if user_profile.funcionalidad == "enfermero" %}
-                                    <h3><h3>Aplicado el {{ historial.fecha_aplicacion|timezone:"America/Tijuana"|date:"d/m/Y h:i A" }}</h3>
-                                {% endif %}
-                                
-                            {% endfor %}
-                        </ul>
-                    {% else %}
-
-                        <h3>No hay aplicaciones registradas.</h3>
-                    {% endif %}
-                    {% if user_profile.funcionalidad == "medico" %}
-                        <a href="{% url 'edicionTratamiento'  expediente=paciente.expediente pk=tratamiento.id_Tratamiento  %}"><button>Editar Tratamiento</button></a>
-                    {% endif %}
-                    {% if user_profile.funcionalidad == "enfermero" %}
-                        <form method="POST" action="{% url 'actualizacionTratamiento' expediente=paciente.expediente id_tratamiento=tratamiento.id_Tratamiento %}">
-                            {% csrf_token %}
-                            <button type="submit">Actualizar</button>
-                        </form>
-                    {% endif %}
+            <hr class="border-t border-black my-4 w-full mx-0">
+            <div class="grid grid-cols-2 gap-x-4 gap-y-4">
+                <div class="flex flex-col">
+                    <span class="font-semibold">Fecha de ingreso:</span>
+                    <span class="text-gray-900">{{ paciente.fecha_ingreso }}</span>
                 </div>
-
-            {% endfor %}
-
-        {% endif %}
-
-        {% if tratamientos_inactivos %}
-            <div class="section-title"><h2>Tratamientos Inactivos</h2></div>
-            {% for tratamiento in tratamientos_inactivos %}
-                <div class="form-container">
-                    <div class="section-title"><h2>Tratamiento {{ forloop.counter }}</h2></div>
-                    <h3>Estado del tratamiento: {{ tratamiento.tratamiento_activo }}</h3>
-                    <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
-                    <h3>Dosis administrada: {{ tratamiento.dosis_Administrada }}</h3>
-                    <h3>Vía de administración: {{ tratamiento.via_Administracion }}</h3>
-                    <h3>Frecuencia de dosis: Cada {{ tratamiento.frecuencia_Dosis }} {{ tratamiento.tiempo_Dosis }}</h3>
-                    <h3>Duración de la terapia: {{ tratamiento.duracion_Terapia }} días</h3>
-                    <h3>Otras indicaciones: {{ tratamiento.nombre_Medicamento }}</h3>
-                    <p>{{ tratamiento.otras_Indicaciones }}</p>
+                <div class="flex flex-col">
+                    <span class="font-semibold">Fecha de nacimiento:</span>
+                    <span class="text-gray-900">{{ paciente.fecha_nacimiento }}</span>
                 </div>
-            {% endfor %}
-        {% endif %}
-
-        </center>
-    </body>
-
-    <!------- FONDO INTERACTUABLE -------->
-
-    <!----<img src="{% static 'assets/interfaz/.png' %}">-->
-
-
-    {% if user_profile.funcionalidad == "enfermero" %}
-    <div class="fixed-bottom-border">
-        <center>
-            <a href=" {% url 'pacientes' %}">
-            <div class="icon-container">
-                <div class="icon-item">
-                    <img src="{% static 'assets/interfaz/patients.png' %}">
-                    <p>Pacientes</p>
+                <div class="flex flex-col">
+                    <span class="font-semibold">Expediente:</span>
+                    <span class="text-gray-900">{{ paciente.expediente }}</span>
                 </div>
-            </a>
-            <a href=" {% url 'signosVitales' %}">
-                <div class="icon-item">
-                    <img src="{% static 'assets/interfaz/vitalSigns.png' %}">
-                    <p>Signos V.</p>
+                <div class="flex flex-col">
+                    <span class="font-semibold">Peso (Kg):</span>
+                    <span class="text-gray-900">{{ paciente.peso }}</span>
                 </div>
-            </a>
-                <div class="icon-item">
-                    <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
-                    <p>Más</p>
-
-                    <!-- Menú desplegable -->
-                    <ul class="dropdown-menu">
-                        {% if paciente.paciente_Habilitado == "Habilitado" %}
-                            <li><a href = "{% url 'deshabilitarPaciente' expediente=paciente.expediente%}" class="dropdown-item">Deshabilitar paciente</a></li>
-                        {% elif paciente.paciente_Habilitado == "Deshabilitado"%}
-                        <li><a href = "{% url 'habilitarPaciente' expediente=paciente.expediente%}" class="dropdown-item">Habilitar paciente</a></li>
-                        {% endif %}
-                        <li><a href = "{% url 'editarPaciente' expediente=paciente.expediente %}" class="dropdown-item">Editar paciente</a></li>
-                        <li><a href = "{% url 'pacientesDeshabilitados'%}" class="dropdown-item">Pacientes deshabilitados</a></li>
-                        <li><a class="dropdown-item" href="#">Llamar doctor</a></li>
-                        <li><a href = "{% url 'estudiosyGabinete' expediente=paciente.expediente %}" class="dropdown-item">Estudios y gabinete</a></li>
-                    </ul>
-
+                <div class="flex flex-col">
+                    <span class="font-semibold">Altura (m):</span>
+                    <span class="text-gray-900">{{ paciente.altura }}</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-semibold">Cirugía realizada:</span>
+                    <span class="text-gray-900">{{ paciente.cirugia_realizada }}</span>
                 </div>
             </div>
-        </center>
-    </div>
-    {% endif %}
-
-    {% if user_profile.funcionalidad == "medico" %}
-        <div class="fixed-bottom-border">
-            <center>
-                <a href=" {% url 'pacientes' %}">
-                <div class="icon-container">
-                    <div class="icon-item">
-                        <img src="{% static 'assets/interfaz/patients.png' %}">
-                        <p>Pacientes</p>
-                    </div>
-                </a>
-                <a href=" {% url 'signosVitales' %}">
-                    <div class="icon-item">
-                        <img src="{% static 'assets/interfaz/vitalSigns.png' %}">
-                        <p>Signos V.</p>
-                    </div>
-                </a>
-                    <div class="icon-item">
-                        <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
-    
-                        <!-- Menú desplegable -->
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{% url 'agregarTratamiento' expediente=paciente.expediente %}">Agregar Tratamiento</a></li>
-                            <li><a class="dropdown-item" href="#">Llamar paciente</a></li>
-                            <li><a class="dropdown-item" href="#">Llamar enfermero</a></li>
-                            <li><a href = "{% url 'estudiosyGabinete' expediente=paciente.expediente %}" class="dropdown-item">Estudios y gabinete</a></li>
-                        </ul>
-    
-                    </div>
-                </div>
-            </center>
+                        <!-- <div class="mt-4 space-y-2">
+                <h3><strong>Fecha de ingreso: </strong>{{ paciente.fecha_ingreso }}</h3>
+                <h3><strong>Fecha de nacimiento: </strong>{{ paciente.fecha_nacimiento }}</h3>
+                <h3><strong>Expediente: </strong>{{ paciente.expediente }}</h3>
+                <h3><strong>Peso(Kg): </strong>{{ paciente.peso }}</h3>
+                <h3><strong>Altura(metros): </strong>{{ paciente.altura }}</h3>
+                <h3><strong>Cirugía realizada: </strong>{{ paciente.cirugia_realizada }}</h3>
+            </div> -->
         </div>
-    {% endif %}
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center w-full">
+                <svg class="w-6 h-6 text-blue-600 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                </svg>
+                <h2 class="font-bold text-center w-full">Diagnostrico clinico prequirúrgico</h2>
+            </div>
+            <hr class="border-t border-black my-4 w-full mx-0">
+            <p> {{ paciente.diagnostico_clinico_prequirurgico }}
+            </p>
+        </div>
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center w-full">
+                <svg class="w-6 h-6 text-blue-600 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                </svg>
+                <h2 class="font-bold text-center w-full">Nota Enfermeria</h2>
+            </div>
+            <hr class="border-t border-black my-4 w-full mx-0">
+            <p>{{ paciente.nota_enfermeria }}
+            </p>
+        </div>
+        {% if tratamientos_activos %}
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center w-full">
+                <svg class="w-6 h-6 text-blue-600 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                </svg>
+                <h2 class="font-bold text-center w-full">Tratamientos activos</h2>
+            </div>
+            <hr class="border-t border-black my-4 w-full mx-0">
+            {% for tratamiento in tratamientos_activos %}
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+                <div class="section-title flex items-center w-full">
+                    <h2 class="text-lg font-bold">Tratamiento {{ forloop.counter }}</h2>
+                </div>
+                <h3>Estado del tratamiento: {{ tratamiento.tratamiento_activo }}</h3>
+                <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
+                <h3>Dosis administrada: {{ tratamiento.dosis_Administrada }}</h3>
+                <h3>Vía de administración: {{ tratamiento.via_Administracion }}</h3>
+                <h3>Frecuencia de dosis: Cada {{ tratamiento.frecuencia_Dosis }} {{ tratamiento.tiempo_Dosis }}</h3>
+                <h3>Duración de la terapia: {{ tratamiento.duracion_Terapia }} días</h3>
+                <h3>Otras indicaciones: {{ tratamiento.nombre_Medicamento }}</h3>
+                <p>{{ tratamiento.otras_Indicaciones }}</p>
+                <div class="section-title flex items-center gap-2">
+                    <h2 class="text-lg font-bold">Historial de Aplicaciones.</h2>
+                </div>
+                {% if tratamiento.historiales.all %}
+                <ul>
+                    {% for historial in tratamiento.historiales.all %}
+                    {% if user_profile.funcionalidad == "medico" %}
+                    <h3>
+                        <h3>Aplicado el {{ historial.fecha_aplicacion|date:"d/m/Y h:i A" }}</h3>
+                        {% endif %}
+                        {% if user_profile.funcionalidad == "enfermero" %}
+                        <h3>
+                            <h3>Aplicado el {{ historial.fecha_aplicacion|date:"d/m/Y h:i A" }}
+                            </h3>
+                            {% endif %}
 
+                            {% endfor %}
+                </ul>
+                {% else %}
+                <h3>No hay aplicaciones registradas.</h3>
+                {% endif %}
+                {% if user_profile.funcionalidad == "medico" %}
+                <a href="{% url 'edicionTratamiento'  expediente=paciente.expediente pk=tratamiento.id_Tratamiento  %}"><button>Editar
+                        Tratamiento</button></a>
+                {% endif %}
+                {% if user_profile.funcionalidad == "enfermero" %}
+                <form method="POST"
+                    action="{% url 'actualizacionTratamiento' expediente=paciente.expediente id_tratamiento=tratamiento.id_Tratamiento %}">
+                    {% csrf_token %}
+                    <button type="submit">Actualizar</button>
+                </form>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if tratamientos_inactivos %}
+        <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+            <div class="section-title flex items-center w-full">
+                <svg class="w-6 h-6 text-blue-600 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                </svg>
+                <h2 class="font-bold text-center w-full">Tratamientos inactivos</h2>
+            </div>
+            <hr class="border-t border-black my-4 w-full mx-0">
+            {% for tratamiento in tratamientos_inactivos %}
+            <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
+                <div class="section-title flex items-center w-full">
+                    <h2 class="text-lg font-bold">Tratamiento {{ forloop.counter }}</h2>
+                </div>
+                <h3>Estado del tratamiento: {{ tratamiento.tratamiento_activo }}</h3>
+                <h3>Nombre del medicamento: {{ tratamiento.nombre_Medicamento }}</h3>
+                <h3>Dosis administrada: {{ tratamiento.dosis_Administrada }}</h3>
+                <h3>Vía de administración: {{ tratamiento.via_Administracion }}</h3>
+                <h3>Frecuencia de dosis: Cada {{ tratamiento.frecuencia_Dosis }} {{ tratamiento.tiempo_Dosis }}</h3>
+                <h3>Duración de la terapia: {{ tratamiento.duracion_Terapia }} días</h3>
+                <h3>Otras indicaciones: {{ tratamiento.nombre_Medicamento }}</h3>
+                <p>{{ tratamiento.otras_Indicaciones }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</main>
 
+<!------- Footer -------->
+<footer class="fixed bottom-0 w-full bg-[#355E9F] h-[8vh] landscape:h-[11vh] flex justify-center items-center gap-6">
+    <div class="w-full flex flex-row justify-center items-center gap-16 landscape:gap-24 relative">
+        <!-- Botón Pacientes -->
+        <a href="{% url 'pacientes' %}" class="flex flex-col items-center">
+            <img src="{% static 'assets/interfaz/patients.png' %}"
+                class="w-[4vh] h-[4vh] landscape:w-[6vh] landscape:h-[6vh]">
+            <p class="text-white text-xs">Pacientes</p>
+        </a>
 
-</HTML>
+        <!-- Botón Signos vitales -->
+        <a href="{% url 'signosVitales' %}" class="flex flex-col items-center">
+            <img src="{% static 'assets/interfaz/vitalSigns.png' %}"
+                class="w-[4vh] h-[4vh] landscape:w-[6vh] landscape:h-[6vh]">
+            <p class="text-white text-xs">Signos V.</p>
+        </a>
+
+        <!-- Botón de menú con tres puntos -->
+        <div class="relative">
+            <button id="dropdownMenuIconHorizontalButton"
+                class="text-white bg-[#355E9F] hover:bg-blue-500 focus:outline-none w-auto h-full flex items-center justify-center">
+                <svg class="w-[4vw] h-[4vw]" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                    viewBox="0 0 16 3">
+                    <path
+                        d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                </svg>
+            </button>
+
+            <!-- Dropdown derecha -->
+            <div id="dropdownDotsHorizontal"
+                class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-auto dark:bg-gray-700 dark:divide-gray-600 absolute bottom-full right-0 mb-2">
+                {% if user_profile.funcionalidad == "enfermero" %} <ul class="py-2 text-gray-700 text-center"
+                    aria-labelledby="dropdownMenuIconHorizontalButton">
+                    {% if paciente.paciente_Habilitado == "Habilitado" %}
+                    <li>
+                        <a href="javascript:void(0);" class="block text-white px-4 py-2 hover:bg-gray-600"
+                            onclick="showConfirmModal('{% url 'deshabilitarPaciente' expediente=paciente.expediente %}')">
+                            Deshabilitar paciente
+                        </a>
+                    </li>
+                    {% elif paciente.paciente_Habilitado == "Deshabilitado"%}
+                    <li>
+                        <a href="javascript:void(0);" class="block text-white px-4 py-2 hover:bg-gray-600"
+                            onclick="showConfirmModal('{% url 'habilitarPaciente' expediente=paciente.expediente%}')">
+                            Habilitar paciente
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li><a href="{% url 'editarPaciente' expediente=paciente.expediente %}"
+                            class="block text-white px-4 py-2 hover:bg-gray-600">Editar paciente</a></li>
+                    <li><a href="{% url 'pacientesDeshabilitados'%}"
+                            class="block text-white px-4 py-2 hover:bg-gray-600">Pacientes deshabilitados</a></li>
+                    <li><a class="block text-white px-4 py-2 hover:bg-gray-600" href="#">Llamar doctor</a></li>
+                    <li><a href="{% url 'estudiosyGabinete' expediente=paciente.expediente %}"
+                            class="block text-white px-4 py-2 hover:bg-gray-600">Estudios y gabinete</a></li>
+                </ul>
+                {% elif user_profile.funcionalidad == "medico" %} <ul class="py-2 text-gray-700 text-center"
+                    aria-labelledby="dropdownMenuIconHorizontalButton">
+                    <li><a class="block text-white px-4 py-2 hover:bg-gray-600"
+                            href="{% url 'agregarTratamiento' expediente=paciente.expediente %}">Agregar
+                            Tratamiento</a>
+                    </li>
+                    <li><a class="block text-white px-4 py-2 hover:bg-gray-600" href="#">Llamar paciente</a></li>
+                    <li><a class="block text-white px-4 py-2 hover:bg-gray-600" href="#">Llamar enfermero</a></li>
+                    <li><a href="{% url 'estudiosyGabinete' expediente=paciente.expediente %}"
+                            class="block text-white px-4 py-2 hover:bg-gray-600">Estudios y gabinete</a></li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Modal de confirmación (oculto por defecto) -->
+<div id="confirmModal" class="fixed inset-0 bg-black/50 flex justify-center items-center hidden z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
+        <h2 class="text-lg font-semibold">Confirmar acción</h2>
+        {% if paciente.paciente_Habilitado == "Habilitado" %}
+        <p class="mt-2 text-gray-700">¿Estás seguro de que deseas deshabilitar este usuario?</p>
+        <div class="flex justify-around mt-4">
+            <button onclick="closeConfirmModal()" class="px-4 py-2 bg-gray-400 text-white rounded-md">Cancelar</button>
+            <a id="confirmButton" href="#" class="px-4 py-2 bg-red-600 text-white rounded-md">Deshabilitar</a>
+        </div>
+        {% elif paciente.paciente_Habilitado == "Deshabilitado" %}
+        <p class="mt-2 text-gray-700">¿Estás seguro de que deseas habilitar este usuario?</p>
+        <div class="flex justify-around mt-4">
+            <button onclick="closeConfirmModal()" class="px-4 py-2 bg-gray-400 text-white rounded-md">Cancelar</button>
+            <a id="confirmButton" href="#" class="px-4 py-2 bg-green-600 text-white rounded-md">Habilitar</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.getElementById("dropdownMenuIconHorizontalButton").addEventListener("click", function () {
+        document.getElementById("dropdownDotsHorizontal").classList.toggle("hidden");
+    });
+    function showConfirmModal(url) {
+        const modal = document.getElementById("confirmModal");
+        if (modal) {
+            modal.classList.remove("hidden");
+            const confirmButton = document.getElementById("confirmButton");
+            if (confirmButton) {
+                confirmButton.href = url; // Asignar la URL al botón de confirmación
+            }
+        }
+    }
+    function closeConfirmModal() {
+        document.getElementById("confirmModal").classList.add("hidden");
+    }
+</script>
+{% endblock %}

@@ -1,264 +1,184 @@
+{% extends '_base.html' %}
 {% load static %}
-<script>
-    function goBack() {
-        window.history.back();
-    }
+{% load widget_tweaks %}
 
-    function toggleActions() {
-        const actionsContainer = document.getElementById('actions-container');
-        if (actionsContainer.style.display === 'none') {
-            actionsContainer.style.display = 'flex';
-        } else {
-            actionsContainer.style.display = 'none';
-        }
-    }
-    
-    function mostrarFormReemplazo() {
-        document.getElementById('reemplazo-form-container').style.display = 'flex';
-    }
-    
-    function ocultarFormReemplazo() {
-        document.getElementById('reemplazo-form-container').style.display = 'none';
-    }
-    
-    function confirmarEliminar() {
-        if (confirm('¿Está seguro que desea eliminar este estudio? Esta acción no se puede deshacer.')) {
-            // Redirigir a la URL de eliminación
-            window.location.href = "{% url 'eliminar_estudio' id_Estudio=estudio.id_Estudio expediente=paciente.expediente %}";
-        }
-    }
-</script>
+{% block title %}Estudio{% endblock %}
 
-<!DOCTYPE html>
-<html lang="en">
+{% block content %}
+<!-- Barra superior -->
+<header
+    class="bg-[#355E9F] h-[8vh] landscape:h-[15vh] w-full fixed top-0 flex items-center justify-center shadow-md relative">
+    <img src="{% static 'assets/interfaz/previous.png' %}" alt="Back"
+        class="w-[4vh] landscape:w-[6vh] absolute left-[2vh] landscape:left-[3vh]" onclick="window.history.back()">
 
+    <h1 class="text-white font-bold ">Estudio</h1>
+</header>
 
-<head>
-    <link rel="stylesheet" href="{% static 'CSS/pdfDisplay.css' %}">
-
-    <link href="{% static 'assets/Interfaz/previous.png' %}" rel="icon" type="image/png">
-
-    <div class="fixed-top-border">
-        <a onclick="goBack()">
-            <img src="{% static 'assets/Interfaz/previous.png'%}">
-        </a>
-        <h1>Estudio</h1>
-        <!-- Carga de PDF.js -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-        
-        <!-- Bootstrap CSS -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-        
-        <style>
-            .dropdown-menu {
-                background-color: #355e9f;  
-                border-radius: 8px;
-                padding: 10px;
-                width: 800px;      /* Asegura que el menú tenga un ancho específico */
-                position: center;   /* Mantiene el menú en la posición fija */
-            }
-
-            .dropdown-item {
-                color: white;         
-                font-family: Montserrat;     
-                font-size: 30px;             
-                padding: 25px 35px;          
-                border-bottom: 1px solid white;  
-            }
-
-            .dropdown-item:hover {
-                background-color: #29477a;   
-                color: #ffffff;              
-                border-radius: 4px;         
-            }
-
-            .dropdown-item:focus {
-                background-color: #1e355f;   
-                color: #ffffff;
-            }
-
-            /* Estilos para el contenedor de acciones */
-            #actions-container {
-                display: flex;
-                gap: 10px;
-                margin-bottom: 15px;
-            }
-            
-            /* Estilos para el formulario de reemplazo */
-            .form-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.5);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 2000;
-            }
-
-            .form-popup {
-                background-color: white;
-                padding: 20px;
-                border-radius: 8px;
-                width: 500px;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            }
-            
-            .form-group {
-                margin-bottom: 15px;
-            }
-            
-            .form-buttons {
-                display: flex;
-                justify-content: flex-end;
-                gap: 10px;
-                margin-top: 20px;
-            }
-            
-            #btnAcciones, #btnReemplazar, #btnEliminar {
-                background-color: #355e9f;
-                font-family: Montserrat;
-                width: 400px;
-                height: 100px;
-                font-size: 60px;
-                color: white;
-                border-radius: 8px;
-                margin-bottom: 10px;
-            }
-            
-            #btnEliminar {
-                background-color: #E32525;
-            }
-        </style> 
-
-        <!-- Bootstrap JS y Popper.js -->
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"></script>
-
+<main
+    class="flex flex-col items-center pt-[5vh] landscape:pt-[5vh] max-w-full h-[calc(100vh-4rem)] overflow-hidden pb-[4rem]">
+    <div class="bg-gray-100 p-6 rounded-lg shadow-md w-[95%]">
+        <div class="section-title flex items-center gap-2">
+            <svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                    d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+            </svg>
+            <h2 class="text-lg font-bold">{{ estudio.nombre_Estudio }}</h2>
+        </div>
+        <div class="mt-4 space-y-2">
+            <label class="block font-semibold">Fecha de realización:</label>
+            <p>{{ estudio.fecha_realizada }}</p>
+        </div>
     </div>
-</head>
 
-<body>
-    <center>
-        <div class="form-container">
-            <div class="section-title"><h2>{{ estudio.nombre_Estudio }}</h2></div>
-            <h3>Fecha realizada: {{ estudio.fecha_realizada }}</h3>
-        </div>
-
-        <div class="pdf-navigation">
-            <button id="btnAcciones" onclick="toggleActions()">Acciones</button>
-
-            <div id="actions-container" style="display: none;">
-                <button id="btnReemplazar" onclick="mostrarFormReemplazo()">Reemplazar</button>
-                <button id="btnEliminar" onclick="confirmarEliminar()">Eliminar</button>
-            </div>
-
-            <div class="button-container">
-                <button onclick="previousPage()">Pág. Anterior</button>
-                <button onclick="nextPage()">Pág. Siguiente</button>
-            </div>
-            <div class="page-info">
-                <h3>Página: <span id="page-num">1</span> de <span id="page-count">1</span></h3>
-            </div>        
-        </div>
-
-        <!-- Formulario oculto para reemplazar el archivo -->
-        <div id="reemplazo-form-container" style="display: none;" class="form-overlay">
-            <div class="form-popup">
-                <h3>Reemplazar estudio</h3>
-                <form id="reemplazo-form" method="post" enctype="multipart/form-data" action="{% url 'reemplazar_estudio' id_Estudio=estudio.id_Estudio %}">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <label for="nuevo_archivo">Seleccione el nuevo archivo:</label>
-                        <input type="file" id="nuevo_archivo" name="nuevo_archivo" accept="application/pdf" required>
-                    </div>
-                    <div class="form-buttons">
-                        <button type="submit">Guardar</button>
-                        <button type="button" onclick="ocultarFormReemplazo()">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <div id="pdf-container" style="width: 100%; height: 80vh; overflow: auto;"></div>
-
+    <!-- Pdf container -->
+    <div id="pdf-container" class="pdf-container bg-gray-200 flex items-center justify-center" style="width: 100%; height: 80vh; overflow: auto;">
         <input type="hidden" id="pdf-url" value="{% url 'ver_pdfEstudios' id_Estudio=estudio.id_Estudio %}">
-        <script src="{% static 'JavaScript/verPDF.js' %}"></script>
-        
-    </center>
+        <p id="pdf-error" class="hidden text-red-500 font-semibold">Error al cargar el PDF. Por favor, inténtalo de nuevo.</p>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const pdfUrl = document.getElementById("pdf-url").value;
+                const errorMessage = document.getElementById("pdf-error");
 
-    {%  if user_profile.funcionalidad == "enfermero" %}
-                <div class="fixed-bottom-border">
-            <div class="icon-item">
-                <a href="{% url 'pacientes' %}">
-                    <img src="{% static 'assets/interfaz/patients.png' %}">
-                    <p>Pacientes</p>
-                </a>
-            </div>
+                if (pdfUrl) {
+                    // Llama al script para cargar el PDF
+                    try {
+                        loadPDF(pdfUrl); // Asegúrate de que esta función esté definida en verPDF.js
+                    } catch (error) {
+                        console.error("Error al cargar el PDF:", error);
+                        errorMessage.classList.remove("hidden");
+                    }
+                } else {
+                    errorMessage.textContent = "No se encontró la URL del PDF.";
+                    errorMessage.classList.remove("hidden");
+                }
+            });
+        </script>
+    </div>
 
-        <!---->
-            <div class="icon-item dropdown">
-                    <a href="#" role="button" id="dropdownAgregar" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="{% static 'assets/interfaz/plus.png' %}">
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownAgregar">
-                        <!---<li><a href="{% url 'registroEstudios' expediente=paciente.expediente %}" class="dropdown-item">Registrar estudio</a></li>
-                        <li><a href="{% url 'registroRadiografias' expediente=paciente.expediente %}" class="dropdown-item">Registrar radiografia</a></li> -->
-                    </ul>
-                    <p>Agregar</p>
+    <div class="w-[95%] mt-4 gap-6 flex justify-center">
+        <button onclick="previousPage()" class="bg-[#355E9F] text-white rounded-sm shadow-md w-auto px-4 py-2">Pág.
+            Anterior</button>
+        <h3>Página: <span id="page-num">1</span> de <span id="page-count">1</span></h3>
+        <button onclick="nextPage()" class="bg-[#355E9F] text-white rounded-sm shadow-md w-auto px-4 py-2">Pág.
+            Siguiente</button>
+    </div>
+</main>
+
+<footer class="fixed bottom-0 w-full bg-[#355E9F] h-[4rem] landscape:h-[3rem] flex justify-center items-center">
+    <div class="w-full flex flex-row justify-center items-center gap-6 landscape:gap-16 relative">
+        <!-- Botón Usuarios -->
+        <a href="{% url 'pacientes' %}" class="flex flex-col items-center">
+            <img src="{% static 'assets/interfaz/user.png' %}"
+                class="w-[4vh] h-[4vh] landscape:w-[6vh] landscape:h-[6vh]">
+            <p class="text-white text-sm">Usuarios</p>
+        </a>
+
+        {% if user_profile.funcionalidad == "enfermero" %}
+        <!-- Boton Agregar -->
+        <button id="botonAgregar" class="flex flex-col items-center">
+            <img src="{% static 'assets/interfaz/plus.png' %}"
+                class="w-[4vh] h-[4vh] landscape:w-[6vh] landscape:h-[6vh]">
+            <p class="text-white text-sm">Agregar</p>
+        </button>
+
+        <!-- Menu Agregar -->
+        <div id="menuAgregar"
+            class="z-10 hidden divide-y rounded-lg shadow-sm w-44 bg-gray-700 divide-gray-600 absolute bottom-full left-10 mb-2">
+            <ul class="py-2 text-gray-700 text-center" aria-labelledby="dropdownMenuIconHorizontalButton">
+                <div class="py-2">
+                    <li>
+                        <a href="{% url 'registroEstudios' expediente=paciente.expediente %}"
+                            class="block text-white px-4 py-2 hover:bg-gray-600">Registrar estudio</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'registroRadiografias' expediente=paciente.expediente %}"
+                            class="block text-white px-4 py-2 hover:bg-gray-600">Registrar radiografia</a>
+                    </li>
                 </div>
-                <!---->
-
-                <div class="icon-item">
-                    <a href="{% url 'signosVitales' %}">
-                        <img src="{% static 'assets/interfaz/vitalSigns.png' %}">
-                        <p>Signos V.</p>
-                    </a>
-                </div>
-
-                <div class="icon-item">
-                    <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
-                    <!-- Menú desplegable -->
-                    <ul class="dropdown-menu">
-                        <li><a href="{% url 'editarPaciente' expediente=paciente.expediente %}" class="dropdown-item">Editar paciente</a></li>
-                        <li><a class="dropdown-item" href="#">Llamar doctor</a></li>
-                    </ul>
-                </div>
+            </ul>
         </div>
-    {% endif %}
+        {% endif %}
 
-    {%  if user_profile.funcionalidad == "medico" %}
-                <div class="fixed-bottom-border">
-            <center>
-                <a href=" {% url 'pacientes' %}">
-                <div class="icon-container">
-                    <div class="icon-item">
-                        <img src="{% static 'assets/interfaz/patients.png' %}">
-                        <p>Pacientes</p>
-                    </div>
-                </a>
-                <a href=" {% url 'signosVitales' %}">
-                    <div class="icon-item">
-                        <img src="{% static 'assets/interfaz/vitalSigns.png' %}">
-                        <p>Signos V.</p>
-                    </div>
-                </a>
-                    <div class="icon-item">
-                        <img src="{% static 'assets/interfaz/more.png' %}" data-bs-toggle="dropdown" aria-expanded="false" class="dropdown-toggle">
+        <!-- Boton signos vitales -->
+        <a href="{% url 'signosVitales' %}" class="flex flex-col items-center">
+            <img src="{% static 'assets/interfaz/vitalSigns.png' %}"
+                class="w-[4vh] h-[4vh] landscape:w-[6vh] landscape:h-[6vh]">
+            <p class="text-white text-sm">Signos V.</p>
+        </a>
 
-                        <!-- Menú desplegable -->
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Llamar enfermero</a></li>
-                        </ul>
+        <!-- Botón de menú con tres puntos -->
+        <button id="dropdownMenuIconHorizontalButton"
+            class="text-white bg-[#355E9F] hover:bg-blue-500 focus:outline-none w-auto h-full flex items-center justify-center relative">
+            <svg class="w-[6vw] h-[6vw] landscape:w-[4vw] landscape:h-[4vw]" aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                <path
+                    d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+            </svg>
+        </button>
+        <!-- <p class="uppercase mt-1 text-white text-center font-bold text-xs md:text-sm absolute bottom[-1vh]">Más</p> -->
 
-                    </div>
+        <!-- Dropdown derecha -->
+        <div id="dropdownDotsHorizontal"
+            class="z-10 hidden divide-y rounded-lg shadow-sm w-44 bg-gray-700 divide-gray-600 absolute bottom-full right-15 mb-2">
+            <ul class="py-2 text-gray-700 text-center" aria-labelledby="dropdownMenuIconHorizontalButton">
+                <div class="py-2">
+                    {% if user_profile.funcionalidad == "enfermero" %}
+                    <li>
+                        <a href="{% url 'editarPaciente' expediente=paciente.expediente %}"
+                            class="block text-white px-4 py-2 hover:bg-gray-600">Editar paciente</a>
+                    </li>
+                    <li>
+                        <a class="block text-white px-4 py-2 hover:bg-gray-600" href="#">Llamar doctor</a>
+                    </li>
+                    {% elif user_profile.funcionalidad == "medico" %}
+                    <li>
+                        <a href="{% url 'agregarTratamiento' expediente=paciente.expediente %}"
+                            class="block text-white px-4 py-2 hover:bg-gray-600">Agregar tratamiento</a>
+                    </li>
+                    <li>
+                        <a class="block text-white px-4 py-2 hover:bg-gray-600" href="#">Llamar paciente</a>
+                    </li>
+                    <li>
+                        <a class="block text-white px-4 py-2 hover:bg-gray-600" href="#">Llamar enfermero</a>
+                    </li>
+                    {% endif %}
                 </div>
-            </center>
+            </ul>
         </div>
-    {% endif %}
+    </div>
+</footer>
 
-</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdownButton = document.getElementById("dropdownMenuIconHorizontalButton");
+        const dropdownMenu = document.getElementById("dropdownDotsHorizontal");
+        const menuAgregar = document.getElementById("menuAgregar");
+        const botonAgregar = document.getElementById("botonAgregar");
 
-</html>
+        // Verifica si el botón de agregar existe antes de agregar el evento
+        if (botonAgregar) {
+            botonAgregar.addEventListener("click", function (event) {
+                event.stopPropagation(); // Evita que el clic se propague al documento
+                menuAgregar.classList.toggle("hidden");
+            });
+        }
+
+        // Alternar visibilidad del menú cuando se haga clic en el botón
+        dropdownButton.addEventListener("click", function (event) {
+            event.stopPropagation(); // Evita que el clic se propague al documento
+            dropdownMenu.classList.toggle("hidden");
+        });
+
+        // Cerrar el dropdown si se hace clic fuera de él
+        document.addEventListener("click", function (event) {
+            if (!dropdownMenu.contains(event.target) && !dropdownButton.contains(event.target)) {
+                dropdownMenu.classList.add("hidden");
+            }
+            if (menuAgregar && !menuAgregar.contains(event.target) && !botonAgregar.contains(event.target)) {
+                menuAgregar.classList.add("hidden");
+            }
+        });
+    });
+</script>
+{% endblock %}

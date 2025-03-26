@@ -18,6 +18,7 @@ from .forms import RegisterForm, PacienteForm, UserProfileForm, TratamientoForm,
 from django.contrib.auth.models import User, Group
 from django.contrib.auth import login as auth_login
 from django.utils import timezone
+from django.template.loader import render_to_string
 
 from .models import Paciente, UserProfile, Tratamiento, Radiografias, Estudios, HistorialAplicacion
 
@@ -313,6 +314,11 @@ class RegistroEstudios(FormView):
             for error in errors:
                 print(f"Error en el campo '{field}': {error}")
         return super().form_invalid(form)
+
+def agregar_enfermero(request):
+    form = PacienteForm()
+    form_html = render_to_string('partials/enfermero_form.html', {'form': form}, request=request)
+    return HttpResponse(form_html)
 
 # --------------------------------------------| REGISTRO DE RADIOGRAFIAS |--------------------------------------------
 

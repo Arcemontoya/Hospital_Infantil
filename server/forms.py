@@ -112,7 +112,8 @@ class PacienteForm(forms.ModelForm):
 
     enfermeros_Encargados = forms.ModelMultipleChoiceField(
         queryset=UserProfile.objects.filter(user__userprofile__funcionalidad="enfermero"),
-        required=False # Modificar
+        required=False, # Modificar,
+        widget=forms.CheckboxSelectMultiple(attrs={'class': 'form-control', 'placeholder': 'Selecciona el enfermero encargado.'})
     )
 
     medico_Encargado = forms.ModelChoiceField(
