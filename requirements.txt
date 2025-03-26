@@ -5,3 +5,5 @@ opencv-python==4.10.0.84
 pyserial==3.5
 sqlparse==0.5.1
 tzdata==2024.2
+gunicorn==23.0.0
+mysqlclient=2.2.7
