@@ -28,6 +28,8 @@ from django.contrib.messages import get_messages
 from django.core.mail import send_mail
 import random
 from django.conf import settings
+from django.views.decorators.http import require_POST
+import os
 
 def index(request):
     return render(request, 'index.html')
@@ -671,3 +673,40 @@ def cambiarPassword(request):
             return redirect("recuperarCuenta")
 
     return render(request, "cambiarPassword.html")
+
+@require_POST
+def delete_pdfEstudios(request, id_Estudio):
+    try:
+        estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+        # Delete the file from storage
+        if estudio.estudio:
+            if os.path.isfile(estudio.estudio.path):
+                os.remove(estudio.estudio.path)
+        estudio.estudio = None
+        estudio.save()
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+@require_POST
+def replace_pdfEstudios(request, id_Estudio):
+    try:
+        estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+        if 'estudio' not in request.FILES:
+            return JsonResponse({'success': False, 'error': 'No se proporcionó ningún archivo'})
+        
+        new_file = request.FILES['estudio']
+        if not new_file.name.endswith('.pdf'):
+            return JsonResponse({'success': False, 'error': 'El archivo debe ser un PDF'})
+        
+        # Delete old file if it exists
+        if estudio.estudio:
+            if os.path.isfile(estudio.estudio.path):
+                os.remove(estudio.estudio.path)
+        
+        # Save new file
+        estudio.estudio = new_file
+        estudio.save()
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})

@@ -134,8 +134,7 @@
                         Tratamiento</button></a>
                 {% endif %}
                 {% if user_profile.funcionalidad == "enfermero" %}
-                <form method="POST"
-                    action="{% url 'actualizacionTratamiento' expediente=paciente.expediente id_tratamiento=tratamiento.id_Tratamiento %}">
+                <form method="POST" action="{% url 'actualizacionTratamiento' expediente=paciente.expediente id_tratamiento=tratamiento.id_Tratamiento %}">
                     {% csrf_token %}
                     <button type="submit">Actualizar</button>
                 </form>

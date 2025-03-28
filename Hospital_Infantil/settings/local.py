@@ -14,8 +14,7 @@ import os.path
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -29,7 +28,7 @@ SECRET_KEY = 'django-insecure-5t#ndq279(iil5d5%37_&ih92^kp*-wxg8*7a&aetf53a6i(c^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "192.168.1.87"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -41,8 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'compressor', 
     'widget_tweaks',
+    'compressor',
     'Hospital_Infantil',
 ]
 
@@ -84,11 +83,18 @@ WSGI_APPLICATION = 'Hospital_Infantil.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'hospital_infantil',
+        'USER': 'your_user',
+        'PASSWORD': 'your_password',
+        'HOST': 'localhost',  # or your MySQL server IP
+        'PORT': '3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
-
 
 
 # Password validation
@@ -113,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'es-mx'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/Tijuana'
 
@@ -142,12 +148,11 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # EMAIL SETTINGS:
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'eco.ecolohosting.info'
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-EMAIL_USE_TLS = False
-EMAIL_HOST_USER = "notificaciones@hospitalinfantil.org"
-EMAIL_HOST_PASSWORD = "Z#l_e8a(TatS"
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "abc@mail.com"
+EMAIL_HOST_PASSWORD = "emailpassword"
 
 """
     CORREGIR MODELO DE TRATAMIENTO
