@@ -5,3 +5,4 @@ db.sqlite3
 Hospital_Infantil/__pycache__/*
 Hospital_Infantil/migrations/__pycache__/*
 
+.env
