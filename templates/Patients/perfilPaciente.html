@@ -1,5 +1,6 @@
 {% extends '_base.html' %}
 {% load static %}
+{% load tz %}
 
 {% block title %}Perfil paciente{% endblock %}
 
@@ -117,11 +118,29 @@
                     {% if user_profile.funcionalidad == "medico" %}
                     <h3>
                         <h3>Aplicado el {{ historial.fecha_aplicacion|date:"d/m/Y h:i A" }}</h3>
-                        {% endif %}
+                    {% endif %}
                         {% if user_profile.funcionalidad == "enfermero" %}
                         <h3>
-                            <h3>Aplicado el {{ historial.fecha_aplicacion|date:"d/m/Y h:i A" }}
-                            </h3>
+                            <ul id="historial-{{ tratamiento.id_Tratamiento }}">
+                                <table>
+                                    <td><h3>Aplicado el {{ historial.fecha_aplicacion|timezone:"America/Tijuana"|date:"d/m/Y h:i A" }}</h3></td>
+                                    <td>
+                                        <button class="historial-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editarModal"
+                                            data-id="{{ historial.id }}"
+                                            data-fecha="{{ historial.fecha_aplicacion|date:'Y-m-d\TH:i' }}">
+                                            Editar Aplicación
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="eliminar-btn historial-btn"
+                                            data-id="{{ historial.id }}">
+                                            Eliminar Aplicación
+                                        </button>
+                                    </td>
+                                </table>
+                            </ul>
                             {% endif %}
 
                             {% endfor %}
@@ -130,12 +149,20 @@
                 <h3>No hay aplicaciones registradas.</h3>
                 {% endif %}
                 {% if user_profile.funcionalidad == "medico" %}
-                <a href="{% url 'edicionTratamiento'  expediente=paciente.expediente pk=tratamiento.id_Tratamiento  %}"><button>Editar
-                        Tratamiento</button></a>
+                <table>
+                    <td>
+                        <a href="{% url 'edicionTratamiento'  expediente=paciente.expediente pk=tratamiento.id_Tratamiento  %}"><button>Editar Tratamiento</button></a>
+                    </td>
+                    <td>
+                        <button class="eliminartratamiento-btn"
+                            data-id="{{ tratamiento.id_Tratamiento }}">
+                            Eliminar Tratamiento
+                        </button>
+                    </td>
+                </table>
                 {% endif %}
                 {% if user_profile.funcionalidad == "enfermero" %}
-                <form method="POST"
-                    action="{% url 'actualizacionTratamiento' expediente=paciente.expediente id_tratamiento=tratamiento.id_Tratamiento %}">
+                <form method="POST" action="{% url 'actualizacionTratamiento' expediente=paciente.expediente id_tratamiento=tratamiento.id_Tratamiento %}">
                     {% csrf_token %}
                     <button type="submit">Actualizar</button>
                 </form>
@@ -157,7 +184,7 @@
             <hr class="border-t border-black my-4 w-full mx-0">
             {% for tratamiento in tratamientos_inactivos %}
             <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
-                <div class="section-title flex items-center w-full">
+                <div class="section-title flex items-center w-full" id="tratamiento-{{ tratamiento.id_Tratamiento }}">
                     <h2 class="text-lg font-bold">Tratamiento {{ forloop.counter }}</h2>
                 </div>
                 <h3>Estado del tratamiento: {{ tratamiento.tratamiento_activo }}</h3>
@@ -172,6 +199,35 @@
             {% endfor %}
         </div>
         {% endif %}
+        <!-- Modal de Edición (ENFERMERO)-->
+        <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <a href="{% url 'editarPaciente' expediente=paciente.expediente %}" class="btn btn-primary">
+                            Editar Paciente
+                        </a>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editarForm" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" id="historial_id" name="historial_id">
+
+                            <label for="fecha_aplicacion">Fecha de Aplicación:</label>
+                            <input type="datetime-local" id="fecha_aplicacion" name="fecha_aplicacion" class="form-control">
+                            <br>
+                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="{% static 'JavaScript/actualizarSuministro.js' %}"></script>
+        <script src="{% static 'JavaScript/eliminarTratamiento.js' %}"></script>
+        <script src="{% static 'JavaScript/eliminarHistorialAplicacion.js' %}"></script>
+        <script src="{% static 'JavaScript/editarSuministroTratamiento.js' %}"></script>
     </div>
 </main>
 
@@ -210,15 +266,15 @@
                     aria-labelledby="dropdownMenuIconHorizontalButton">
                     {% if paciente.paciente_Habilitado == "Habilitado" %}
                     <li>
-                        <a href="javascript:void(0);" class="block text-white px-4 py-2 hover:bg-gray-600"
-                            onclick="showConfirmModal('{% url 'deshabilitarPaciente' expediente=paciente.expediente %}')">
+                        <a href="javascript:void(0);" class="block text-white px-4 py-2 hover:bg-gray-600 confirm-action"
+                            data-url="{% url 'deshabilitarPaciente' expediente=paciente.expediente %}">
                             Deshabilitar paciente
                         </a>
                     </li>
                     {% elif paciente.paciente_Habilitado == "Deshabilitado"%}
                     <li>
-                        <a href="javascript:void(0);" class="block text-white px-4 py-2 hover:bg-gray-600"
-                            onclick="showConfirmModal('{% url 'habilitarPaciente' expediente=paciente.expediente%}')">
+                        <a href="javascript:void(0);" class="block text-white px-4 py-2 hover:bg-gray-600 confirm-action"
+                            data-url="{% url 'habilitarPaciente' expediente=paciente.expediente %}">
                             Habilitar paciente
                         </a>
                     </li>
@@ -272,6 +328,13 @@
     document.getElementById("dropdownMenuIconHorizontalButton").addEventListener("click", function () {
         document.getElementById("dropdownDotsHorizontal").classList.toggle("hidden");
     });
+
+    document.querySelectorAll('.confirm-action').forEach(button => {
+         button.addEventListener('click', function() {
+             showConfirmModal(this.dataset.url);
+         });
+     });
+
     function showConfirmModal(url) {
         const modal = document.getElementById("confirmModal");
         if (modal) {

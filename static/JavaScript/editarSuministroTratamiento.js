@@ -1,28 +1,37 @@
-        function editarFecha(id) {
-            let input = document.getElementById("fecha_" + id);
-            input.removeAttribute("readonly"); // Habilita la edición
-            input.focus(); // Enfoca el campo
-        }
+document.addEventListener("DOMContentLoaded", function () {
+  const modal = new bootstrap.Modal(document.getElementById("editarModal"));
+  const form = document.getElementById("editarForm");
 
-        function guardarFecha(id) {
-            let input = document.getElementById("fecha_" + id);
-            let nuevaFecha = input.value;
+  document.querySelectorAll(".historial-btn").forEach((button) => {
+    button.addEventListener("click", function () {
+      const id = this.getAttribute("data-id");
+      const fecha = this.getAttribute("data-fecha");
 
-            fetch(`/actualizar-fecha/${id}/`, {  // URL de la vista para actualizar
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: JSON.stringify({ fecha_aplicacion: nuevaFecha })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    alert("Fecha actualizada correctamente");
-                    input.setAttribute("readonly", "true"); // Bloquear edición después de guardar
-                } else {
-                    alert("Error al actualizar la fecha");
-                }
-            });
+      document.getElementById("historial_id").value = id;
+      document.getElementById("fecha_aplicacion").value = fecha;
+    });
+  });
+
+  form.addEventListener("submit", function (event) {
+    event.preventDefault();
+    const id = document.getElementById("historial_id").value;
+    const fecha = document.getElementById("fecha_aplicacion").value;
+
+    fetch(`/actualizar-historial/${id}/`, {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": "{{ csrf_token }}",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ fecha_aplicacion: fecha }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          location.reload();
+        } else {
+          alert("Error al actualizar");
         }
+      });
+  });
+});

@@ -12,24 +12,24 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 import os.path
 from pathlib import Path
+from Hospital_Infantil.settings import get_secret
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5t#ndq279(iil5d5%37_&ih92^kp*-wxg8*7a&aetf53a6i(c^'
+SECRET_KEY = get_secret('SECRET_KEY')
 
 # Agregar siguiente hora de medicamento
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "192.168.1.87"]
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'compressor', 
     'widget_tweaks',
+    'compressor',
     'Hospital_Infantil',
 ]
 
@@ -81,14 +81,25 @@ WSGI_APPLICATION = 'Hospital_Infantil.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
+DB_NAME = get_secret("DB_NAME")
+DB_USER_NM = get_secret("DB_USER_NM")
+DB_USER_PW = get_secret("DB_USER_PW")
+DB_IP = get_secret("DB_IP")
+DB_PORT = get_secret("DB_PORT")
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': DB_NAME,
+        'USER': DB_USER_NM,
+        'PASSWORD': DB_USER_PW,
+        'HOST': DB_IP,  # or your MySQL server IP
+        'PORT': DB_PORT,
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
-
 
 
 # Password validation
@@ -113,7 +124,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'es-mx'
+LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'America/Tijuana'
 

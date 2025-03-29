@@ -30,6 +30,8 @@ from django.contrib.messages import get_messages
 from django.core.mail import send_mail
 import random
 from django.conf import settings
+from django.views.decorators.http import require_POST
+import os
 
 def index(request):
     return render(request, 'index.html')
@@ -347,17 +349,24 @@ class edicionPacientes(UpdateView):
     form_class = PacienteForm
     slug_field = "expediente"
     slug_url_kwarg = "expediente"
+    success_url = reverse_lazy('pacientes')
 
     def get_object(self):
         expediente = self.kwargs.get('expediente')
         return get_object_or_404(Paciente, expediente=expediente)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        expediente = self.kwargs.get('expediente')
+        paciente = get_object_or_404(Paciente, expediente=expediente) if expediente else None
+        context['expediente'] = expediente
+        context['paciente'] = paciente
+        return context
+
     def form_valid(self, form):
         form.save()
         messages.success(self.request, "Paciente editado con éxito.")
-        expediente = self.kwargs.get('expediente')
-        paciente = Paciente.objects.get(expediente=expediente)
-        return redirect(reverse('perfilPaciente', kwargs={'pk': paciente.expediente}))
+        return super().form_valid(form)
 
     def form_invalid(self, form):
         print(form.errors)
@@ -374,6 +383,12 @@ class perfilPaciente(DetailView):
     model = Paciente
     template_name = 'Patients/perfilPaciente.html'
     context_object_name = "paciente"
+    slug_field = "expediente"
+    slug_url_kwarg = "expediente"
+
+    def get_object(self):
+        expediente = self.kwargs.get('expediente')
+        return get_object_or_404(Paciente, expediente=expediente)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -527,18 +542,27 @@ class edicionHistorialSuministro(UpdateView):
         context["historial_aplicaciones"] = HistorialAplicacion.objects.filter(tratamiento=self.object.tratamiento)
         return context
 
+
 # Forma parte de edicionHistorialSuministro
 @csrf_exempt
-def actualizar_historial(request, id):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        historial = get_object_or_404(HistorialAplicacion, id=id)
-        historial.fecha_aplicacion = data.get("fecha_aplicacion")
-        historial.save()
-        return JsonResponse({"success": True})
-    return JsonResponse({"success": False}, status=400)
-
-
+def actualizar_historial(request, id_Tratamiento):
+     try:
+         tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_Tratamiento)
+         # Aquí puedes actualizar el tratamiento según sea necesario
+         tratamiento.fecha_aplicacion = request.POST.get('fecha_aplicacion')
+         tratamiento.save()
+         return JsonResponse({'success': True, 'fecha_aplicacion': tratamiento.fecha_aplicacion})
+     except Exception as e:
+         return JsonResponse({'success': False, 'error': str(e)}, status=500)
+ 
+@csrf_exempt
+def eliminar_historial(request, id):
+     if request.method == "DELETE":
+         historial = get_object_or_404(HistorialAplicacion, id=id)
+         historial.delete()
+         return JsonResponse({"sucess": True})
+     return JsonResponse({"sucess": False}, status=400)
+ 
 # No mover
 def deshabilitarPaciente(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)
@@ -589,7 +613,7 @@ class RegistroTratamiento(FormView):
 
     def get_success_url(self):
         paciente = get_object_or_404(Paciente, expediente=self.kwargs.get('expediente'))
-        return reverse_lazy('perfilPaciente', kwargs={'pk': paciente.pk})
+        return reverse_lazy('perfilPaciente', kwargs={'expediente': paciente.expediente})
 
 # --------------------------------------------| EDICION DE TRATAMIENTO |--------------------------------------------
 class edicionTratamientos(UpdateView):
@@ -611,7 +635,7 @@ class edicionTratamientos(UpdateView):
         messages.success(self.request, "Tratamiento editado con éxito.")
         expediente = self.kwargs.get('expediente')
         paciente = Paciente.objects.get(expediente=expediente)
-        return redirect(reverse('perfilPaciente', kwargs={'pk': paciente.pk}))
+        return redirect(reverse('perfilPaciente', kwargs={'expediente': paciente.expediente}))
 
     def form_invalid(self, form):
         print(form.errors)
@@ -620,7 +644,14 @@ class edicionTratamientos(UpdateView):
                 print(f"Error en el campo '{field}': {error}")
         return super().form_invalid(form)
 
-
+@csrf_exempt
+def eliminar_Tratamiento(request, id_Tratamiento):
+     if request.method == "DELETE":
+         tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_Tratamiento)
+         tratamiento.delete()
+         return JsonResponse({"sucess": True})
+     return JsonResponse({"sucess": False}, status=400)
+ 
 # --------------------------------------------| INTERFACES DE VISTA GENERAL |--------------------------------------------
 
 # Pendiente
@@ -694,7 +725,6 @@ def cambiarPassword(request):
     return render(request, "cambiarPassword.html")
 
 
-
 # --------------------------------------------| NOTIFICACIONES |--------------------------------------------
 
 # SE QUEDAN COMO NO LEIDAS POR TERMINOS DE TESTING, PASAR A LEIDAS EN EL DEPLOY
@@ -704,3 +734,41 @@ def verNotificaciones(request):
     notificaciones = Notificacion.objects.filter(usuario=user_profile, estado='no leida')
     notificaciones.update(estado='no leida')
     return render(request, 'VerNotificaciones.html', {'notificaciones': notificaciones})
+
+@require_POST
+def delete_pdfEstudios(request, id_Estudio):
+    try:
+        estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+        # Delete the file from storage
+        if estudio.estudio:
+            if os.path.isfile(estudio.estudio.path):
+                os.remove(estudio.estudio.path)
+        estudio.estudio = None
+        estudio.save()
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+@require_POST
+def replace_pdfEstudios(request, id_Estudio):
+    try:
+        estudio = get_object_or_404(Estudios, id_Estudio=id_Estudio)
+        if 'estudio' not in request.FILES:
+            return JsonResponse({'success': False, 'error': 'No se proporcionó ningún archivo'})
+        
+        new_file = request.FILES['estudio']
+        if not new_file.name.endswith('.pdf'):
+            return JsonResponse({'success': False, 'error': 'El archivo debe ser un PDF'})
+        
+        # Delete old file if it exists
+        if estudio.estudio:
+            if os.path.isfile(estudio.estudio.path):
+                os.remove(estudio.estudio.path)
+        
+        # Save new file
+        estudio.estudio = new_file
+        estudio.save()
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
