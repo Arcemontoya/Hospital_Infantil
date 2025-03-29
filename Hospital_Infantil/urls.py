@@ -48,6 +48,9 @@ urlpatterns = [
 
     path('cambiarPassword/', views.cambiarPassword, name='cambiarPassword'),
 
+    # Notificaciones
+    path('verNotificaciones/', views.verNotificaciones, name='verNotificaciones'),
+
     # ------------------------------------------------| INTERFACES DE ENFERMERO |------------------------------------------------
     # Mostrar pacientesEnfermero
     path('registroPaciente/', RegistroPaciente.as_view(), name="registroPaciente"),
