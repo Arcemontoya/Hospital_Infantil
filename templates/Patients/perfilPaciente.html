@@ -124,13 +124,11 @@
                             <!-- AQUI EDITA PARA LOS BOTONES DE SUMINISTRO -->
                                 <h3>Aplicado el {{ historial.fecha_aplicacion|date:"d/m/Y h:i A" }}</h3>
                                 <button class="historial-btn bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 w-[30%]"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editarModal"
                                     data-id="{{ historial.id }}"
                                     data-fecha="{{ historial.fecha_aplicacion|date:'Y-m-d\TH:i' }}">
                                     Editar
                                 </button>
-                                <button class="eliminar-btn historial-btn bg-red-600 text-white rounded-sm shadow-md w-auto px-4 py-2 hover:bg-red-700"
+                                <button class="eliminar-btn bg-red-600 text-white rounded-sm shadow-md w-auto px-4 py-2 hover:bg-red-700"
                                     data-id="{{ historial.id }}">
                                     Eliminar
                                 </button>
