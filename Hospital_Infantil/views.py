@@ -539,6 +539,22 @@ def actualizar_historial(request, id):
     return JsonResponse({"success": False}, status=400)
 
 
+@csrf_exempt
+def eliminar_Tratamiento(request, id_Tratamiento):
+    if request.method == "DELETE":
+        tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_Tratamiento)
+        tratamiento.delete()
+        return JsonResponse({"sucess": True})
+    return JsonResponse({"sucess": False}, status=400)
+
+@csrf_exempt
+def eliminar_historial(request, id):
+    if request.method == "DELETE":
+        historial = get_object_or_404(HistorialAplicacion, id=id)
+        historial.delete()
+        return JsonResponse({"sucess": True})
+    return JsonResponse({"sucess": False}, status=400)
+
 # No mover
 def deshabilitarPaciente(request, expediente):
     paciente = get_object_or_404(Paciente, expediente=expediente)

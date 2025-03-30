@@ -24,7 +24,8 @@ from django.contrib.auth.views import LoginView, LogoutView
 from .views import index, RegistroPaciente, RegistroUsuario, CustomLoginView, RegistroTratamiento, \
     logout_view, RegistroEstudios, RegistroRadiografias, \
     desplieguePacientesHabilitados, desplieguePacientesDeshabilitados, edicionPacientes, perfilPaciente, \
-    edicionTratamientos, actualizar_historial, EstudiosYGabinete, mostrarRadiografias
+    edicionTratamientos, actualizar_historial, EstudiosYGabinete, mostrarRadiografias, eliminar_Tratamiento, \
+    eliminar_historial
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -58,8 +59,13 @@ urlpatterns = [
     path('registroRadiografias/<int:expediente>/', RegistroRadiografias.as_view(), name="registroRadiografias"),
     path('ver_pdfEstudios/<int:id_Estudio>/', views.ver_pdfEstudios, name='ver_pdfEstudios'),
     path('ver_pdfRadiografias/<int:id_Radiografia>/', views.ver_pdfRadiografias, name='ver_pdfRadiografias'),
+
     path('paciente/<int:expediente>/actualizar_tratamiento/<int:id_tratamiento>/',
          views.actualizacion_Aplicacion_Tratamiento, name="actualizacionTratamiento"),
+
+    path('paciente/<int:expediente>/actualizar_tratamiento/<int:id_tratamiento>/',
+         views.actualizacion_Aplicacion_Tratamiento, name="actualizacionTratamiento"),
+
     path('paciente/pacientesDeshabilitados', desplieguePacientesDeshabilitados.as_view(), name='pacientesDeshabilitados'),
     path('deshabilitarPaciente/<int:expediente>', views.deshabilitarPaciente, name='deshabilitarPaciente'),
     path('habilitarPaciente/<int:expediente>', views.habilitarPaciente, name="habilitarPaciente"),
@@ -89,7 +95,10 @@ urlpatterns = [
     path('pacientes/<int:pk>', perfilPaciente.as_view(), name="perfilPaciente"),
     path('pacientes/<int:expediente>/estudiosyGabinete/', EstudiosYGabinete.as_view(), name='estudiosyGabinete'),
     path('radiografia/<int:expediente>/<int:id_Radiografia>/', views.mostrarRadiografias, name='radiografia'),
-    path('estudio/<int:expediente>/<int:id_Estudio>/', views.mostrarEstudios, name='estudio')
+    path('estudio/<int:expediente>/<int:id_Estudio>/', views.mostrarEstudios, name='estudio'),
+    path('editar_historial/<int:id>/', actualizar_historial, name='editar_historial'),
+    path('eliminar_historial/<int:id>/', eliminar_historial, name='eliminar_historial'),
+    path('eliminar_tratamiento/<int:id_Tratamiento>/', eliminar_Tratamiento, name='eliminar_tratamiento'),
 
 ]
 

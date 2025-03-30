@@ -26,3 +26,12 @@
                 }
             });
         }
+
+        // Función para cerrar el modal
+        function closeModal() {
+            if (modal) {
+                modal.classList.add("hidden");
+            } else {
+                console.error("Modal no encontrado.");
+            }
+        }

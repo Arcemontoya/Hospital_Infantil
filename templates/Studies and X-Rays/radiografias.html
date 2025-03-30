@@ -33,7 +33,7 @@
 
     <!-- Pdf container -->
     <div id="pdf-container" class="pdf-container bg-gray-200 flex items-center justify-center" style="width: 100%; height: 80vh; overflow: auto;">
-        <input type="hidden" id="pdf-url" value="{% url 'ver_pdfEstudios' id_Estudio=estudio.id_Estudio %}">
+        <input type="hidden" id="pdf-url" value="{% url 'ver_pdfRadiografias' id_Radiografia=radiografia.id_Radiografia %}">
         <p id="pdf-error" class="hidden text-red-500 font-semibold">Error al cargar el PDF. Por favor, inténtalo de nuevo.</p>
         <script>
             document.addEventListener("DOMContentLoaded", function () {

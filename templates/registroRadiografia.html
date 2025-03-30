@@ -16,7 +16,7 @@
 
 
 <main class="flex flex-col items-center pt-[10vh] landscape:pt-[17vh] max-w-full min-h-[calc(100vh-6vh)] pb-[2vh]">
-    <form action="{% url 'registroRadiografias' expediente=paciente.expediente %}" method="post" class="w-[90%] max-w-lg space-y-6">
+    <form action="{% url 'registroRadiografias' expediente=paciente.expediente %}" method="post" class="w-[90%] max-w-lg space-y-6" enctype="multipart/form-data">
         {% csrf_token %}
         <!-- Registro de estudio -->
         <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
