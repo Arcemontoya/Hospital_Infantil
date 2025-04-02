@@ -1,13 +1,12 @@
 {% extends '_base.html' %}
 {% load static %}
-{% load tz %}
 
 {% block title %}Perfil paciente{% endblock %}
 
 {% block content %}
 <!-- Barra superior -->
 <header class="bg-[#355E9F] h-[8vh] landscape:h-[8vh] w-full fixed top-0 flex items-center justify-center shadow-md">
-    <h1 class="text-white font-bold">Usuarios</h1>
+    <h1 class="text-white font-bold">Perfil del Paciente</h1>
 </header>
 <main
     class="flex flex-col items-center pt-[10vh] landscape:pt-[17vh] min-h-[calc(100vh-8vh)] pb-[10vh] landscape:pb-[20vh] items-center">
@@ -19,7 +18,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
                 </svg>
-                <h2 class="font-bold text-center w-full">{{ paciente.nombre }} {{ paciente.apellido_paterno }} 
+                <h2 class="font-bold text-center w-full">{{ paciente.nombre }} {{ paciente.apellido_paterno }}
                     {{paciente.apellido_materno }}</h2>
             </div>
             <hr class="border-t border-black my-4 w-full mx-0">
@@ -118,54 +117,48 @@
                     {% if user_profile.funcionalidad == "medico" %}
                     <h3>
                         <h3>Aplicado el {{ historial.fecha_aplicacion|date:"d/m/Y h:i A" }}</h3>
-                    {% endif %}
+                        {% endif %}
                         {% if user_profile.funcionalidad == "enfermero" %}
                         <h3>
-                            <ul id="historial-{{ tratamiento.id_Tratamiento }}">
-                                <table>
-                                    <td><h3>Aplicado el {{ historial.fecha_aplicacion|timezone:"America/Tijuana"|date:"d/m/Y h:i A" }}</h3></td>
-                                    <td>
-                                        <button class="historial-btn"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#editarModal"
-                                            data-id="{{ historial.id }}"
-                                            data-fecha="{{ historial.fecha_aplicacion|date:'Y-m-d\TH:i' }}">
-                                            Editar Aplicación
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button class="eliminar-btn historial-btn"
-                                            data-id="{{ historial.id }}">
-                                            Eliminar Aplicación
-                                        </button>
-                                    </td>
-                                </table>
-                            </ul>
+                            <div class="w-[95%] mt-4 gap-6 flex justify-center">
+                            <!-- AQUI EDITA PARA LOS BOTONES DE SUMINISTRO -->
+                                <h3>Aplicado el {{ historial.fecha_aplicacion|date:"d/m/Y h:i A" }}</h3>
+                                <button class="historial-btn bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 w-[30%]"
+                                    data-id="{{ historial.id }}"
+                                    data-fecha="{{ historial.fecha_aplicacion|date:'Y-m-d\TH:i' }}">
+                                    Editar
+                                </button>
+                                <button class="eliminar-btn bg-red-600 text-white rounded-sm shadow-md w-auto px-4 py-2 hover:bg-red-700"
+                                    data-id="{{ historial.id }}">
+                                    Eliminar
+                                </button>
+                            </div>
                             {% endif %}
-
                             {% endfor %}
                 </ul>
                 {% else %}
                 <h3>No hay aplicaciones registradas.</h3>
                 {% endif %}
                 {% if user_profile.funcionalidad == "medico" %}
-                <table>
-                    <td>
-                        <a href="{% url 'edicionTratamiento'  expediente=paciente.expediente pk=tratamiento.id_Tratamiento  %}"><button>Editar Tratamiento</button></a>
-                    </td>
-                    <td>
-                        <button class="eliminartratamiento-btn"
-                            data-id="{{ tratamiento.id_Tratamiento }}">
-                            Eliminar Tratamiento
-                        </button>
-                    </td>
-                </table>
+                    <div class="w-[95%] mt-4 gap-6 flex justify-center">
+                        <a href="{% url 'edicionTratamiento'  expediente=paciente.expediente pk=tratamiento.id_Tratamiento  %}">
+                            <button class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 w-[30%]">
+                                Editar Tratamiento
+                            </button>
+                             <button class="eliminartratamiento-btn bg-red-600 text-white rounded-sm shadow-md w-auto px-4 py-2 hover:bg-red-700" data-id="{{ tratamiento.id_Tratamiento }}">
+                                Eliminar tratamiento
+                            </button>
+                        </a>
+                    </div>
                 {% endif %}
                 {% if user_profile.funcionalidad == "enfermero" %}
-                <form method="POST" action="{% url 'actualizacionTratamiento' expediente=paciente.expediente id_tratamiento=tratamiento.id_Tratamiento %}">
-                    {% csrf_token %}
-                    <button type="submit">Actualizar</button>
-                </form>
+                    <div class="w-[95%] mt-4 gap-6 flex justify-center">
+                        <form method="POST"
+                            action="{% url 'actualizacionTratamiento' expediente=paciente.expediente id_tratamiento=tratamiento.id_Tratamiento %}">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 w-[30%]">Actualizar suministro</button>
+                        </form>
+                    </div>
                 {% endif %}
             </div>
             {% endfor %}
@@ -184,7 +177,7 @@
             <hr class="border-t border-black my-4 w-full mx-0">
             {% for tratamiento in tratamientos_inactivos %}
             <div class="bg-gray-100 p-6 rounded-lg shadow-md w-full">
-                <div class="section-title flex items-center w-full" id="tratamiento-{{ tratamiento.id_Tratamiento }}">
+                <div class="section-title flex items-center w-full">
                     <h2 class="text-lg font-bold">Tratamiento {{ forloop.counter }}</h2>
                 </div>
                 <h3>Estado del tratamiento: {{ tratamiento.tratamiento_activo }}</h3>
@@ -199,35 +192,6 @@
             {% endfor %}
         </div>
         {% endif %}
-        <!-- Modal de Edición (ENFERMERO)-->
-        <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <a href="{% url 'editarPaciente' expediente=paciente.expediente %}" class="btn btn-primary">
-                            Editar Paciente
-                        </a>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="editarForm" method="POST">
-                            {% csrf_token %}
-                            <input type="hidden" id="historial_id" name="historial_id">
-
-                            <label for="fecha_aplicacion">Fecha de Aplicación:</label>
-                            <input type="datetime-local" id="fecha_aplicacion" name="fecha_aplicacion" class="form-control">
-                            <br>
-                            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <script src="{% static 'JavaScript/actualizarSuministro.js' %}"></script>
-        <script src="{% static 'JavaScript/eliminarTratamiento.js' %}"></script>
-        <script src="{% static 'JavaScript/eliminarHistorialAplicacion.js' %}"></script>
-        <script src="{% static 'JavaScript/editarSuministroTratamiento.js' %}"></script>
     </div>
 </main>
 
@@ -266,15 +230,15 @@
                     aria-labelledby="dropdownMenuIconHorizontalButton">
                     {% if paciente.paciente_Habilitado == "Habilitado" %}
                     <li>
-                        <a href="javascript:void(0);" class="block text-white px-4 py-2 hover:bg-gray-600 confirm-action"
-                            data-url="{% url 'deshabilitarPaciente' expediente=paciente.expediente %}">
+                        <a href="javascript:void(0);" class="block text-white px-4 py-2 hover:bg-gray-600"
+                            onclick="showConfirmModal('{% url 'deshabilitarPaciente' expediente=paciente.expediente %}')">
                             Deshabilitar paciente
                         </a>
                     </li>
                     {% elif paciente.paciente_Habilitado == "Deshabilitado"%}
                     <li>
-                        <a href="javascript:void(0);" class="block text-white px-4 py-2 hover:bg-gray-600 confirm-action"
-                            data-url="{% url 'habilitarPaciente' expediente=paciente.expediente %}">
+                        <a href="javascript:void(0);" class="block text-white px-4 py-2 hover:bg-gray-600"
+                            onclick="showConfirmModal('{% url 'habilitarPaciente' expediente=paciente.expediente%}')">
                             Habilitar paciente
                         </a>
                     </li>
@@ -302,39 +266,37 @@
             </div>
         </div>
     </div>
-</footer>
 
-<!-- Modal de confirmación (oculto por defecto) -->
-<div id="confirmModal" class="fixed inset-0 bg-black/50 flex justify-center items-center hidden z-50">
-    <div class="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-        <h2 class="text-lg font-semibold">Confirmar acción</h2>
-        {% if paciente.paciente_Habilitado == "Habilitado" %}
-        <p class="mt-2 text-gray-700">¿Estás seguro de que deseas deshabilitar este usuario?</p>
-        <div class="flex justify-around mt-4">
-            <button onclick="closeConfirmModal()" class="px-4 py-2 bg-gray-400 text-white rounded-md">Cancelar</button>
-            <a id="confirmButton" href="#" class="px-4 py-2 bg-red-600 text-white rounded-md">Deshabilitar</a>
+    <!-- Modal para editar suministro -->
+    <div id="editModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+            <h2 class="text-xl font-bold mb-4">Editar Suministro</h2>
+            <form id="editForm" method="POST">
+                {% csrf_token %}
+                <input type="hidden" id="editId" name="id">
+
+                <label class="block mb-2 font-semibold">Fecha de Aplicación:</label>
+                <input type="datetime-local" id="editFecha" name="fecha_aplicacion" class="w-full p-2 border rounded-md mb-4">
+
+                <div class="flex justify-end gap-2">
+                    <button type="button" onclick="closeModal()" class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-500">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
         </div>
-        {% elif paciente.paciente_Habilitado == "Deshabilitado" %}
-        <p class="mt-2 text-gray-700">¿Estás seguro de que deseas habilitar este usuario?</p>
-        <div class="flex justify-around mt-4">
-            <button onclick="closeConfirmModal()" class="px-4 py-2 bg-gray-400 text-white rounded-md">Cancelar</button>
-            <a id="confirmButton" href="#" class="px-4 py-2 bg-green-600 text-white rounded-md">Habilitar</a>
-        </div>
-        {% endif %}
     </div>
-</div>
+
+
+</footer>
 
 <script>
     document.getElementById("dropdownMenuIconHorizontalButton").addEventListener("click", function () {
         document.getElementById("dropdownDotsHorizontal").classList.toggle("hidden");
     });
-
-    document.querySelectorAll('.confirm-action').forEach(button => {
-         button.addEventListener('click', function() {
-             showConfirmModal(this.dataset.url);
-         });
-     });
-
     function showConfirmModal(url) {
         const modal = document.getElementById("confirmModal");
         if (modal) {
@@ -349,4 +311,27 @@
         document.getElementById("confirmModal").classList.add("hidden");
     }
 </script>
+    <script src="{% static 'JavaScript/eliminarTratamiento.js' %}"></script>
+    <script src="{% static 'JavaScript/eliminarHistorialAplicacion.js' %}"></script>
+    <script src="{% static 'JavaScript/editarSuministroTratamiento.js' %}"></script>
+
+    <!-- Modal de confirmación (oculto por defecto) -->
+    <div id="confirmModal" class="fixed inset-0 bg-black/50 flex justify-center items-center hidden z-50">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
+            <h2 class="text-lg font-semibold">Confirmar acción</h2>
+            {% if paciente.paciente_Habilitado == "Habilitado" %}
+            <p class="mt-2 text-gray-700">¿Estás seguro de que deseas deshabilitar este usuario?</p>
+            <div class="flex justify-around mt-4">
+                <button onclick="closeConfirmModal()" class="px-4 py-2 bg-gray-400 text-white rounded-md">Cancelar</button>
+                <a id="confirmButton" href="#" class="px-4 py-2 bg-red-600 text-white rounded-md">Deshabilitar</a>
+            </div>
+            {% elif paciente.paciente_Habilitado == "Deshabilitado" %}
+            <p class="mt-2 text-gray-700">¿Estás seguro de que deseas habilitar este usuario?</p>
+            <div class="flex justify-around mt-4">
+                <button onclick="closeConfirmModal()" class="px-4 py-2 bg-gray-400 text-white rounded-md">Cancelar</button>
+                <a id="confirmButton" href="#" class="px-4 py-2 bg-green-600 text-white rounded-md">Habilitar</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

@@ -11,7 +11,7 @@
     <img src="{% static 'assets/interfaz/previous.png' %}" alt="Back"
         class="w-[4vh] landscape:w-[6vh] absolute left-[2vh] landscape:left-[3vh]" onclick="window.history.back()">
 
-    <h1 class="text-white font-bold ">Estudio</h1>
+    <h1 class="text-white font-bold ">Radiografia</h1>
 </header>
 
 <main
@@ -33,7 +33,7 @@
 
     <!-- Pdf container -->
     <div id="pdf-container" class="pdf-container bg-gray-200 flex items-center justify-center" style="width: 100%; height: 80vh; overflow: auto;">
-        <input type="hidden" id="pdf-url" value="{% url 'ver_pdfEstudios' id_Estudio=estudio.id_Estudio %}">
+        <input type="hidden" id="pdf-url" value="{% url 'ver_pdfRadiografias' id_Radiografia=radiografia.id_Radiografia %}">
         <p id="pdf-error" class="hidden text-red-500 font-semibold">Error al cargar el PDF. Por favor, inténtalo de nuevo.</p>
         <script>
             document.addEventListener("DOMContentLoaded", function () {

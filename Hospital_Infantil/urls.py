@@ -65,8 +65,6 @@ urlpatterns = [
     path('deshabilitarPaciente/<int:expediente>', views.deshabilitarPaciente, name='deshabilitarPaciente'),
     path('habilitarPaciente/<int:expediente>', views.habilitarPaciente, name="habilitarPaciente"),
 
-    path("actualizar-historial/<int:id>/", actualizar_historial, name="actualizar_historial"),
-
     # ------------------------------------------------| INTERFACES DE MEDICO |------------------------------------------------
     path('paciente/<int:expediente>/agregar_tratamiento/', RegistroTratamiento.as_view(), name='agregarTratamiento'),
     path('paciente/<int:expediente>/editar_tratamiento/<int:pk>/', edicionTratamientos.as_view(), name = "edicionTratamiento"),
@@ -94,10 +92,12 @@ urlpatterns = [
     path('estudio/<int:expediente>/<int:id_Estudio>/', views.mostrarEstudios, name='estudio'),
     path('estudio/<int:id_Estudio>/delete/', views.delete_pdfEstudios, name='delete_pdfEstudios'),
     path('estudio/<int:id_Estudio>/replace/', views.replace_pdfEstudios, name='replace_pdfEstudios'),
-    path("actualizar-historial/<int:id_Tratamiento>/", actualizar_historial, name="actualizar_historial"),
-    path('eliminar_historial/<int:id>/', eliminar_historial, name='eliminar_historial'),
 
+    path('editar_historial/<int:id>/', actualizar_historial, name='editar_historial'),
+    path('eliminar_historial/<int:id>/', eliminar_historial, name='eliminar_historial'),
     path('eliminar_tratamiento/<int:id_Tratamiento>/', eliminar_Tratamiento, name='eliminar_tratamiento'),
+    path("actualizar-historial/<int:id>/", actualizar_historial, name="actualizar_historial"),
+
 ]
 
 

@@ -578,26 +578,33 @@ class edicionHistorialSuministro(UpdateView):
         context["historial_aplicaciones"] = HistorialAplicacion.objects.filter(tratamiento=self.object.tratamiento)
         return context
 
-
 # Forma parte de edicionHistorialSuministro
 @csrf_exempt
-def actualizar_historial(request, id_Tratamiento):
-     try:
-         tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_Tratamiento)
-         # Aquí puedes actualizar el tratamiento según sea necesario
-         tratamiento.fecha_aplicacion = request.POST.get('fecha_aplicacion')
-         tratamiento.save()
-         return JsonResponse({'success': True, 'fecha_aplicacion': tratamiento.fecha_aplicacion})
-     except Exception as e:
-         return JsonResponse({'success': False, 'error': str(e)}, status=500)
- 
+def actualizar_historial(request, id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        historial = get_object_or_404(HistorialAplicacion, id=id)
+        historial.fecha_aplicacion = data.get("fecha_aplicacion")
+        historial.save()
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False}, status=400)
+
+
+@csrf_exempt
+def eliminar_Tratamiento(request, id_Tratamiento):
+    if request.method == "DELETE":
+        tratamiento = get_object_or_404(Tratamiento, id_Tratamiento=id_Tratamiento)
+        tratamiento.delete()
+        return JsonResponse({"sucess": True})
+    return JsonResponse({"sucess": False}, status=400)
+
 @csrf_exempt
 def eliminar_historial(request, id):
-     if request.method == "DELETE":
-         historial = get_object_or_404(HistorialAplicacion, id=id)
-         historial.delete()
-         return JsonResponse({"sucess": True})
-     return JsonResponse({"sucess": False}, status=400)
+    if request.method == "DELETE":
+        historial = get_object_or_404(HistorialAplicacion, id=id)
+        historial.delete()
+        return JsonResponse({"sucess": True})
+    return JsonResponse({"sucess": False})
  
 # No mover
 def deshabilitarPaciente(request, expediente):
